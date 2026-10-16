@@ -91,7 +91,7 @@ def test_prefix_normalization_and_order(monkeypatch):
 
 
 def test_official_model_parity():
-    upstream=Path('/homeb/user/github_repos/GANBase')
+    upstream=Path('/path/to/GANBase')
     if not (upstream/'model/Human_model.pt').exists(): pytest.skip('official artifacts unavailable')
     classifier=ganbase.GanbaseClassifier(upstream,'cpu')
     namespace=dict(torch=torch, nn=torch.nn, math=__import__('math'), Variable=torch.autograd.Variable)
@@ -148,7 +148,7 @@ def test_official_registry_sampling_evidence(monkeypatch,tmp_path):
     monkeypatch.setitem(sys.modules,'bonito.util',SimpleNamespace(load_model=lambda *a,**kw:SimpleNamespace(config={})))
     monkeypatch.setitem(sys.modules,'bonito.reader',SimpleNamespace(normalisation=lambda *a,**kw:(0.,1.)))
     monkeypatch.setitem(sys.modules,'bonito.crf.basecall',SimpleNamespace(basecall=lambda *a,**kw:[]))
-    root=Path('/homeb/user/signal_explore/results/ganbase_baseline_20261011/resources')
+    root=Path('/path/to/poreloom/results/ganbase_baseline_20261011/resources')
     cpp=root/'dorado_v0.3.4_models.cpp'; header=root/'dorado_v0.3.4_models.h'
     if not cpp.exists(): pytest.skip('registry artifacts unavailable')
     name='dna_r10.4.1_e8.2_400bps_hac@v4.1.0'

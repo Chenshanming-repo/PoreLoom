@@ -8,8 +8,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 THIRD_PARTY = REPO_ROOT / 'third_party'
-DEFAULTS = {'PORELOOM_DATA': '/homeb/user/signal_explore/data',
-            'PORELOOM_RESULTS': '/homeb/user/signal_explore/results'}
+DEFAULTS = {'PORELOOM_DATA': str(REPO_ROOT / 'data'),
+            'PORELOOM_RESULTS': str(REPO_ROOT / 'results')}
 
 
 def _dotenv(path=REPO_ROOT / '.env'):
