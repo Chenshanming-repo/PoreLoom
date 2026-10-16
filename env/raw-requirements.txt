@@ -1,0 +1,3 @@
+# 原始 BLOW5 预处理环境（对应 signal_explore/.venv-raw, Python 3.10）
+numpy
+pyslow5

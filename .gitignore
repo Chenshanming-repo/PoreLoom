@@ -1,0 +1,89 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# ===== 环境 =====
+.venv*/
+.env
+.env.*
+!.env.example
+
+# ===== 数据与结果（放仓库外，由 PORELOOM_DATA / PORELOOM_RESULTS 指定）=====
+/data/
+/results/
+/runs/
+/outputs/
+/checkpoints/
+/logs/
+/wandb/
+/tb_logs/
+
+# ===== 大文件 / 二进制产物 =====
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.parquet
+*.sqlite
+*.db
+*.part
+*.zip
+*.log
+
+# 测序原始数据
+*.blow5
+*.slow5
+*.fast5
+*.pod5
+*.fastq
+*.fastq.gz
+*.fq.gz
+*.bam
+*.bai
+*.paf
+*.paf.gz
+
+# 大型结果
+*.csv.gz
+*.tsv.gz
+*.jsonl
+*.jsonl.gz
+
+# ===== 论文 / 图表产物 =====
+paper/figures/**/*.pdf
+paper/figures/**/*.png
+paper/figures/**/*.svg
+docs/**/*.pdf
+
+# ===== 放行：测试小样本与示例配置 =====
+!tests/fixtures/**
+!configs/paths.example.yaml
+
+# ===== 编辑器 / 系统 =====
+.idea/
+.vscode/
+*.swp
+.DS_Store
+.superpowers/
+
+# ===== Baseline 上游代码（仅本地，不上传；见 third_party/README.md）=====
+/third_party/CAFES/
+/third_party/NanoDeep/
+/third_party/SquiggleNet/
+/third_party/ReadCurrent_patched/
