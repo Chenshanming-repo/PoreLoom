@@ -1,0 +1,56 @@
+\begin{longtable}{llllll}
+\caption{Complete main comparison. Baselines are retrained with 6000-sample windows; PoreLoom uses the default 6000-sample budget.}\label{tab:s_main}\\
+\toprule
+Unit & Method & Host rej. (\%) & ACC (\%) & Target FRR (\%) & Host (s)\\\midrule\endfirsthead
+\toprule
+Unit & Method & Host rej. (\%) & ACC (\%) & Target FRR (\%) & Host (s)\\\midrule\endhead
+\bottomrule\endfoot
+Mixed 1 / 0 & PoreLoom & 94.14 & 95.59 & 2.96 & 1.56\\
+Mixed 1 / 0 & ReadCurrent & 84.91 & 89.80 & 5.32 & 2.82\\
+Mixed 1 / 0 & NanoDeep & 85.37 & 91.64 & 2.08 & 2.77\\
+Mixed 1 / 0 & SquiggleNet & 82.33 & 87.69 & 6.95 & 3.44\\
+Mixed 2 / 0 & PoreLoom & 95.04 & 95.85 & 3.34 & 1.40\\
+Mixed 2 / 0 & ReadCurrent & 83.88 & 89.43 & 5.02 & 3.03\\
+Mixed 2 / 0 & NanoDeep & 86.13 & 92.03 & 2.07 & 2.50\\
+Mixed 2 / 0 & SquiggleNet & 82.69 & 86.53 & 9.62 & 3.19\\
+Mixed 3 / 0 & PoreLoom & 95.52 & 95.51 & 4.50 & 1.36\\
+Mixed 3 / 0 & ReadCurrent & 84.05 & 89.33 & 5.40 & 2.93\\
+Mixed 3 / 0 & NanoDeep & 85.44 & 91.45 & 2.54 & 2.72\\
+Mixed 3 / 0 & SquiggleNet & 83.52 & 88.75 & 6.01 & 3.11\\
+R9 / 0 & PoreLoom & 91.11 & 91.85 & 7.41 & 1.79\\
+R9 / 0 & ReadCurrent & 68.35 & 80.95 & 6.45 & 2.91\\
+R9 / 0 & NanoDeep & 70.81 & 83.19 & 4.44 & 2.62\\
+R9 / 0 & SquiggleNet & 65.78 & 79.60 & 6.58 & 3.22\\
+R9 / 1 & PoreLoom & 89.66 & 91.64 & 6.39 & 1.93\\
+R9 / 1 & ReadCurrent & 70.69 & 80.50 & 9.70 & 2.70\\
+R9 / 1 & NanoDeep & 70.33 & 80.91 & 8.52 & 2.75\\
+R9 / 1 & SquiggleNet & 68.47 & 80.53 & 7.40 & 2.92\\
+R9 / 2 & PoreLoom & 90.98 & 92.03 & 6.92 & 1.81\\
+R9 / 2 & ReadCurrent & 69.36 & 81.28 & 6.79 & 2.77\\
+R9 / 2 & NanoDeep & 70.41 & 83.17 & 4.07 & 2.73\\
+R9 / 2 & SquiggleNet & 66.53 & 79.07 & 8.38 & 3.10\\
+Simulated 1 / 0 & PoreLoom & 96.05 & 95.71 & 4.64 & 1.87\\
+Simulated 1 / 0 & ReadCurrent & 93.21 & 93.01 & 7.18 & 3.06\\
+Simulated 1 / 0 & NanoDeep & 93.38 & 92.64 & 8.09 & 3.01\\
+Simulated 1 / 0 & SquiggleNet & 90.70 & 89.44 & 11.81 & 3.53\\
+Simulated 2 / 0 & PoreLoom & 95.72 & 95.79 & 4.15 & 2.02\\
+Simulated 2 / 0 & ReadCurrent & 92.78 & 92.39 & 8.01 & 3.16\\
+Simulated 2 / 0 & NanoDeep & 90.17 & 92.24 & 5.69 & 3.60\\
+Simulated 2 / 0 & SquiggleNet & 89.80 & 90.43 & 8.93 & 3.70\\
+Simulated 3 / 0 & PoreLoom & 95.41 & 95.63 & 4.16 & 1.99\\
+Simulated 3 / 0 & ReadCurrent & 91.85 & 92.19 & 7.47 & 3.34\\
+Simulated 3 / 0 & NanoDeep & 94.06 & 92.91 & 8.25 & 2.88\\
+Simulated 3 / 0 & SquiggleNet & 90.69 & 90.71 & 9.27 & 3.53\\
+Sputum 1 / 0 & PoreLoom & 94.70 & 92.96 & 8.78 & 1.32\\
+Sputum 1 / 0 & ReadCurrent & 94.42 & 91.60 & 11.22 & 2.02\\
+Sputum 1 / 0 & NanoDeep & 89.72 & 89.54 & 10.63 & 2.27\\
+Sputum 1 / 0 & SquiggleNet & 92.09 & 89.39 & 13.32 & 2.16\\
+Sputum 2 / 0 & PoreLoom & 93.90 & 92.40 & 9.10 & 1.39\\
+Sputum 2 / 0 & ReadCurrent & 88.93 & 89.57 & 9.79 & 2.26\\
+Sputum 2 / 0 & NanoDeep & 86.02 & 86.97 & 12.07 & 2.37\\
+Sputum 2 / 0 & SquiggleNet & 87.18 & 87.14 & 12.90 & 2.31\\
+Sputum 3 / 0 & PoreLoom & 93.09 & 92.69 & 7.70 & 1.49\\
+Sputum 3 / 0 & ReadCurrent & 90.96 & 89.77 & 11.42 & 2.21\\
+Sputum 3 / 0 & NanoDeep & 87.06 & 87.95 & 11.17 & 2.34\\
+Sputum 3 / 0 & SquiggleNet & 86.72 & 87.07 & 12.58 & 2.41\\
+\end{longtable}

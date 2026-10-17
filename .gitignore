@@ -66,6 +66,10 @@ htmlcov/
 *.jsonl.gz
 
 # ===== 论文 / 图表产物 =====
+# paper/results/ 从 Zenodo 解压；paper/review/ 是重画时写出的检查记录
+/paper/results/
+/paper/review/*
+!/paper/review/.gitkeep
 paper/figures/**/*.pdf
 paper/figures/**/*.png
 paper/figures/**/*.svg

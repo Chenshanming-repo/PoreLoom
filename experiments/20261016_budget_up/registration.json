@@ -1,0 +1,157 @@
+{
+  "written": "2026-10-16 16:21:42, before any budget-increase training",
+  "request": "decision-budget increase on one dataset: B in {6000, 9000, 12000, 15000, 18000}",
+  "design": "Decision-budget increase on one dataset.\n\nDataset: r10_run01 (R10.4.1, HG002 host vs Zymo target, 4 kHz, TRAIN 40k / DEV 20k / TEST 20k). The budget has to\nbind, and here it does: 77-86 % of host and of target reads in every split are at least raw 19500 long, and the length\ndistributions of TRAIN / DEV / TEST match. sputum_g1 was not chosen because its TEST targets are much shorter than its\nTRAIN / DEV targets (median 13.4k vs 18.8k / 22.5k samples): a higher budget would mix in that split shift.\n\nBudget B = signal samples after the 1500-sample skip (the paper convention). B in {6000 (method default),\n9000, 12000, 15000, 18000}: the forced decision lands at raw 1500 + B (7500 ... 19500, i.e. 1.9 ... 4.9 s at 4 kHz).\nEach (B, replicate r) changes only the budget. Everything else is the method default (poreloom.method, docs/method.md):\n  stage A  shared by every budget of replicate r: the method's stage A on the default 9000-sample cache (r0: the main\n           run's stage_A.pt; r1, r2: `python -m poreloom.method stageA --replicate r`). Stage A only ever sees windows\n           up to raw 9000.\n  S1       StreamR0 from that stage A with R0_DEFAULTS, except max_samples = 1500 + B (training prefix lengths uniform up\n           to the budget, normalizer prior over [1500, 1500 + B)), seed + r. DEV-A early stopping uses dev_lengths =\n           the default ten plus 6000 + 1488 k up to the budget plus the budget's own stream length (the default for B = 6000).\n  head     C-p on DEV-A looks up to the budget, with 768-sample buckets: ceil((B - 432) / 768) of them (6000 -> 8,\n           9000 -> 12, 12000 -> 16, 15000 -> 19, 18000 -> 23). The forced look is scored on exactly the first 1500 + B\n           samples. The time inputs n/7500 and log1p(n/4000) are the method's, but n is clamped at the budget, not at\n           7500 (looks_capped; head.looks clamps at 7500, which would make every look past raw 7500 look like 7500;\n           for B = 6000 the two are identical). beta is picked by max DEV-B ACC and locked before TEST.\n  test     the same as pipeline.test (0.4 s primary; 0.2 / 1.0 s and zero service as sensitivity), plus the TEST replay\n           of every beta at 0.4 s nominal (the ACC vs host pore time front) and decision diagnostics.\nData: the same reads with a 27000-sample prefix cache built from the original raw records (stream_real run.py reader;\nbudgets up to 22500 keep S1's full 1500-sample start jitter). Before use, the first 9000 samples and all metadata are\nchecked equal to the main-run cache.",
+  "dataset": {
+    "name": "r10_run01",
+    "fs": 4000.0,
+    "prefix_samples": 27000,
+    "files": {
+      "train": {
+        "adc.npy": "83dc29532cd48a0cbc0b606b148b74188726b2727154cc1f0a6dce6d642fe369",
+        "metadata.npz": "f31d7ff2724ed07c20865e32a02713988e056476a2cab089c765ec1e76aa7266"
+      },
+      "dev": {
+        "adc.npy": "5986823892edbcc09184d3fe58f30006749724ba804cb2b049c385ded284c4f4",
+        "metadata.npz": "0286c57f1948fd4ced4b8fc8697958c6a3a4e30162b4b5defb6c73df6b1f0805"
+      },
+      "test": {
+        "adc.npy": "bdd27ba4137db0ec3811f5a9f5dbc7163677d6cec70e9d65c5b6f2c62bc5e0a3",
+        "metadata.npz": "8b1f8f4f3b502778b6efb24b8e61e0b17c56b7d6d67ab797051908b4e326a1b2"
+      }
+    },
+    "equality_with": "/path/to/poreloom_work/results/stream_real_20261013/prefix/run_01"
+  },
+  "budgets_signal": [
+    6000,
+    9000,
+    12000,
+    15000,
+    18000
+  ],
+  "forced_raw": [
+    7500,
+    10500,
+    13500,
+    16500,
+    19500
+  ],
+  "replicates": [
+    0,
+    1,
+    2
+  ],
+  "n_buckets": {
+    "6000": 8,
+    "9000": 12,
+    "12000": 16,
+    "15000": 19,
+    "18000": 23
+  },
+  "dev_lengths": {
+    "6000": [
+      432,
+      768,
+      1200,
+      1488,
+      1968,
+      2496,
+      2976,
+      3456,
+      4464,
+      6000
+    ],
+    "9000": [
+      432,
+      768,
+      1200,
+      1488,
+      1968,
+      2496,
+      2976,
+      3456,
+      4464,
+      6000,
+      7488,
+      8976
+    ],
+    "12000": [
+      432,
+      768,
+      1200,
+      1488,
+      1968,
+      2496,
+      2976,
+      3456,
+      4464,
+      6000,
+      7488,
+      8976,
+      10464,
+      11952,
+      12000
+    ],
+    "15000": [
+      432,
+      768,
+      1200,
+      1488,
+      1968,
+      2496,
+      2976,
+      3456,
+      4464,
+      6000,
+      7488,
+      8976,
+      10464,
+      11952,
+      13440,
+      14928,
+      14976
+    ],
+    "18000": [
+      432,
+      768,
+      1200,
+      1488,
+      1968,
+      2496,
+      2976,
+      3456,
+      4464,
+      6000,
+      7488,
+      8976,
+      10464,
+      11952,
+      13440,
+      14928,
+      16416,
+      17904,
+      18000
+    ]
+  },
+  "seeds": {
+    "stage_a": "STAGEA seed + r",
+    "s1": "20261012 + r",
+    "head_train": "20261013 + r",
+    "test_phase": 20261012
+  },
+  "reference": {
+    "main_run": "/path/to/poreloom_work/runs/main/r10_run01/poreloom_r0",
+    "note": "B = 6000 r0 is rerun here through this script (code-path check against the main run, same weights recipe); every comparison uses this script's runs"
+  },
+  "primary": {
+    "metric": "TEST command ACC and host mean pore seconds, 0.4 s, nominal service, max DEV-B ACC beta",
+    "comparison": "each B vs B = 6000 of the same replicate: paired bootstrap over TEST reads (2000 draws, seed 20261016); summary = mean over the 3 replicates and how many replicates have a 95 % CI excluding 0",
+    "noise": "run-to-run noise of the method is about 0.3 pp ACC (2026-10-14 rerun)"
+  },
+  "secondary": [
+    "target command FRR, host command / effective reject",
+    "TEST front of every beta (ACC vs host pore s)",
+    "decision diagnostics: signal used at the decision, share decided at the forced look, share of reads that end without a command",
+    "0.2 / 1.0 s chunk and zero-service sensitivity"
+  ]
+}

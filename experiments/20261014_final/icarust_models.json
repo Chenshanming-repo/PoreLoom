@@ -1,0 +1,13 @@
+{
+  "PoreLoom": "/path/to/poreloom_work/results/final_20261014/runs/main/sim_g1/poreloom_r0",
+  "readcurrent": "/path/to/poreloom_work/results/final_20261014/runs/main/sim_g1/readcurrent_r0",
+  "nanodeep": "/path/to/poreloom_work/results/final_20261014/runs/main/sim_g1/nanodeep_upstream_r0",
+  "squigglenet": "/path/to/poreloom_work/results/final_20261014/runs/main/sim_g1/squigglenet_r0",
+  "calibration": {
+    "offset": 13.464453946637898,
+    "range": 1536.598389,
+    "digitisation": 8192.0
+  },
+  "note": "sim g1 models trained on HPC (runs/main/sim_g1); NanoDeep = authors' training recipe; offset = mean sim g1 DEV offset",
+  "PoreLoom-head0.2": "/path/to/poreloom_work/results/final_20261014/icarust_chunk/poreloom_sh_cp_head0.2.pt"
+}

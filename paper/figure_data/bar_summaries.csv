@@ -1,0 +1,181 @@
+figure,panel,group,method,variant,metric,n,mean,minimum,maximum
+Figure 2,a,Simulated,poreloom,streaming,host_reject,3,95.7288888888889,95.4133333333333,96.0533333333333
+Figure 2,a,Simulated,readcurrent,w3000,host_reject,3,89.3222222222222,88.4666666666667,90.9866666666667
+Figure 2,a,Simulated,readcurrent,w6000,host_reject,3,92.6133333333333,91.8533333333333,93.2066666666667
+Figure 2,a,Simulated,nanodeep_upstream,w3000,host_reject,3,87.7066666666667,86.3866666666667,89.6333333333333
+Figure 2,a,Simulated,nanodeep_upstream,w6000,host_reject,3,92.5355555555556,90.1666666666667,94.06
+Figure 2,a,Simulated,squigglenet,w3000,host_reject,3,86.5177777777778,84.6733333333333,88.2866666666667
+Figure 2,a,Simulated,squigglenet,w6000,host_reject,3,90.3955555555556,89.8,90.7
+Figure 2,a,R9,poreloom,streaming,host_reject,3,90.5833333333333,89.66,91.11
+Figure 2,a,R9,readcurrent,w3000,host_reject,3,80.6766666666667,79.93,81.37
+Figure 2,a,R9,readcurrent,w6000,host_reject,3,69.4666666666667,68.35,70.69
+Figure 2,a,R9,nanodeep_upstream,w3000,host_reject,3,85.7966666666667,84.73,86.57
+Figure 2,a,R9,nanodeep_upstream,w6000,host_reject,3,70.5166666666667,70.33,70.81
+Figure 2,a,R9,squigglenet,w3000,host_reject,3,77.6166666666667,76.95,78.45
+Figure 2,a,R9,squigglenet,w6000,host_reject,3,66.9266666666667,65.78,68.47
+Figure 2,a,R10 mixed,poreloom,streaming,host_reject,3,94.9,94.14,95.52
+Figure 2,a,R10 mixed,readcurrent,w3000,host_reject,3,86.0933333333333,83.42,88.31
+Figure 2,a,R10 mixed,readcurrent,w6000,host_reject,3,84.28,83.88,84.91
+Figure 2,a,R10 mixed,nanodeep_upstream,w3000,host_reject,3,87.1966666666667,84.92,89.29
+Figure 2,a,R10 mixed,nanodeep_upstream,w6000,host_reject,3,85.6466666666667,85.37,86.13
+Figure 2,a,R10 mixed,squigglenet,w3000,host_reject,3,83.2766666666667,80.84,84.55
+Figure 2,a,R10 mixed,squigglenet,w6000,host_reject,3,82.8466666666667,82.33,83.52
+Figure 2,a,R10 sputum,poreloom,streaming,host_reject,3,93.8982707595604,93.0902303256558,94.7034042264048
+Figure 2,a,R10 sputum,readcurrent,w3000,host_reject,3,88.155724578537,84.727175760808,90.439627641503
+Figure 2,a,R10 sputum,readcurrent,w6000,host_reject,3,91.4350083704303,88.93003703333,94.4180199768975
+Figure 2,a,R10 sputum,nanodeep_upstream,w3000,host_reject,3,76.1531123711953,71.114296190127,78.8609748773897
+Figure 2,a,R10 sputum,nanodeep_upstream,w6000,host_reject,3,87.5990516461327,86.0174156741067,89.7159747231093
+Figure 2,a,R10 sputum,squigglenet,w3000,host_reject,3,84.0721918234294,81.803939868671,88.0852075830672
+Figure 2,a,R10 sputum,squigglenet,w6000,host_reject,3,88.665472134946,86.7204426519116,92.0941768023374
+Figure 2,b,Simulated,poreloom,streaming,frr,3,4.31555555555556,4.14666666666667,4.64
+Figure 2,b,Simulated,readcurrent,w3000,frr,3,13.2666666666667,11.4066666666667,15.2066666666667
+Figure 2,b,Simulated,readcurrent,w6000,frr,3,7.55111111111111,7.18,8.00666666666667
+Figure 2,b,Simulated,nanodeep_upstream,w3000,frr,3,14.4688888888889,13.8533333333333,15.64
+Figure 2,b,Simulated,nanodeep_upstream,w6000,frr,3,7.34222222222222,5.68666666666667,8.24666666666667
+Figure 2,b,Simulated,squigglenet,w3000,frr,3,16.52,14.68,18.1533333333333
+Figure 2,b,Simulated,squigglenet,w6000,frr,3,10.0044444444444,8.93333333333333,11.8133333333333
+Figure 2,b,R9,poreloom,streaming,frr,3,6.90666666666667,6.39,7.41
+Figure 2,b,R9,readcurrent,w3000,frr,3,13.9466666666667,12.77,15.12
+Figure 2,b,R9,readcurrent,w6000,frr,3,7.64666666666667,6.45,9.7
+Figure 2,b,R9,nanodeep_upstream,w3000,frr,3,13.4233333333333,10.66,16.88
+Figure 2,b,R9,nanodeep_upstream,w6000,frr,3,5.67666666666667,4.07,8.52
+Figure 2,b,R9,squigglenet,w3000,frr,3,15.9,15.82,16
+Figure 2,b,R9,squigglenet,w6000,frr,3,7.45333333333333,6.58,8.38
+Figure 2,b,R10 mixed,poreloom,streaming,frr,3,3.6,2.96,4.5
+Figure 2,b,R10 mixed,readcurrent,w3000,frr,3,8.25333333333333,6.96,10.81
+Figure 2,b,R10 mixed,readcurrent,w6000,frr,3,5.24666666666667,5.02,5.4
+Figure 2,b,R10 mixed,nanodeep_upstream,w3000,frr,3,4.72333333333333,4.1,5.91
+Figure 2,b,R10 mixed,nanodeep_upstream,w6000,frr,3,2.23,2.07,2.54
+Figure 2,b,R10 mixed,squigglenet,w3000,frr,3,10.22,8.59,13.03
+Figure 2,b,R10 mixed,squigglenet,w6000,frr,3,7.52666666666667,6.01,9.62
+Figure 2,b,R10 sputum,poreloom,streaming,frr,3,8.5289872683727,7.70307656411453,9.10152470556835
+Figure 2,b,R10 sputum,readcurrent,w3000,frr,3,15.8086494928392,15.0811986138479,16.9585960697962
+Figure 2,b,R10 sputum,readcurrent,w6000,frr,3,10.8100281872889,9.79214626497181,11.4196193460218
+Figure 2,b,R10 sputum,nanodeep_upstream,w3000,frr,3,18.5012951894916,14.0585717197798,21.4593133820438
+Figure 2,b,R10 sputum,nanodeep_upstream,w6000,frr,3,11.2892201442982,10.6271658626079,12.0742001134354
+Figure 2,b,R10 sputum,squigglenet,w3000,frr,3,18.490267029979,18.1015152544676,18.9427019099363
+Figure 2,b,R10 sputum,squigglenet,w6000,frr,3,12.9341533702208,12.579580680644,13.3179316436774
+Figure 2,c,Simulated,poreloom,streaming,host_pore,3,1.9604936106361,1.86921185878506,2.01913794247793
+Figure 2,c,Simulated,readcurrent,w3000,host_pore,3,3.30469873515767,3.0030763321855,3.48128641440463
+Figure 2,c,Simulated,readcurrent,w6000,host_pore,3,3.18776936271355,3.06160358087228,3.34357957730043
+Figure 2,c,Simulated,nanodeep_upstream,w3000,host_pore,3,3.50382672573741,3.13201417575738,3.76403595579364
+Figure 2,c,Simulated,nanodeep_upstream,w6000,host_pore,3,3.1628078547081,2.88058636345038,3.59886866258602
+Figure 2,c,Simulated,squigglenet,w3000,host_pore,3,3.80562890112953,3.43491978416796,4.20537895787354
+Figure 2,c,Simulated,squigglenet,w6000,host_pore,3,3.58477592658691,3.5271979408792,3.69752258280779
+Figure 2,c,R9,poreloom,streaming,host_pore,3,1.84293685064932,1.78849346592001,1.93299404577245
+Figure 2,c,R9,readcurrent,w3000,host_pore,3,2.83725393987188,2.74926378782792,2.91225195145725
+Figure 2,c,R9,readcurrent,w6000,host_pore,3,2.79343079074628,2.69534856048916,2.91224289614777
+Figure 2,c,R9,nanodeep_upstream,w3000,host_pore,3,2.47712058427943,2.3835829119168,2.57354117364333
+Figure 2,c,R9,nanodeep_upstream,w6000,host_pore,3,2.69941909247456,2.61514322776191,2.74998806059053
+Figure 2,c,R9,squigglenet,w3000,host_pore,3,3.15453703294064,2.97519134188869,3.2689449896174
+Figure 2,c,R9,squigglenet,w6000,host_pore,3,3.07966125486015,2.91621063668969,3.22183667706953
+Figure 2,c,R10 mixed,poreloom,streaming,host_pore,3,1.4389693020637,1.36282498606725,1.55669824249732
+Figure 2,c,R10 mixed,readcurrent,w3000,host_pore,3,2.87051853476525,2.48790920819084,3.43856130115779
+Figure 2,c,R10 mixed,readcurrent,w6000,host_pore,3,2.92797957715424,2.82396302121314,3.02773079142957
+Figure 2,c,R10 mixed,nanodeep_upstream,w3000,host_pore,3,2.67489564694428,2.37703444246732,3.19950950616315
+Figure 2,c,R10 mixed,nanodeep_upstream,w6000,host_pore,3,2.66404685723423,2.50179422754359,2.76938364082645
+Figure 2,c,R10 mixed,squigglenet,w3000,host_pore,3,3.3120206733437,3.0923801848621,3.70728825665056
+Figure 2,c,R10 mixed,squigglenet,w6000,host_pore,3,3.24618852965487,3.10607618230008,3.44418462800007
+Figure 2,c,R10 sputum,poreloom,streaming,host_pore,3,1.39687115357616,1.31537861491211,1.48858734151182
+Figure 2,c,R10 sputum,readcurrent,w3000,host_pore,3,1.86200958783347,1.71858694676276,2.08936878233208
+Figure 2,c,R10 sputum,readcurrent,w6000,host_pore,3,2.16491643988625,2.01659653204239,2.26424698967637
+Figure 2,c,R10 sputum,nanodeep_upstream,w3000,host_pore,3,2.46517321041969,2.23163008872617,2.80675845639211
+Figure 2,c,R10 sputum,nanodeep_upstream,w6000,host_pore,3,2.32428149784452,2.26682353164737,2.37075965222773
+Figure 2,c,R10 sputum,squigglenet,w3000,host_pore,3,2.0827730741681,1.84632824237648,2.23514474801092
+Figure 2,c,R10 sputum,squigglenet,w6000,host_pore,3,2.29317804437824,2.15577177423438,2.41216570349073
+Figure 2,d,1%,poreloom,streaming,relative_yield,3,7.83535984046672,7.42428261916535,8.23344562649695
+Figure 2,d,10%,poreloom,streaming,relative_yield,3,4.8808179535207,4.82467379952088,4.96207297917937
+Figure 2,d,30%,poreloom,streaming,relative_yield,3,2.61965004891972,2.60452866927649,2.62983133022838
+Figure 2,d,1%,readcurrent,w3000,relative_yield,3,4.76258700112669,4.53601450686272,5.00766159003247
+Figure 2,d,10%,readcurrent,w3000,relative_yield,3,3.60617702781939,3.55956316992233,3.68250884547392
+Figure 2,d,30%,readcurrent,w3000,relative_yield,3,2.26772713801294,2.24875927623175,2.27957324428906
+Figure 2,d,1%,nanodeep_upstream,w3000,relative_yield,3,6.14519195429088,5.88370735736035,6.43597997274811
+Figure 2,d,10%,nanodeep_upstream,w3000,relative_yield,3,4.19487316248905,4.16125504054379,4.25967285878004
+Figure 2,d,30%,nanodeep_upstream,w3000,relative_yield,3,2.42863409221995,2.41156063339639,2.43998104503842
+Figure 2,d,1%,squigglenet,w3000,relative_yield,3,5.17887441379511,4.98672838202802,5.38991572869067
+Figure 2,d,10%,squigglenet,w3000,relative_yield,3,3.73736260949366,3.69199545283824,3.80967153138108
+Figure 2,d,30%,squigglenet,w3000,relative_yield,3,2.25536016022848,2.23917559325414,2.26807512491237
+Figure 4,a,Simulated,main,same_encoder,host_reject,3,95.7288888888889,95.4133333333333,96.0533333333333
+Figure 4,a,Simulated,fixed_len,same_encoder,host_reject,3,95.8622222222222,95.48,96.22
+Figure 4,a,Simulated,const_thr,same_encoder,host_reject,3,96.1422222222222,95.7533333333333,96.4133333333333
+Figure 4,a,Simulated,calib_thr,same_encoder,host_reject,3,96.4488888888889,96.3133333333333,96.5933333333333
+Figure 4,a,R9,main,same_encoder,host_reject,3,90.5833333333333,89.66,91.11
+Figure 4,a,R9,fixed_len,same_encoder,host_reject,3,85.52,84.26,86.86
+Figure 4,a,R9,const_thr,same_encoder,host_reject,3,89.5,88.88,90.57
+Figure 4,a,R9,calib_thr,same_encoder,host_reject,3,89.4766666666667,88.57,90.81
+Figure 4,a,R10 mixed,main,same_encoder,host_reject,3,94.9,94.14,95.52
+Figure 4,a,R10 mixed,fixed_len,same_encoder,host_reject,3,90.4166666666667,88.93,91.17
+Figure 4,a,R10 mixed,const_thr,same_encoder,host_reject,3,95.08,94.76,95.58
+Figure 4,a,R10 mixed,calib_thr,same_encoder,host_reject,3,94.85,94.24,95.18
+Figure 4,a,R10 sputum,main,same_encoder,host_reject,3,93.8982707595604,93.0902303256558,94.7034042264048
+Figure 4,a,R10 sputum,fixed_len,same_encoder,host_reject,3,94.7868475142103,93.3002233258891,95.7895439228639
+Figure 4,a,R10 sputum,const_thr,same_encoder,host_reject,3,93.9638271733941,93.0068997700077,95.6794448336836
+Figure 4,a,R10 sputum,calib_thr,same_encoder,host_reject,3,94.5208256016748,92.4202526582447,95.7695259066493
+Figure 4,b,Simulated,main,same_encoder,frr,3,4.31555555555556,4.14666666666667,4.64
+Figure 4,b,Simulated,fixed_len,same_encoder,frr,3,4.75333333333333,4.49333333333333,5.10666666666667
+Figure 4,b,Simulated,const_thr,same_encoder,frr,3,4.56,3.99333333333333,5.08
+Figure 4,b,Simulated,calib_thr,same_encoder,frr,3,4.60222222222222,4.51333333333333,4.66
+Figure 4,b,R9,main,same_encoder,frr,3,6.90666666666667,6.39,7.41
+Figure 4,b,R9,fixed_len,same_encoder,frr,3,9.09333333333333,8.03,10.3
+Figure 4,b,R9,const_thr,same_encoder,frr,3,6.98,6.32,7.46
+Figure 4,b,R9,calib_thr,same_encoder,frr,3,6.21666666666667,5.39,7.53
+Figure 4,b,R10 mixed,main,same_encoder,frr,3,3.6,2.96,4.5
+Figure 4,b,R10 mixed,fixed_len,same_encoder,frr,3,3.72666666666667,2.5,4.49
+Figure 4,b,R10 mixed,const_thr,same_encoder,frr,3,4.13333333333333,3.8,4.68
+Figure 4,b,R10 mixed,calib_thr,same_encoder,frr,3,3.34333333333333,2.7,3.88
+Figure 4,b,R10 sputum,main,same_encoder,frr,3,8.5289872683727,7.70307656411453,9.10152470556835
+Figure 4,b,R10 sputum,fixed_len,same_encoder,frr,3,8.27409679445581,7.11976267457751,9.72875588029226
+Figure 4,b,R10 sputum,const_thr,same_encoder,frr,3,7.72249965354461,6.49249167629272,9.5319120541821
+Figure 4,b,R10 sputum,calib_thr,same_encoder,frr,3,7.99189861849523,6.55311489617013,9.43182197310913
+Figure 4,c,Simulated,main,same_encoder,host_pore,3,1.9604936106361,1.86921185878506,2.01913794247793
+Figure 4,c,Simulated,fixed_len,same_encoder,host_pore,3,2.53910562190484,2.39958506328651,2.63844434210873
+Figure 4,c,Simulated,const_thr,same_encoder,host_pore,3,2.16747570028606,1.99147672233703,2.39806485572698
+Figure 4,c,Simulated,calib_thr,same_encoder,host_pore,3,2.01583517876855,1.95183170661307,2.10420593474904
+Figure 4,c,R9,main,same_encoder,host_pore,3,1.84293685064932,1.78849346592001,1.93299404577245
+Figure 4,c,R9,fixed_len,same_encoder,host_pore,3,2.41441617510236,2.31937382713588,2.52865633786048
+Figure 4,c,R9,const_thr,same_encoder,host_pore,3,1.86146490738165,1.76498230360333,1.97248673045437
+Figure 4,c,R9,calib_thr,same_encoder,host_pore,3,1.92248190536661,1.79327629990645,2.02425931903557
+Figure 4,c,R10 mixed,main,same_encoder,host_pore,3,1.4389693020637,1.36282498606725,1.55669824249732
+Figure 4,c,R10 mixed,fixed_len,same_encoder,host_pore,3,2.13640334366867,1.93571925701424,2.43770372296611
+Figure 4,c,R10 mixed,const_thr,same_encoder,host_pore,3,1.40618107617283,1.35409492997498,1.43957261885056
+Figure 4,c,R10 mixed,calib_thr,same_encoder,host_pore,3,1.4513836827686,1.39292987913451,1.52328537859635
+Figure 4,c,R10 sputum,main,same_encoder,host_pore,3,1.39687115357616,1.31537861491211,1.48858734151182
+Figure 4,c,R10 sputum,fixed_len,same_encoder,host_pore,3,1.87826280942377,1.79745164490574,1.96854687196333
+Figure 4,c,R10 sputum,const_thr,same_encoder,host_pore,3,1.91357338623493,1.73285793042218,2.03337251090903
+Figure 4,c,R10 sputum,calib_thr,same_encoder,host_pore,3,1.69125393855087,1.57998166233903,1.89961176919403
+Figure 4,d,Simulated,readcurrent,Cp_minus_native_W3000,host_reject,3,3.12,0.800000000000001,4.41333333333329
+Figure 4,d,Simulated,nanodeep_upstream,Cp_minus_native_W3000,host_reject,3,4.20666666666664,3.6266666666666,5.3133333333333
+Figure 4,d,Simulated,squigglenet,Cp_minus_native_W3000,host_reject,3,1.9266666666667,0.5066666666667,2.7533333333334
+Figure 4,d,R9,readcurrent,Cp_minus_native_W3000,host_reject,3,1.19,-1.13,2.39
+Figure 4,d,R9,nanodeep_upstream,Cp_minus_native_W3000,host_reject,3,1.87666666666666,0.879999999999992,3.57
+Figure 4,d,R9,squigglenet,Cp_minus_native_W3000,host_reject,3,3.77666666666667,1.97000000000001,4.95
+Figure 4,d,R10 mixed,readcurrent,Cp_minus_native_W3000,host_reject,3,0.97333333333333,-0.419999999999998,3.17
+Figure 4,d,R10 mixed,nanodeep_upstream,Cp_minus_native_W3000,host_reject,3,-0.233333333333334,-0.590000000000002,0.229999999999997
+Figure 4,d,R10 mixed,squigglenet,Cp_minus_native_W3000,host_reject,3,1.97666666666667,1.41,2.6
+Figure 4,d,R10 sputum,readcurrent,Cp_minus_native_W3000,host_reject,3,4.0131823627949,2.91929403129479,5.7398086730442
+Figure 4,d,R10 sputum,nanodeep_upstream,Cp_minus_native_W3000,host_reject,3,6.70301222467307,2.8125312781503,10.956716722158
+Figure 4,d,R10 sputum,squigglenet,Cp_minus_native_W3000,host_reject,3,3.97639446840427,2.0384589250527,5.18982700576649
+Figure 4,e,Simulated,readcurrent,Cp_minus_native_W3000,frr,3,-2.68444444444448,-4.7933333333334,-1.56000000000003
+Figure 4,e,Simulated,nanodeep_upstream,Cp_minus_native_W3000,frr,3,-2.8844444444444,-4.86,-0.9066666666666
+Figure 4,e,Simulated,squigglenet,Cp_minus_native_W3000,frr,3,-5.0222222222222,-6.4,-4.0733333333333
+Figure 4,e,R9,readcurrent,Cp_minus_native_W3000,frr,3,-3.99666666666667,-5.86,-2.81
+Figure 4,e,R9,nanodeep_upstream,Cp_minus_native_W3000,frr,3,-3.06,-4.46,-0.559999999999999
+Figure 4,e,R9,squigglenet,Cp_minus_native_W3000,frr,3,-2.51666666666667,-4.46,-1.26
+Figure 4,e,R10 mixed,readcurrent,Cp_minus_native_W3000,frr,3,-2.34,-4.15,-0.48
+Figure 4,e,R10 mixed,nanodeep_upstream,Cp_minus_native_W3000,frr,3,-1.00666666666667,-1.31,-0.84
+Figure 4,e,R10 mixed,squigglenet,Cp_minus_native_W3000,frr,3,-1.50666666666667,-1.75,-1.16
+Figure 4,e,R10 sputum,readcurrent,Cp_minus_native_W3000,frr,3,-2.13154266918747,-2.9126213592234,-1.2532915569481
+Figure 4,e,R10 sputum,nanodeep_upstream,Cp_minus_native_W3000,frr,3,-4.60439920537133,-9.6053114469689,-0.4246789427193
+Figure 4,e,R10 sputum,squigglenet,Cp_minus_native_W3000,frr,3,-3.6596675401205,-3.8357002106407,-3.3498883370554
+Figure 4,f,Simulated,readcurrent,Cp_minus_native_W3000,host_pore,3,-0.490863281782037,-0.77559898762134,-0.0201278526279802
+Figure 4,f,Simulated,nanodeep_upstream,Cp_minus_native_W3000,host_pore,3,-0.657866316772757,-0.85262188611351,-0.54622482965315
+Figure 4,f,Simulated,squigglenet,Cp_minus_native_W3000,host_pore,3,-0.197084825805763,-0.37279887438307,0.11260091247036
+Figure 4,f,R9,readcurrent,Cp_minus_native_W3000,host_pore,3,-0.320235063532443,-0.44819819918449,-0.12241299230463
+Figure 4,f,R9,nanodeep_upstream,Cp_minus_native_W3000,host_pore,3,-0.41280260896265,-0.58224958777574,-0.32550337997315
+Figure 4,f,R9,squigglenet,Cp_minus_native_W3000,host_pore,3,-0.618927454675597,-0.69455554450891,-0.53584772834334
+Figure 4,f,R10 mixed,readcurrent,Cp_minus_native_W3000,host_pore,3,-0.23736372523387,-0.59815206831403,0.0342708709304702
+Figure 4,f,R10 mixed,nanodeep_upstream,Cp_minus_native_W3000,host_pore,3,-0.02138157575933,-0.06251568638393,0.0145236318816599
+Figure 4,f,R10 mixed,squigglenet,Cp_minus_native_W3000,host_pore,3,-0.392412295839217,-0.45187661683869,-0.3570411661794
+Figure 4,f,R10 sputum,readcurrent,Cp_minus_native_W3000,host_pore,3,-0.122712938292783,-0.25363611269717,-0.02857829028701
+Figure 4,f,R10 sputum,nanodeep_upstream,Cp_minus_native_W3000,host_pore,3,-0.274307581114893,-0.51080125011229,0.01687212137778
+Figure 4,f,R10 sputum,squigglenet,Cp_minus_native_W3000,host_pore,3,-0.122574770314513,-0.19953314516569,-0.00945267419260998

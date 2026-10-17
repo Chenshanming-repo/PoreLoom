@@ -1,0 +1,5 @@
+{
+  "written": "2026-10-15 08:44:34, before any ablation result on full data (steps jobs cancelled before their first result)",
+  "change": "Forced look capped at the budget, as the default method caps StreamR0 at 7500 samples. budget_B: the forced look (first arrival >= B) is now scored on exactly the first B samples (it had used every sample received by that arrival, up to B + one chunk). window_cp / window_thr: the window is raw[e-1500:e], e = min(n, 7500) (had been raw[n-1500:n], past 7500 at the forced look). method/head.extract(budget=B) encodes at min(n, B); for the default B = 7500 this is identical (StreamR0 caps n at min(read length, 7500)). Steps jobs 20381107-129 cancelled, caches removed, resubmitted. Found when the user asked whether the head trains to the budget.",
+  "smoke": "sputum_g1 3000-read subset: budget 3000 ACC 88.8 -> 85.6 after the fix"
+}

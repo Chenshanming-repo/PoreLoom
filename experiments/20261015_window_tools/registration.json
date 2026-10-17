@@ -1,0 +1,9 @@
+{
+  "written": "2026-10-15, before any job",
+  "request": "tool networks (ReadCurrent/NanoDeep/SquiggleNet) replace stage A and StreamR0, ell output directly, window 1000 trained within raw[1500:7500], compare the effect of streaming; recipe/normalization = unified",
+  "window_net": "native tool architecture incl. classifier, random init seed 20261009+r, stage A recipe (AdamW 1e-3, wd 1e-4, batch 128, clip 1, 30 epochs, best DEV-A CE), MAD-normalized 1000-sample grid windows raw[1500+1000k:2500+1000k], k<6",
+  "looks": "0.4 s arrivals, ell of the latest 1000 samples ending at min(n,7500); first at raw 2500",
+  "head": "default C-p, 7 buckets of 768 from stream length 1000 + forced; beta by max DEV-B ACC",
+  "primary": "TEST 0.4 s nominal; paired bootstrap 2000 seed 20261015: PoreLoom(stream) - tool window+C-p (effect of streaming); tool window+C-p - tool native single window",
+  "units": "12 (r10 x3, r9 r0-r2, sim x3, sputum x3) x 3 tools = 36 jobs; pilot sputum_g1 r0 squigglenet"
+}
