@@ -42,7 +42,7 @@ SOURCES = [
 
 CAPTION = """Figure 1. PoreLoom performs streaming adaptive sampling directly from raw nanopore current.
 
-(a) Current arrives in successive chunks. After skipping the first 1,500 raw samples, normalization uses past signal statistics regularized toward a training-set prior. The streaming encoder updates evidence for an adaptive policy, which selects Accept (sequence the read to its natural end without further classification), Reject (request ejection), or Continue (retain the read state and await more signal). The blue return arrow denotes the arrival of another chunk from the same read. At the first eligible callback reaching the configured raw endpoint N, only Accept or Reject is available. The default N = 7,500 leaves at most 6,000 usable samples after prefix skipping. The sampling rate f_s defaults to 4,000 Hz; N and f_s are supplied at the entrypoint and stored with the trained model. A time budget T can instead specify N = floor(T f_s), including the skipped prefix. Forced action occurs at the first eligible callback reaching N, with command completion also subject to arrival and service delays. The small b and c labels identify the expanded components below.
+(a) Current arrives in successive chunks. After skipping the first 1,500 raw samples, causal normalization scales the signal in blocks of 480 samples. The inset shows block j (white) scaled with the median and MAD of the preceding blocks (teal). The streaming encoder updates evidence for an adaptive policy, which selects Accept (sequence the read to its natural end without further classification), Reject (request ejection), or Continue (retain the read state and await more signal). The blue return arrow indicates that Continue keeps the read's streaming-encoder state, which is updated when the next chunk of the same read arrives. At the first eligible callback reaching the configured raw endpoint N, only Accept or Reject is available. The default N = 7,500 leaves at most 6,000 usable samples after prefix skipping. The sampling rate f_s defaults to 4,000 Hz; N and f_s are supplied at the entrypoint and stored with the trained model. A time budget T can instead specify N = floor(T f_s), including the skipped prefix. Forced action occurs at the first eligible callback reaching N, with command completion also subject to arrival and service delays. The small b and c labels identify the expanded components below.
 
 (b) The streaming encoder uses the ReadCurrent convolutional architecture. The stem consists of a 32-channel Conv1D (kernel 19, stride 3), batch normalization, ReLU, MaxPool (kernel 2, stride 2), and a 64-channel Conv1D (kernel 3). Four residual stages contain 5, 5, 2 and 2 blocks with 64, 128, 256 and 512 channels, respectively; each block contains two kernel-3 convolutions with batch normalization and a residual connection. Labels give channels and block repetitions. MaxPool (kernel 3, stride 2) follows each of the first three stages. The feature-map stacks and residual shortcuts depict these operations schematically. Global mean pooling produces a 512-dimensional vector, followed by a 512-to-128 linear projection, LayerNorm, GELU, and a 128-to-2 linear classifier, grouped as the MLP. Circles illustrate the fully connected layers; the numbers below them give their actual widths. The blue branch uses the aligned raw-signal endpoint n_tilde = 1,500 + 48 floor((n - 1,500)/48), where n = min(n_received, N) is the observed length used in panel c and all lengths are measured in sample points. At eligible decisions, n and n_tilde differ by at most 47 samples; for example, n = 3,000 gives n_tilde = 2,988. The branch forms phi(n_tilde) = [n_tilde/N, log(1+n_tilde/f_s)] and applies a learned 2-to-2 affine layer. With z_signal denoting the two CNN/MLP logits, z_final = z_signal + W_n phi(n_tilde) + b_n, followed by ell = z_final,target - z_final,host. This length term is learned during streaming encoder training so that class scores explicitly account for prefix length. Here f_s is the configured sampling rate, also used to convert sample counts to seconds. The adjacent cache diagram shows two successive updates, t and t+1. Pale teal denotes contributions of already finalized frames, dark teal denotes newly finalized frames, and gold denotes the boundary-dependent tail that is recomputed. The state retains accumulated feature sums and frame counts, rather than a history of all intermediate activations. New final-frame sums are added to the stable sum; the current tail sum is replaced. Their combined sum divided by their combined count gives the global mean. New frames are computed from overlapping signal windows with enough left context; at sufficient prefix length the recomputed tail contains 11 frames. Each read has its own state. Frame counts and drawn neurons are schematic.
 
@@ -152,12 +152,25 @@ def draw(out):
     for i, col in enumerate([C["pale"], C["blue_light"], C["teal_light"]]):
         ax.add_patch(Rectangle((240 + i * 70, 150), 67, 78, fc=col, ec="none", zorder=0))
     signal(246, 190, 195, 62, seed=13, steps=30)
-    box(482, 145, 238, 90, "Normalize", color="blue", size=30)
+    box(476, 72, 260, 244, color="blue", gid="panel_a_causal_normalization")
+    text(606, 118, "Causal\nnormalization", size=30, ha="center")
+    # Blocks of 10p samples: block j (white) is scaled with statistics of the
+    # preceding blocks (teal).
+    for i in range(3):
+        current = i == 2
+        ax.add_patch(Rectangle((494 + i * 75, 172), 75, 44, zorder=2,
+                               fc="white" if current else C["teal_light"],
+                               ec=C["blue"] if current else C["teal"], lw=1.0 if current else 0.6))
+    signal(498, 194, 217, 34, seed=7, steps=24)
+    line([(496, 222), (496, 230), (642, 230), (642, 222)], C["teal"], lw=0.8)
+    arrow([(569, 230), (569, 252), (681, 252), (681, 218)], color=C["blue"], ms=4.5,
+          gid="panel_a_block_scale")
+    text(606, 284, "median, MAD", size=28, ha="center")
     box(768, 145, 200, 90, "Streaming\nencoder", size=30)
     box(1016, 145, 200, 90, "Adaptive\npolicy", color="purple", size=30)
     text(868, 114, "b", size=30, ha="center", color=C["teal"], weight="bold")
     text(1116, 114, "c", size=30, ha="center", color=C["purple"], weight="bold")
-    for x1, x2 in [(450, 474), (728, 760), (976, 1008)]:
+    for x1, x2 in [(450, 468), (742, 760), (976, 1008)]:
         arrow([(x1, 190), (x2, 190)])
 
     for y, label, col in [(72, "Accept", "teal"), (159, "Reject", "coral"), (246, "Continue", "blue")]:
@@ -171,7 +184,7 @@ def draw(out):
             line([(end - 6, y + 39), (end + 6, y + 23)], C[col], lw=1.3)
         elif label == "Continue":
             circle(end, y + 31, 6, "white", C[col], lw=1)
-    arrow([(1362, 315), (1362, 337), (341, 337), (341, 238)], color=C["blue"], lw=1)
+    arrow([(1362, 315), (1362, 337), (868, 337), (868, 238)], color=C["blue"], lw=1)
     line([(32, 367), (1568, 367)], lw=0.6)
 
     # b — explicit CNN, an adjacent cache state, and a dense readout.
@@ -334,6 +347,7 @@ def draw(out):
     circle(930, 1035, 8, C["blue"]).set_gid("panel_c_continue_result")
     arrow([(993, 1035), (945, 1035)], color=C["blue"], ms=4.5)
     arrow([(915, 1035), (868, 1035), (868, 500), (892, 500)], color=C["blue"], lw=1)
+    text(848, 768, "Wait for next chunk", size=26, color=C["blue"], ha="center", rotation=90)
 
     # Verification concerns the exported artwork, not a new unit-test suite.
     fig.canvas.draw()

@@ -100,7 +100,7 @@ def save_bar_figure(fig, name, expected_bars, point_axes=()):
 
 
 def main_figure():
-    d, w, iy = data('main'), data('window_extensions'), data('icarust')
+    d, w, iy = data('main_length_matched'), data('window_length_matched'), data('icarust_extended')
     fig, axes = plt.subplots(3, 2, figsize=(6.5, 6.4))
     methods = [('poreloom', 'streaming')] + [(m, v) for m in MS[1:] for v in ['w3000', 'w6000']]
     bar_width, tool_gap = .09, .055
@@ -134,19 +134,20 @@ def main_figure():
     axes[1, 0].set_ylim(0, 4.5)
     a = axes[1, 1]
     panel(a, 'd')
-    for mi, method in enumerate(MS):
+    for mi, (method, variant) in enumerate(methods):
         strategy = 'PoreLoom' if method == 'poreloom' else 'nanodeep' if method == 'nanodeep_upstream' else method
+        if variant == 'w6000':
+            strategy += '_w6000'
         for fi, fraction in enumerate([10, 100, 300]):
             q = iy[(iy.strategy == strategy) & (iy.permille == fraction)]
-            variant = 'streaming' if method == 'poreloom' else 'w3000'
             mean, err = bar_summary(q.relative_yield, 'Figure 2', 'd', f'{fraction/10:g}%', method, variant, 'relative_yield')
-            a.bar(fi+(mi-1.5)*.18, mean, width=.15,
-                  facecolor=COL[method] if method == 'poreloom' else 'white',
-                  edgecolor=COL[method], linewidth=.85, zorder=3,
-                  yerr=err, error_kw=dict(ecolor='#4F565B', elinewidth=.6, capsize=1.6, capthick=.6))
+            a.bar(fi+offsets[mi], mean, width=bar_width,
+                  facecolor='white' if variant == 'w3000' else COL[method],
+                  edgecolor=COL[method], linewidth=.8, zorder=3,
+                  yerr=err, error_kw=dict(ecolor='#4F565B', elinewidth=.55, capsize=1.2, capthick=.55))
     a.axhline(1, color='#858C91', ls='--', lw=.8, zorder=4)
     a.set(xticks=range(3), xticklabels=['1', '10', '30'], xlabel='Input target fraction (%)',
-          ylabel='Relative target yield', ylim=(0, 9))
+          ylabel='Relative target yield', ylim=(0, 9), xlim=(-.53, 2.53))
     prefix, positions = data('fixed_prefix'), data('decision_position_cdf')
     prefix_lengths = [432, 768, 1200, 1968, 3000, 4464, 6000]
     prefix = prefix[prefix.usable_samples.isin(prefix_lengths)]
@@ -177,14 +178,15 @@ def main_figure():
                bbox_to_anchor=(.5, .375), ncol=4, frameon=False, columnspacing=1.0, handlelength=1.1)
     bar_method_legend(fig, MS, NAMES, COL, 1)
     fig.legend([Patch(facecolor='white', edgecolor='#555555'), Patch(facecolor='#777777', edgecolor='#777777')],
-               ['3000-sample window (a-d)', '6000-sample window (a-c)'],
+               ['3000-sample window (a-d)', '6000-sample window (a-d)'],
                loc='upper center', bbox_to_anchor=(.5, .962), ncol=2,
                frameon=False, columnspacing=1.5, handlelength=1)
     fig.subplots_adjust(left=.105, right=.985, bottom=.135, top=.895, hspace=.72, wspace=.37)
-    save_bar_figure(fig, 'fig02_overall', 96, point_axes=(axes[2, 0],))
+    save_bar_figure(fig, 'fig02_overall', 105, point_axes=(axes[2, 0],))
     BAR_CHECKS[-1]['accuracy_curve_samples'] = prefix_lengths
+    BAR_CHECKS[-1]['comparison_population'] = 'Panels a-c: identical raw_length >= 7500 TEST read IDs for PoreLoom and both baseline window lengths within each unit; panels d-f retain their original populations.'
     BAR_CHECKS[-1]['decision_cdf_support'] = 'Union of observed decision positions; unit CDFs carried forward before equal averaging'
-    BAR_CHECKS[-1]['bar_grouping'] = dict(panels='a-c', window_pair_gap=0,
+    BAR_CHECKS[-1]['bar_grouping'] = dict(panels='a-d', window_pair_gap=0,
                                     tool_gap=tool_gap, bar_width=bar_width,
                                     dataset_group_gap=1-cursor)
 
@@ -241,11 +243,16 @@ def decision_figure():
     paired = native.pivot(index=['unit', 'family', 'method'], columns='state', values=['acc', 'host_reject', 'frr', 'host_pore'])
     delta = pd.DataFrame({m: paired[m]['C-p']-paired[m]['Native'] for m in ['acc', 'host_reject', 'frr', 'host_pore']}).reset_index()
     delta.to_csv(ROOT/'figure_data/native_cp_deltas.csv', index=False, float_format='%.15g')
+    metrics = ['acc', 'host_reject', 'frr', 'host_pore']
+    poreloom = d[d.variant == 'main'].assign(method='poreloom', state='Original')
+    comparison = pd.concat([poreloom, native[native.state == 'C-p']], ignore_index=True)
+    comparison = comparison[['unit', 'family', 'method', 'state']+metrics]
+    comparison.to_csv(ROOT/'figure_data/native_cp_comparison.csv', index=False, float_format='%.15g')
     fig, axes = plt.subplots(2, 3, figsize=(6.5, 4.95))
     for row, frame, methods, colors, keycol, letters in [
             (0, d, list(PC), PC, 'variant', 'abc'),
-            (1, delta, MS[1:], COL, 'method', 'def')]:
-        labels = ['Host rejection (%)', 'Target FRR (%)', 'Host occupancy (s)'] if row == 0 else ['ΔHost rejection (pp)', 'ΔTarget FRR (pp)', 'ΔHost occupancy (s)']
+            (1, comparison, MS, COL, 'method', 'def')]:
+        labels = ['Host rejection (%)', 'Target FRR (%)', 'Host occupancy (s)']
         for col, (metric, scale, label, letter) in enumerate(zip(['host_reject', 'frr', 'host_pore'], [100, 100, 1], labels, letters)):
             a = axes[row, col]
             panel(a, letter)
@@ -257,7 +264,7 @@ def decision_figure():
                 for mi, method in enumerate(methods):
                     q = frame[(frame[keycol] == method) & (frame.family == family)]
                     mean, err = bar_summary(q[metric] * scale, 'Figure 4', letter, family, method,
-                                        'same_encoder' if row == 0 else 'Cp_minus_native_W3000', metric)
+                                        'same_encoder' if row == 0 else 'original_PoreLoom' if method == 'poreloom' else 'W3000_with_FACP', metric)
                     y = fi+(mi-(len(methods)-1)/2)*.21
                     a.barh(y, mean, height=.15, color=colors[method], edgecolor='none', zorder=3,
                            xerr=err, error_kw=dict(ecolor='#3F484E', elinewidth=.65, capsize=1.2, capthick=.6))
@@ -266,19 +273,16 @@ def decision_figure():
             a.tick_params(axis='y', length=0, pad=7)
             a.spines['left'].set_visible(False)
             a.xaxis.set_major_locator(MaxNLocator(nbins=3))
-            if row == 0:
-                a.set_xlim(left=0)
-            else:
-                a.axvline(0, color='#8D969C', lw=.8, zorder=4)
+            a.set_xlim(left=0)
     axes[0, 0].set(xlim=(0, 103), xticks=[0, 50, 100])
     axes[0, 1].set(xlim=(0, 11.2), xticks=[0, 5, 10])
     axes[0, 2].set(xlim=(0, 2.9), xticks=[0, 1, 2])
+    axes[1, 0].set(xlim=(0, 103), xticks=[0, 50, 100])
     bar_method_legend(fig, list(PC), [PN[k] for k in PC], PC, 1)
-    bar_method_legend(fig, MS[1:], NAMES[1:], COL, .525)
-    fig.text(.5, .015, 'Bars: mean; whiskers: min-max of 3 units (not confidence intervals)',
-             ha='center', va='bottom', fontsize=8, color='#586168')
-    fig.subplots_adjust(left=.17, right=.985, bottom=.145, top=.875, hspace=.95, wspace=.23)
-    save_bar_figure(fig, 'fig04_decisions', 84)
+    bar_method_legend(fig, MS, [NAMES[0]]+[name+'\n+ FACP' for name in NAMES[1:]], COL, .545)
+    fig.subplots_adjust(left=.17, right=.985, bottom=.11, top=.875, hspace=.95, wspace=.23)
+    save_bar_figure(fig, 'fig04_decisions', 96)
+    BAR_CHECKS[-1]['comparison_population'] = 'Panels d-f: identical all-read TEST populations, including short reads, for original PoreLoom and the three W3000 baselines equipped with FACP.'
 
 
 def budget_figure():

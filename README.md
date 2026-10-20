@@ -2,24 +2,78 @@
 
 Streaming adaptive decisions for selective nanopore sequencing from raw signals.
 
-PoreLoom reads raw nanopore signal as chunks arrive and, at each callback, chooses to Accept, Reject, or Continue for
-every read. All model parameters are fixed during inference. The method has three parts:
+Fixed-window classifiers wait for the same amount of signal on every read. PoreLoom instead reads raw signal as chunks
+arrive and, at each callback, chooses Accept, Reject, or Continue for each read. Reads whose origin is already clear are
+decided early, while uncertain reads keep observing up to a maximum budget.
 
-- Causal normalization and a streaming convolutional encoder. Each 480-sample block is normalized using only the
-  preceding signal, so earlier blocks never change. The backbone follows the ReadCurrent architecture and is trained on
-  streaming prefixes after window pretraining.
-- An encoder cache. Finalized feature frames are kept as a running sum and count, and only the frames that depend on the
-  current right boundary are recomputed.
-- The factorized action-cost policy (FACP). For each action, a length-bucketed head predicts host pore occupancy and
-  target-rejection risk from a short history of the target-minus-host logit. The policy picks the action with the
-  lowest estimated cost. Heads are fitted backward from the forced decision, and the penalty is selected on DEV-B.
+<p align="center">
+  <img src="docs/poreloom_overview.png" width="900" alt="PoreLoom overview">
+</p>
 
-By default the first 1500 samples are skipped and the usable budget is 6000 samples, so the forced decision falls at
-7500 samples. Across simulated, R9, R10 computational-mixture, and R10 sputum data, PoreLoom reaches mean host rejection
-of 90.58–95.73% and has shorter mean host pore occupancy than ReadCurrent, NanoDeep, and SquiggleNet at 3000- and
-6000-sample windows. Among completed decisions, 36.68–73.93% occur within 3000 usable samples. The target
-false-rejection rate is higher than that of some alternatives, for example the 6000-sample NanoDeep model on R9 and R10
-mixed data, and it increases for held-out taxa.
+**Overview.** (a) Each chunk passes through causal normalization and a streaming encoder. Each block (white) is scaled
+with the median and MAD of the preceding blocks (teal). Accept sequences the read to its natural end, Reject requests
+ejection, and Continue waits for the next chunk. (b) A ReadCurrent-derived backbone reuses cached features as the prefix
+grows and recomputes only those near its right boundary. Pooling and a length correction give the target-minus-host
+logit. (c) The current, previous, and minimum logits, the observed length, and the look count are passed to a
+length-specific head, which predicts host occupancy and target-rejection risk for each action. The forced head at the
+budget endpoint excludes Continue.
+
+## Method
+
+- **Causal normalization.** After the first 1500 samples are skipped, the signal is scaled in blocks of 480 samples.
+  Each block uses the median and MAD of the preceding signal, averaged with training-set values early in a read when
+  few samples are available. Values more than 3.5 standard deviations from the median are replaced by the most recent
+  inlier. Normalized values never change once computed and do not depend on how the signal is split into chunks.
+- **Streaming encoder with feature reuse.** The backbone follows the ReadCurrent architecture, is initialized by window
+  pretraining, and is then trained on streaming prefixes of many lengths. Finalized feature frames are kept as a running
+  sum and count, and only the frames affected by the right boundary are recomputed.
+- **Factorized action-cost policy (FACP).** For each action, a head selected by the observed length predicts the
+  normalized host pore occupancy and the target-rejection risk. The policy chooses the action with the lowest
+  `occupancy + beta * risk`. Heads are fitted backward from the forced decision, and `beta` is selected on DEV-B.
+
+By default the usable budget is 6000 samples, so the forced decision falls at 7500 raw samples (1.875 s at 4 kHz).
+
+## Results
+
+All numbers come from offline replay of recorded TEST reads at 0.4-s callbacks, averaged over three units per data
+family. The comparison below uses, for every method, the same TEST reads that are long enough (at least 7500 raw
+samples) for the 6000-sample baselines to decide.
+
+| Family | PoreLoom host rejection | PoreLoom target FRR | PoreLoom host occupancy | 6000-sample baselines: host rejection / target FRR / host occupancy |
+|---|---|---|---|---|
+| Simulated | 96.36% | 4.38% | 1.975 s | 91.79–94.04% / 7.47–10.18% / 3.192–3.621 s |
+| R9 | 94.05% | 8.35% | 1.999 s | 82.84–87.28% / 7.82–10.53% / 2.982–3.453 s |
+| R10 mixed | 97.81% | 3.71% | 1.501 s | 92.37–95.49% / 2.34–7.88% / 2.836–3.485 s |
+| R10 sputum | 93.93% | 8.58% | 1.398 s | 87.81–91.66% / 10.89–13.03% / 2.167–2.327 s |
+
+Baselines are ReadCurrent, NanoDeep, and SquiggleNet retrained with 6000-sample windows; ranges span the three tools.
+
+- **Early decisions.** Among completed decisions, 50.15%, 36.68%, 73.93%, and 56.22% occur within 3000 usable samples
+  on simulated, R9, R10 mixed, and sputum data.
+- **Streaming encoding.** Compared with a sliding-window encoder from the same initialization, the streaming encoder
+  improves mean accuracy by 1.87–2.63 percentage points across the four families.
+- **Feature reuse.** On an RTX 2080 Ti, updating 512 reads at different prefix lengths after each 0.4 s of signal takes
+  141.3 ms with the cache versus 571.2 ms with full-prefix evaluation (4.0-fold). Cached and full-prefix logits differ
+  by at most 4.35e-6.
+- **Stopping rules.** On the same frozen encoder, FACP has lower mean host occupancy than length-calibrated thresholds
+  in all four families at similar host rejection, but higher target FRR in three of them.
+- **Larger budgets.** Retraining with an 18000-sample budget on R10 mixed group 1 raises mean accuracy from 95.58% to
+  96.25% while host occupancy falls from 1.610 to 1.369 s. A 12000-sample budget on sputum group 1 raises accuracy from
+  93.03% to 94.57%, with host occupancy rising from 1.333 to 1.399 s.
+- **Closed-loop simulation.** In Icarust runs with 512 channels for 1200 s, PoreLoom's retained target-base yield is
+  7.84, 4.88, and 2.62 times that of nonselective sequencing at 1%, 10%, and 30% targets, compared with at most 5.82,
+  4.07, and 2.40 for the 6000-sample baselines.
+
+### Limitations
+
+- Some baselines preserve targets better: the 6000-sample NanoDeep model has lower target FRR on R9 (7.82% vs 8.35%)
+  and R10 mixed data (2.34% vs 3.71%), with longer host occupancy.
+- Target FRR rises for taxa removed from training, and some genera have high FRR even when included.
+- Models do not transfer between datasets without retraining. Models trained on R10 mixed data and applied to sputum
+  reject 79.97% of targets on average, so PoreLoom currently requires matched training data.
+- The R10 mixed host and target reads come from separate sequencing runs, and the sputum data are a spiked
+  quality-control panel after host depletion.
+- All results come from replay of recorded signals and simulation; PoreLoom has not yet been run on a sequencing device.
 
 ## Installation
 
@@ -124,7 +178,7 @@ working directory and cluster settings.
 | Paper result | Scripts |
 |---|---|
 | Main comparison with 3000- and 6000-sample baselines (Fig. 2a–c) | `experiments/20261014_final/hpc/`, `summarize.py`; `experiments/20261016_window6000/win6000.py` |
-| Icarust target yield (Fig. 2d) | `experiments/20261014_final/icarust_run.py`, `icarust_live.py` |
+| Icarust retained target-base yield (Fig. 2d) | `experiments/20261014_final/icarust_run.py`, `icarust_live.py` |
 | Fixed-prefix accuracy (Fig. 2e) | `experiments/20261015_ablation/fixed_window.py` |
 | Decision positions (Fig. 2f) | `experiments/20261014_final/signal_budget.py`; `paper/scripts/signal_position_data.py` |
 | Streaming versus window encoder, stopping-rule controls (Figs. 3a,b and 4a–c) | `experiments/20261015_ablation/ablation.py` |

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from signal_position_data import prepare as prepare_signal_positions
 from read_case_data import prepare as prepare_read_cases
+from length_eligibility import prepare as prepare_length_eligibility
 ROOT = Path(__file__).resolve().parents[1]
 FINAL = ROOT/'results/final_20261014'
 BUDGET = ROOT/'results/budget_up_20261016/runs'
@@ -63,6 +64,9 @@ def main():
     d=write(pd.DataFrame(rows),'main'); assert len(d)==48 and len(seen)==12
     write(pd.DataFrame(pairs),'main_paired');write(pd.DataFrame(history),'window_extensions')
     means=write(d.groupby(['family','method'],sort=False)[['acc','frr','host_pore','host_reject']].mean().reset_index(),'main_means')
+    INPUTS.update(prepare_length_eligibility())
+    length_main=pd.read_csv(OUT/'main_length_matched.csv')
+    length_means=write(length_main.groupby(['family','method'],sort=False)[['acc','frr','host_pore','host_reject']].mean().reset_index(),'main_length_matched_means')
     ab=read(FINAL/'ablation/report.json'); rows=[]
     for u,rs in ab.items():
         for r in rs:
@@ -144,6 +148,49 @@ def main():
         q['frr']=r['target_command_reject']['value'];q['host_reject']=r['host_effective_reject']['value']
         iy.append(q)
     iy=write(pd.DataFrame(iy),'icarust');assert len(iy)==45
+    # Add the W6000 closed-loop runs without changing the original 45-run input.
+    extension=ROOT/'results/icarust_w6000_20261018'
+    extended=read(extension/'aggregate.json')['rows']
+    by_key={(r['seed'],r['permille'],r['strategy']):r for r in extended}
+    assert len(by_key)==len(extended)==72
+    for r in ir:
+        original=by_key[r['seed'],r['permille'],r['strategy']]
+        assert all(original[k]==v for k,v in r.items()), r['name']
+    extra=[r for r in extended if r['strategy'].endswith('_w6000')]
+    assert len(extra)==27
+    combined=[]
+    for r in ir+extra:
+        q={k:v for k,v in r.items() if not isinstance(v,(dict,list)) and k!='source'}
+        q['relative_yield']=r['yield_target_bp_per_channel_hour']/no[r['seed'],r['permille']]
+        q['frr']=r['target_command_reject']['value']
+        q['host_reject']=r['host_effective_reject']['value']
+        q['command_latency_p50']=r['command_latency_s']['p50']
+        combined.append(q)
+    ix=write(pd.DataFrame(combined),'icarust_extended')
+    simulator_names={'No-AS':'No-AS','PoreLoom':'PoreLoom','readcurrent':'ReadCurrent 3000',
+                     'readcurrent_w6000':'ReadCurrent 6000','nanodeep':'NanoDeep 3000',
+                     'nanodeep_w6000':'NanoDeep 6000','squigglenet':'SquiggleNet 3000',
+                     'squigglenet_w6000':'SquiggleNet 6000'}
+    summary=[]
+    for strategy,display in simulator_names.items():
+        for per in [10,100,300]:
+            group=ix[(ix.strategy==strategy)&(ix.permille==per)]
+            assert len(group)==3 and group.status.eq('complete').all()
+            summary.append(dict(strategy=strategy,method=display,permille=per,n=3,
+                relative_yield=group.relative_yield.mean(),yield_min=group.relative_yield.min(),
+                yield_max=group.relative_yield.max(),host_effective_reject=group.host_reject.mean(),
+                target_command_frr=group.frr.mean(),host_pore=group.host_mean_pore_seconds.mean(),
+                command_latency_p50=group.command_latency_p50.mean()))
+    simulator_summary=write(pd.DataFrame(summary),'icarust_summary')
+    # Register the new experimental settings and the independently checkable case.
+    for path in [extension/'plan.json',extension/'check.json']:
+        read(path)
+    for method in METHODS[1:]:
+        for name in ['selection.json','window.json']:
+            read(extension/'models'/f'{method}_r0'/name)
+    for path in (extension/'live').glob('*/read_outcomes.jsonl'):
+        INPUTS.add(str(path.relative_to(ROOT)))
+        read(path.parent/'manifest.json')
     # Supplement tables keep all units, avoiding false biological replication.
     for name,df in [('main',d),('encoder',a[a.variant.isin(['main','window_cp'])]),('stopping',a[a.variant.isin(['main','fixed_len','const_thr','calib_thr'])]),('native_cp',nc)]:
         q=df.copy();q['ACC']=100*q.acc;q['FRR']=100*q.frr;q['Host']=q.host_pore;q['Reject']=100*q.host_reject
@@ -156,13 +203,13 @@ def main():
             q['method']=q.method.map(NAMES)
             q['state']=q.state.map({'Native':'Single window','C-p':'FACP'})
             cols+=['state'];heads+=['Policy']
-        table(q,cols+['Reject','ACC','FRR','Host'],heads+[r'Host rej. (\%)',r'ACC (\%)',r'Target FRR (\%)','Host (s)'],name+'.tex',{'main':'Complete main comparison. Baselines are retrained with 6000-sample windows; PoreLoom uses the default 6000-sample budget.','encoder':'Encoding scheme comparison, with separately fitted factorized action-cost policies (FACP).','stopping':'Stopping rules on the same frozen streaming encoder.','native_cp':'Frozen 3000-sample baselines with single-window decisions or repeated sliding-window scoring and FACP.'}[name],'tab:s_'+name)
+        table(q,cols+['Reject','ACC','FRR','Host'],heads+[r'Host rej. (\%)',r'ACC (\%)',r'Target FRR (\%)','Host (s)'],name+'.tex',{'main':r'All-read operational comparison, including short reads. Baselines are retrained with 6000-sample windows; PoreLoom uses the default 6000-sample budget. The shared length-subset comparison used in Figure 2a--c is reported in Table~\ref{tab:s_length_main}.','encoder':'Encoding scheme comparison, with separately fitted factorized action-cost policies (FACP).','stopping':'Stopping rules on the same frozen streaming encoder.','native_cp':'Frozen 3000-sample baselines with single-window decisions or repeated sliding-window scoring and FACP.'}[name],'tab:s_'+name)
     q=b.copy();q['unit']=q.dataset.str.replace('r10_run01','Mixed',regex=False).str.replace('sputum_g1','Sputum',regex=False);q['ACC']=q.acc*100;q['FRR']=q.frr*100
     table(q,['unit','budget','replicate','ACC','FRR','host_pore'],['Data','Budget','Rep.',r'ACC (\%)',r'FRR (\%)','Host (s)'],'budget.tex','All maximum-budget training repeats. Budget excludes the skipped 1500 samples.','tab:s_budget')
     ci=lambda v,lo,hi,s,d: f'${s*v:+.{d}f}$ [${s*lo:+.{d}f}$, ${s*hi:+.{d}f}$]'
     q=pd.read_csv(OUT/'main_paired.csv');q['unit']=q.unit.map(publication_unit);q['method']=q.method.map(NAMES)
     q['dACC']=[ci(r.dacc,r.dacc_low,r.dacc_high,100,2) for r in q.itertuples()];q['dHost']=[ci(r.dpore,r.dpore_low,r.dpore_high,1,3) for r in q.itertuples()]
-    table(q,['unit','method','dACC','dHost'],['Unit','Baseline',r'$\Delta$ACC (pp) [95\% CI]',r'$\Delta$host (s) [95\% CI]'],'main_paired.tex','Paired differences between PoreLoom and each 6000-sample baseline (PoreLoom minus baseline) on the same TEST reads, with paired read-bootstrap intervals (2000 draws).','tab:s_main_paired')
+    table(q,['unit','method','dACC','dHost'],['Unit','Baseline',r'$\Delta$ACC (pp) [95\% CI]',r'$\Delta$host (s) [95\% CI]'],'main_paired.tex','All-read paired differences between PoreLoom and each 6000-sample baseline (PoreLoom minus baseline), including short TEST reads, with paired read-bootstrap intervals (2000 draws). These intervals describe the all-read operational comparison.','tab:s_main_paired')
     q=pd.read_csv(OUT/'window_extensions.csv');q=q[q.variant.isin(['w3000','cascade'])].copy();q['unit']=q.unit.map(publication_unit);q['method']=q.method.map(NAMES)
     q['variant']=q.variant.map({'w3000':'3000 window','cascade':'Cascade'});q['Reject']=100*q.host_reject;q['ACC']=100*q.acc;q['FRR']=100*q.frr
     table(q,['unit','method','variant','Reject','ACC','FRR','host_pore'],['Unit','Method','Variant',r'Host rej. (\%)',r'ACC (\%)',r'Target FRR (\%)','Host (s)'],'window_extensions.tex',r"Additional fixed-window baseline variants. ``3000 window'' is the original single-window model, and ``Cascade'' rescores the same model on up to three windows shifted by 1500 samples, deciding when DEV-B-selected thresholds are crossed. The 6000-sample models are in Table~\ref{tab:s_main}.",'tab:s_window_extensions')
@@ -179,6 +226,45 @@ def main():
         q['variant']=q.variant.map({'at5k':'5 kHz','at4k':'4 kHz','native':'Original'})
         q['ACC']=q.acc*100;q['FRR']=q.target_frr*100
         table(q,['src','tgt','variant','method','ACC','FRR','host_pore'],['Source','Test','Rate','Method',r'ACC (\%)',r'FRR (\%)','Host (s)'],f'transfer_{code}.tex',direction+'. Rates refer to test signals: resampled to the source rate or kept at their original rate.','tab:s_'+code)
+    # Shared length subset for Figure 2a--c; original all-read tables remain above.
+    q=pd.read_csv(OUT/'length_eligibility.csv').query("split == 'test'").copy()
+    q['unit']=q.dataset.map(lambda x: publication_unit(x+'/r0').split(' / ')[0])
+    q['Host']=q.host_coverage*100;q['Target']=q.target_coverage*100
+    q['Median']=q.target_median_samples/1000
+    table(q,['unit','n_host_eligible','n_target_eligible','Host','Target','Median'],
+          ['Data','Long hosts','Long targets',r'Host (\%)',r'Target (\%)',r'Target median (k)'],
+          'length_eligibility.tex','TEST coverage at raw length 7500 samples. Percentages use all reads of the corresponding class; target median length is in thousands of raw samples. R9 is one shared TEST set used for all three training repeats.','tab:s_length_eligibility')
+    q=length_main.copy();q['unit']=q.unit.map(publication_unit);q['method']=q.method.map(NAMES)
+    q['Reject']=100*q.host_reject;q['ACC']=100*q.acc;q['FRR']=100*q.frr
+    table(q,['unit','method','Reject','ACC','FRR','host_pore'],
+          ['Unit','Method',r'Host rej. (\%)',r'ACC (\%)',r'Target FRR (\%)','Host (s)'],
+          'length_main.tex',r'Shared length-subset main comparison. Every method uses the same TEST reads with raw length $\geq7500$ within each unit; all baselines here have 6000-sample windows. Read counts are given in Table~\ref{tab:s_length_eligibility}. No-command reads of sufficient length remain in the denominators.','tab:s_length_main')
+    q=pd.read_csv(OUT/'length_metrics.csv').query("dataset == 'r9'").copy()
+    q['method']=q.apply(lambda r: NAMES[r['method']]+(' '+r['variant'][1:] if r['variant'].startswith('w') else ''),axis=1)
+    q['scope']=q.scope.map({'all':'All','ge7500':'Long','lt7500':'Short'})
+    q['Reject']=100*q.host_reject;q['ACC']=100*q.acc;q['FRR']=100*q.frr
+    table(q,['replicate','method','scope','Reject','FRR','host_pore','ACC'],
+          ['Rep.','Method / window','Reads',r'Host rej. (\%)',r'FRR (\%)','Host (s)',r'ACC (\%)'],
+          'r9_length_strata.tex',r'R9 outcomes by read length, with the original DEV-B selections and 0.4-s callbacks. All: 20000 reads (10000 host, 10000 target); Long: raw length $\geq7500$, 15339 reads (8079 host, 7260 target); Short: raw length $<7500$, 4661 reads (1921 host, 2740 target). All repeats use these same reads.','tab:s_r9_length_strata')
+    yield_rows=[]
+    for strategy,display in simulator_names.items():
+        row={'method':display}
+        for per in [10,100,300]:
+            r=simulator_summary[(simulator_summary.strategy==strategy)&(simulator_summary.permille==per)].iloc[0]
+            row[str(per)]=f'{r.relative_yield:.2f} [{r.yield_min:.2f}, {r.yield_max:.2f}]'
+        yield_rows.append(row)
+    table(pd.DataFrame(yield_rows),['method','10','100','300'],
+          ['Strategy / window',r'1\% target',r'10\% target',r'30\% target'],
+          'icarust_yield.tex',r'Closed-loop relative target yield, reported as the mean [minimum, maximum] of three seed-matched ratios to nonselective sequencing. Each run uses 512 channels for 1200 s. Baseline labels give fixed window lengths in samples; PoreLoom uses a maximum usable budget of 6000 samples. These are simulator seeds, not training or biological replicates.','tab:s_icarust_yield')
+    q=simulator_summary.sort_values('permille',kind='stable').copy()
+    q['fraction']=q.permille.map(lambda x:f'{x/10:g}')
+    q['HostReject']=q.host_effective_reject.map(lambda x:f'{100*x:.2f}')
+    q['FRR']=q.target_command_frr.map(lambda x:f'{100*x:.2f}')
+    q['Host']=q.host_pore.map(lambda x:f'{x:.3f}')
+    q['Latency']=q.command_latency_p50.map(lambda x:f'{1000*x:.1f}')
+    table(q,['fraction','method','HostReject','FRR','Host','Latency'],
+          [r'Target (\%)','Strategy / window',r'Host eff. (\%)',r'FRR (\%)','Host (s)','Latency (ms)'],
+          'icarust_operations.tex',r'Closed-loop operational outcomes, averaged across three simulator seeds. Host eff. is effective host ejection; FRR is target command rejection; Host is mean host pore occupancy. Latency is the mean of the three within-run median command latencies, not a pooled median or decision time. The 6000-sample runs were acquired in a separate batch under different GPU load.','tab:s_icarust_operations')
     INPUTS.update(prepare_signal_positions())
     INPUTS.update(prepare_read_cases())
     inp=[dict(path=p,sha256=hashlib.sha256((ROOT/p).read_bytes()).hexdigest()) for p in sorted(INPUTS)]
@@ -189,9 +275,12 @@ def main():
         macros[k]=format(v,fmt);claims.append(dict(macro=k,value=float(v),display=macros[k],source=source,aggregation=rule))
     for fam,short in zip(FAMILIES,['Sim','Rnine','Mix','Sputum']):
         for m in METHODS:
-            r=means[(means.family==fam)&(means.method==m)].iloc[0]
+            r=length_means[(length_means.family==fam)&(length_means.method==m)].iloc[0]
             tag=dict(poreloom='PL',readcurrent='RC',nanodeep_upstream='ND',squigglenet='SN')[m]
-            for key,suffix,scale,fmt in [('acc','Acc',100,'.2f'),('host_reject','Reject',100,'.2f'),('frr','Frr',100,'.2f'),('host_pore','Pore',1,'.3f')]:macro(short+tag+suffix,r[key]*scale,fmt,'figure_data/main.csv',f'equal mean across 3 {fam} units')
+            for key,suffix,scale,fmt in [('acc','Acc',100,'.2f'),('host_reject','Reject',100,'.2f'),('frr','Frr',100,'.2f'),('host_pore','Pore',1,'.3f')]:macro(short+tag+suffix,r[key]*scale,fmt,'figure_data/main_length_matched.csv',f'equal mean across 3 {fam} units; all methods on shared raw_length >= 7500 TEST subset')
+    pl_rejection=length_means[length_means.method=='poreloom'].host_reject
+    macro('MainPLMinReject',pl_rejection.min()*100,'.2f','figure_data/main_length_matched.csv','minimum of four PoreLoom family means on shared length subset')
+    macro('MainPLMaxReject',pl_rejection.max()*100,'.2f','figure_data/main_length_matched.csv','maximum of four PoreLoom family means on shared length subset')
     prefix=pd.read_csv(OUT/'fixed_prefix.csv');positions=pd.read_csv(OUT/'decision_position_summary.csv')
     for fam,tag in zip(FAMILIES,['Sim','Rnine','Mix','Sputum']):
         for length,point in [(432,'Base'),(6000,'Max')]:
@@ -209,10 +298,12 @@ def main():
             for k,label,scale,fmt in [('acc','Acc',100,'.2f'),('frr','Frr',100,'.2f'),('host_pore','Pore',1,'.3f')]:macro(tag+point+label,rr[k].mean()*scale,fmt,'figure_data/budget.csv','mean across 3 training repeats on one fixed dataset')
     for per,tag in [(10,'One'),(100,'Ten'),(300,'Thirty')]:
         r=iy[(iy.strategy=='PoreLoom')&(iy.permille==per)];macro('Yield'+tag,r.relative_yield.mean(),'.2f','figure_data/icarust.csv','mean of 3 seed-matched ratios to No-AS')
+        r=simulator_summary[(simulator_summary.strategy.str.endswith('_w6000'))&(simulator_summary.permille==per)]
+        macro('YieldWsixBest'+tag,r.relative_yield.max(),'.2f','figure_data/icarust_summary.csv','maximum W6000 baseline mean across 3 seed-matched ratios to No-AS')
     for di,tag in [('Sputum to mixed','Forward'),('Mixed to sputum','Reverse')]:
         r=ts[(ts.direction==di)&(ts.primary)&(ts.method=='poreloom')]
         for k,suf,sc in [('acc','Acc',100),('target_frr','Frr',100),('host_reject','Host',100)]:macro('Transfer'+tag+suf,r[k].mean()*sc,'.2f','figure_data/transfer_all.csv','descriptive mean of 9 dependent source/test combinations')
     (ROOT/'numbers.tex').write_text('% Generated by scripts/prepare_results.py\n'+'\n'.join(chr(92)+'newcommand{'+chr(92)+k+'}{'+v+'}' for k,v in macros.items())+'\n')
     (ROOT/'provenance/numerical_claims.json').write_text(json.dumps(claims,indent=2)+'\n')
-    print(json.dumps(dict(main=len(d),budget=len(b),native_cp=len(nc),lso=len(l),transfer=len(ts),icarust=len(iy),timing=len(tr),input_files=len(inp)),indent=2))
+    print(json.dumps(dict(main=len(d),budget=len(b),native_cp=len(nc),lso=len(l),transfer=len(ts),icarust=len(iy),icarust_extended=len(ix),timing=len(tr),input_files=len(inp)),indent=2))
 if __name__=='__main__':main()
