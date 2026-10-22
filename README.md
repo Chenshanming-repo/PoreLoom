@@ -96,8 +96,8 @@ The complete table is Table 2 of the paper.
 ## Installation
 
 ```bash
-conda env create -f env/readcurrent.yml   # Python 3.9, PyTorch 1.12.1
-conda activate readcurrent
+conda env create -f env/poreloom.yml      # Python 3.9, PyTorch 1.12.1
+conda activate poreloom
 pip install -e .                          # add [raw] for BLOW5 input (pyslow5), [dev] for pytest
 ```
 

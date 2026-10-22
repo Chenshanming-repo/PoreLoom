@@ -1,5 +1,5 @@
-# 训练 / 评估环境（对应现有 conda env: readcurrent）
-name: readcurrent
+# Training / evaluation environment for PoreLoom
+name: poreloom
 channels: [pytorch, conda-forge, defaults]
 dependencies:
   - python=3.9
