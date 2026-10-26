@@ -1,12 +1,10 @@
-"""Chunk-arrival replay: arrival arithmetic, equivalence with ReplayEnv in compatibility mode, threshold rules."""
+"""Chunk-arrival replay: arrival arithmetic, processing delays, and threshold rules."""
 import numpy as np
 import pytest
 
-from poreloom.chunk_replay import (NO_DECISION, arrivals, available_at, calibrated_thresholds, paired_mean_difference,
+from poreloom.chunk_replay import (NO_DECISION, arrivals, available_at, calibrated_thresholds,
                                    replay, threshold_actions)
-from poreloom.contracts import Action, ReadRecord
-from poreloom.costs import CostConfig, TimingConfig
-from poreloom.replay import ReplayEnv
+from poreloom.contracts import Action
 
 A, R, D = int(Action.ACCEPT), int(Action.REJECT), int(Action.DEFER)
 
@@ -18,42 +16,6 @@ def test_available_at_and_arrivals():
     grid = arrivals(np.array([0., 900.]), 1600., 4000)
     np.testing.assert_array_equal(grid[0], [0, 1600, 3200, 4800])
     np.testing.assert_array_equal(grid[1, :3], [900, 2500, 4100]) and np.isnan(grid[1, 3])
-
-
-SERVICE = dict(preprocessing_seconds=.001, encoder_seconds=.006, gru_seconds=.0002, head_seconds=.0001)
-
-
-def replay_env(raw_length, script):
-    timing = TimingConfig(eject_latency_seconds=.1, **SERVICE)
-    env = ReplayEnv(ReadRecord('r', False, raw_length, np.ones(4, bool)), timing, CostConfig(), max_windows=4)
-    obs = env.reset()
-    for action in script:
-        if obs is None: break
-        obs, _ = env.step(action)
-    return env.outcome
-
-
-@pytest.mark.parametrize('raw_length,script', [
-    (20000, [R]), (20000, [A]), (20000, [D, D, R]), (20000, [D, D, D, A]), (20000, [D, D, D, R]),
-    (3030, [R]),            # decision completes, eject does not
-    (3010, [R]),            # read ends while the decision is in flight
-    (5000, [D, D, R]),      # read ends before window 3 exists
-    (2000, []),             # shorter than the first window
-])
-def test_compatibility_mode_matches_replay_env(raw_length, script):
-    want = replay_env(raw_length, script)
-    window, head = sum(SERVICE.values()) - SERVICE['head_seconds'], SERVICE['head_seconds']
-    times, starts, actions, previous = [], [], [], 0.
-    for k in range(1, 5):
-        start = max(previous, available_at(1500 + 1500*k)); previous = start + window + head
-        starts.append(start); times.append(previous); actions.append(script[k - 1] if k <= len(script) else NO_DECISION)
-    got = replay(np.array([times]), np.array([actions]), np.array([starts]), (window, head), np.array([raw_length/4000]))
-    assert (got['command'][0], got['effective_reject'][0]) == (want.command_issued, want.effective_reject)
-    assert got['command_reject'][0] == want.command_reject
-    assert got['pore_seconds'][0] == pytest.approx(want.pore_seconds, abs=1e-12)
-    if want.decision_seconds is None: assert np.isnan(got['decision_seconds'][0])
-    else: assert got['decision_seconds'][0] == pytest.approx(want.decision_seconds, abs=1e-12)
-    assert got['compute_seconds'][0] == pytest.approx(want.compute_seconds, abs=1e-12)
 
 
 def test_chunk_mode_waits_for_the_next_arrival():
@@ -73,12 +35,6 @@ def test_threshold_actions():
     np.testing.assert_array_equal(out['steps'], [2, 3, 1])
     np.testing.assert_array_equal(out['command_reject'], [True, True, False])
     np.testing.assert_allclose(out['compute_seconds'], [.03, .04, .02])
-
-
-def test_paired_mean_difference():
-    old = np.arange(10.); new = old - 1
-    got = paired_mean_difference(new, old, np.ones(10, bool), reps=200)
-    assert got['delta'] == -1 and got['ci'] == [-1, -1]
 
 
 def test_calibrated_thresholds_take_the_nearest_lower_length():

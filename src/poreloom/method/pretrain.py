@@ -5,8 +5,6 @@ Stage A  PoreLoom window encoder = CNN (method.backbone, ReadCurrent architectur
          read and epoch (windows from raw[1500:], each MAD-normalized): AdamW lr 1e-3 for every weight, weight decay
          1e-4, batch 128, 30 epochs; the epoch with the lowest DEV-A read-normalized window cross entropy is kept
          (stage_A.pt: model_state, temporary_head).
-This is the recipe chosen by the 2026-10-14 ablation (variant a1, experiments/20261014_method_ablation): an earlier
-stage 0 window-classifier pretraining with a short stage A (lr 1e-4, 5 epochs) was 2.85 pp ACC worse on the sputum TEST.
 """
 import json
 import time

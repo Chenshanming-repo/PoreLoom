@@ -22,6 +22,8 @@ def _upstream():
 
 
 def test_vendored_backbone_matches_upstream():
+    if not (THIRD_PARTY/'ReadCurrent/models/ReadCurrent.py').is_file():
+        pytest.skip('upstream ReadCurrent source not installed')
     torch.manual_seed(7); ours = window_classifier()
     torch.manual_seed(7); theirs = _upstream()
     a, b = ours.state_dict(), theirs.state_dict()
@@ -102,6 +104,10 @@ def test_head_selection_rules():
 def test_baseline_runner_cpu(tmp_path, tool, recipe):
     from poreloom.method import baselines, native_policy
     from poreloom.data import file_sha256
+    source = {'readcurrent': 'ReadCurrent/models/ReadCurrent.py', 'nanodeep': 'NanoDeep/read_deep/model/nanodeep.py',
+              'squigglenet': 'SquiggleNet/model.py'}[tool]
+    if not (THIRD_PARTY/source).is_file():
+        pytest.skip(f'upstream {tool} source not installed')
     for split, seed, n in (('train', 1, 48), ('dev', 2, 64), ('test', 4, 32)):
         d, out = _prefix(n, seed=seed), tmp_path/'data'/split
         out.mkdir(parents=True); np.save(out/'adc.npy', d.adc)
@@ -115,6 +121,7 @@ def test_baseline_runner_cpu(tmp_path, tool, recipe):
     finally:
         baselines.TRAINING.update(epochs=100, batch_size=128, eval_batch=128); baselines.UPSTREAM['nanodeep'].update(epochs=30)
     m = json.loads((tmp_path/'run'/'test'/'metrics.json').read_text())
-    assert native_policy.FS == 5000. and {r['rule'] for r in m['rows']} == {'native', 'max_acc', 'op1'}
+    assert native_policy.FS == 5000. and {r['rule'] for r in m['rows']} == {'native', 'max_acc'}
+    assert {(r['interval'], r['service']) for r in m['rows']} == {(.4, 'measured')}
     o = np.load(tmp_path/'run'/'test'/'outcomes_max_acc_0.4_measured.npz')
     assert np.all(o['pore_seconds'] <= np.load(tmp_path/'data'/'test'/'metadata.npz')['raw_length']/5000 + 1e-9)

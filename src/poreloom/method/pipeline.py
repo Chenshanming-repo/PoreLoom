@@ -6,7 +6,7 @@ Stages (each skips when its output exists; run them in order or use `all`):
   stageA   window encoder (CNN + projection) from a seeded random init on 1500-sample windows   -> stageA/stage_A.pt
   stream   StreamR0 (streaming encoder, causal normalizer, time term) from stage A, S1 recipe  -> stream/best.pt
   head     C-p action heads over the beta grid on DEV-A looks, beta by max DEV-B ACC (locked)  -> head/selection.json
-  test     replay on TEST at --interval (other intervals of 0.2 / 0.4 / 1.0 s and zero service as sensitivity)
+  test     replay on TEST at --interval with the measured encoder-update delay
                                                                                               -> test/metrics.json
 The final deployable bundle is <out>/poreloom_sh_cp.pt (encoder checkpoint path, head state, beta, fs).
 --replicate r (default 0) adds r to the stage A, S1 and head training seeds (independent training replicates);
@@ -99,16 +99,14 @@ def test(a):
     ctrl = H.load_controller(a.out/'head'/'controllers.pt', choice['beta'], a.device)
     (a.out/'test').mkdir(parents=True, exist_ok=True)
     rows = []
-    for interval in [a.interval] + [i for i in (.2, .4, 1.) if i != a.interval]:
-        z = H.extract(net, data, a.fs, interval, H.HEAD['phase_seed'], a.device)
-        for service, tag in ((H.HEAD['service'], 'nominal'), (0., 'zero')):
-            o = H.evaluate(ctrl, z, a.fs, a.device, service=service)
-            np.savez(a.out/'test'/f'outcomes_{interval}_{tag}.npz', read_id=z['read_id'], is_target=z['is_target'], repeat=repeat,
-                     **{k: v for k, v in o.items() if k != 'missing'})
-            groups = {'pooled': np.ones(len(repeat), bool), **{f'repeat_{r}': repeat == r for r in np.unique(repeat)}}
-            for g, mask in groups.items():
-                rows.append(dict(interval=interval, service=tag, group=g,
-                                 **H.metrics({k: v[mask] for k, v in o.items() if k != 'missing'}, z['is_target'][mask])))
+    z = H.extract(net, data, a.fs, a.interval, H.HEAD['phase_seed'], a.device)
+    o = H.evaluate(ctrl, z, a.fs, a.device, service=H.HEAD['service'])
+    np.savez(a.out/'test'/f'outcomes_{a.interval}_nominal.npz', read_id=z['read_id'], is_target=z['is_target'], repeat=repeat,
+             **{k: v for k, v in o.items() if k != 'missing'})
+    groups = {'pooled': np.ones(len(repeat), bool), **{f'repeat_{r}': repeat == r for r in np.unique(repeat)}}
+    for g, mask in groups.items():
+        rows.append(dict(interval=a.interval, service='nominal', group=g,
+                         **H.metrics({k: v[mask] for k, v in o.items() if k != 'missing'}, z['is_target'][mask])))
     (a.out/'test'/'metrics.json').write_text(json.dumps(dict(beta=choice['beta'], fs=a.fs, max_samples=a.max_samples,
                                                           max_decision_seconds=a.max_samples/a.fs, rows=rows), indent=2))
     for r in rows:

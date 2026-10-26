@@ -1,5 +1,85 @@
 [
   {
+    "path": "provenance/legacy_story/cache/r10_run01/test/metadata.npz",
+    "sha256": "8b1f8f4f3b502778b6efb24b8e61e0b17c56b7d6d67ab797051908b4e326a1b2"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r10_run01/train/metadata.npz",
+    "sha256": "f31d7ff2724ed07c20865e32a02713988e056476a2cab089c765ec1e76aa7266"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r10_run02/test/metadata.npz",
+    "sha256": "0be4350a6dcbd8dfc7bc13fcc8fcd11ff0c9ed1d45d1e3b383f10c4d5f06e535"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r10_run02/train/metadata.npz",
+    "sha256": "5919c328a2d8505254fc23d64386f28dad74a378290e36b588bcb7f2780577ae"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r10_run03/test/metadata.npz",
+    "sha256": "cb64adf88cf843a4036b5ee88b72165872c9120ee933d98dd9c8442d67559c42"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r10_run03/train/metadata.npz",
+    "sha256": "b875bb68f40b819352b40ee95ccdc46de3d27f561b97ea04fa81d0ff40374fa4"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r9/test/metadata.npz",
+    "sha256": "245488cdbcd293803bd9186480263a21221013d689de79cdf06d62d6cf9c52d7"
+  },
+  {
+    "path": "provenance/legacy_story/cache/r9/train/metadata.npz",
+    "sha256": "09008198f269493bb6d8e174f63d4e8f19bf6d92fa09686eede32f30d00ac04e"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sim_g1/test/metadata.npz",
+    "sha256": "5c1a5c37fbcbd30fa0da624b83a355b1e9864d1116bd08c8de2c29148a14bef1"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sim_g1/train/metadata.npz",
+    "sha256": "ed8ea11e7ee5dc262e9cbe68770f529c253fad22db4ac80bce9cf44994f3a44c"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sim_g2/test/metadata.npz",
+    "sha256": "d5bebcb92af618d86c576917a83244a8c3d03534eb39541d6260d3af7e5ae9b3"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sim_g2/train/metadata.npz",
+    "sha256": "2beca2193d4bd22223b4f1d5df7dd36ac4dcecda32b0b163db3556faee158e30"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sim_g3/test/metadata.npz",
+    "sha256": "6de7f37950020a9b367a77a20f28f36fe43cf10bb1167b5f6842b480d6952883"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sim_g3/train/metadata.npz",
+    "sha256": "0fe6d18ffdfa15fd024628a61e60b729c7a86eca94892430f3911ed7099419b9"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sputum_g1/test/metadata.npz",
+    "sha256": "4b3460c04e58446e6a55b4bc7a51d8c8ad16ff85df42da8c2c4e96e9baa046b9"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sputum_g1/train/metadata.npz",
+    "sha256": "e852b2ebdc242bf81920b998ed778800c0689dd35713e2fb6164f5219fef1f1d"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sputum_g2/test/metadata.npz",
+    "sha256": "308f1e8b5c24aaa15a22aae8fa7eb014a54184e756fc01c44f3e37618664c8a5"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sputum_g2/train/metadata.npz",
+    "sha256": "31d38aac293328e77918b2aa0683643e9fd4e3264dff303226fd3faa3303658a"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sputum_g3/test/metadata.npz",
+    "sha256": "84c2eefdf040d39ccf44504c0ac4334ba9b3a5453c7d54b8b59f4dff5f33fca9"
+  },
+  {
+    "path": "provenance/legacy_story/cache/sputum_g3/train/metadata.npz",
+    "sha256": "6476ed0d06ebfdca34343c2f68c9b984e029fde35ee4368b88c9bd2312c80f9a"
+  },
+  {
     "path": "results/budget_up_20261016/runs/r10_run01/b12000_r0/test/metrics.json",
     "sha256": "bcf5cdb4bf8150d74d64811fb079bdc1bc93176fcd262c2cb9c658e31b47a94e"
   },
@@ -60,10 +140,6 @@
     "sha256": "15ea434a01d9a754765355e339bc95d326906a31d76dcd6001f478f7cd665f35"
   },
   {
-    "path": "results/budget_up_20261016/runs/r10_run01/report.json",
-    "sha256": "ab571684667bbd69f1e08bfe318a605cf708cf19cd9bf0e106aa88337a7aba8c"
-  },
-  {
     "path": "results/budget_up_20261016/runs/sputum_g1/b12000_r0/test/metrics.json",
     "sha256": "37e253a49d592e1584758df7fb239615c55708f0bc7c6b40e09fa8d100184de8"
   },
@@ -100,20 +176,8 @@
     "sha256": "ad3df3e9c7132e3cd531b9863e8f5d7602dbaac4897802d3c218aaf9426c3007"
   },
   {
-    "path": "results/budget_up_20261016/runs/sputum_g1/report.json",
-    "sha256": "197d702abbe44d6f7e659a1a727e455780ac226d8648a9dce8dfe37e6babacc4"
-  },
-  {
     "path": "results/final_20261014/ablation/report.json",
     "sha256": "7454c779ec1e7dd672dc1e6d2228309d262b0a1b375aa92cc120db9ee6bc6776"
-  },
-  {
-    "path": "results/final_20261014/cross_domain/report.json",
-    "sha256": "7c6566b59449385b384a8942944fa074942dbaddb7b18ee5e3baf4e6ad027bbf"
-  },
-  {
-    "path": "results/final_20261014/cross_domain_rev/report.json",
-    "sha256": "ac8d6d4a938501c267d8080393a10ea9c5ef2b2683a3096775f0b62b48c6f84d"
   },
   {
     "path": "results/final_20261014/fixed_window/report.json",
@@ -128,148 +192,152 @@
     "sha256": "e1d1f8e7122973e58af2b3ee1266e3875f132ed1deb6f9a51a06c4d3049534b7"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run01/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "15118362f3b017a66925638b0bcfc72d19b2921090dad05310f6c78e27d535c6"
+    "path": "results/final_20261014/native_cp/r10_run01/r0/nanodeep_upstream/metrics.json",
+    "sha256": "df491a9c1355327fdfccb21c74959d38e67a646c6f8bd65a1dea181872c51a7e"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run01/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "a6262b491850cd65ba0b22f5c317318bfa09e7d1ed0a84468a4257f7de57114c"
+    "path": "results/final_20261014/native_cp/r10_run01/r0/readcurrent/metrics.json",
+    "sha256": "a4ce73006acb0c50e23df5419f0da545cc4e12dbb9963460741f9c7de9a675e7"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run01/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "4896e7181f097f9ac5d9c7e6a0e9a39e2b35ab7f56ca59669f2446b8920c8220"
+    "path": "results/final_20261014/native_cp/r10_run01/r0/squigglenet/metrics.json",
+    "sha256": "e702c5bf06f0671e1540695aa443a55795c94720ae1b9d651ee2dc66ae7b2c8f"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run02/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "94f59ff7091133a6f3b0afca7715853ac45947aff42642d61ac693ca9362f53c"
+    "path": "results/final_20261014/native_cp/r10_run02/r0/nanodeep_upstream/metrics.json",
+    "sha256": "bd0b4ba73ddaed5837ce2ec8861d3346f0063efd6270aaf8c88689a968327760"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run02/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "a5ece1fb78c92b841afc72806bca264a30912e772e72d3120d3462f471108837"
+    "path": "results/final_20261014/native_cp/r10_run02/r0/readcurrent/metrics.json",
+    "sha256": "deda4ddd570a4a81e79b7016f6d9e643487592fadc12257eb5af0b230498dede"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run02/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "e6fe66339d26698b0fba5b3e336526b2ba4bbc88055dcdfc951f43b2b401e0b0"
+    "path": "results/final_20261014/native_cp/r10_run02/r0/squigglenet/metrics.json",
+    "sha256": "78c73e0bdc1f7db6732b935b3222d532db85fb0321a85076a0ce70573d95e601"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run03/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "08b1c03ef403eb1eceb8ab4ae21aae165ff5f72c90e798f9e37036b24568cf12"
+    "path": "results/final_20261014/native_cp/r10_run03/r0/nanodeep_upstream/metrics.json",
+    "sha256": "f7736d2bb13cff50f3274f23bbe73e6400bb3c27a2bc946153405c3b8a592be3"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run03/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "013fdbc0d2d9e01891911d552a269a28088af0bf03fdb7d570cdf8d8e5c0186c"
+    "path": "results/final_20261014/native_cp/r10_run03/r0/readcurrent/metrics.json",
+    "sha256": "5c56298b4433853c58ace6a54f036f4b6f2a2e0a0caf536f1bdcde18859025fd"
   },
   {
-    "path": "results/final_20261014/native_cp/r10_run03/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "689c65cff9051a989ef17cd59042b81fdc8fcdee443feff04ba19617fde6b92a"
+    "path": "results/final_20261014/native_cp/r10_run03/r0/squigglenet/metrics.json",
+    "sha256": "fa64022f673bc406971f114d1c1fa2c976c8a7ebbd44b7d2704342e215df0ff5"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "69500d761d7cee8402690a96ee6956bf9a97b598cc29f579fec02c11a1344df1"
+    "path": "results/final_20261014/native_cp/r9/r0/nanodeep_upstream/metrics.json",
+    "sha256": "857c33de1e2174d3e2ecdd5ab2684e7ae9b3cb41b22710e5a4241fd6a2d771fa"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "89172c8e6b0632e95fa59cfd67ff45ef4449324720695175eb027c2ad17e271a"
+    "path": "results/final_20261014/native_cp/r9/r0/readcurrent/metrics.json",
+    "sha256": "63aad08ecccc6a7a5bbb27efb44f0497878b7fe86e5429ae6d6cf90cb611f0a5"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "7392fa308bf23ada956d44faeead2b7ac37ff6e9ade190f4423c9f98aea4cb9d"
+    "path": "results/final_20261014/native_cp/r9/r0/squigglenet/metrics.json",
+    "sha256": "90433a3334c07ad4c41957d8d88bddbbddee6a6861589efd1eabe5351cbda824"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r1/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "ce87e393c3ef0a79fc77a680cbbb18f45775c836b87ca4101e22d9c64f512505"
+    "path": "results/final_20261014/native_cp/r9/r1/nanodeep_upstream/metrics.json",
+    "sha256": "2bf09ca2c9ea05847702fdfe12adf3195ed7a5edbc6fd7e76382accdf1c99e1a"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r1/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "cd536ac4a3674a30215ec823d674f06b4532976247c46cf1e475da2afbd870e0"
+    "path": "results/final_20261014/native_cp/r9/r1/readcurrent/metrics.json",
+    "sha256": "c6c46d45b0d7fcc653630b46101f14bc6400b980b75019283ac290c9a614ff72"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r1/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "4cb768dcbcd19ad805b25c6098b8bb398d536536daafbeb0baff1780fa1a48c9"
+    "path": "results/final_20261014/native_cp/r9/r1/squigglenet/metrics.json",
+    "sha256": "0a6f2b207a2a94f785a9b2412920436a81b6335453e01cec37ad97cbeb288165"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r2/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "7e12ddc403d87d3a33f010b5ecf82eebe4eba83a191fbc66eef7653b0eef28e4"
+    "path": "results/final_20261014/native_cp/r9/r2/nanodeep_upstream/metrics.json",
+    "sha256": "883ea757b496a2837f31ea0045be366babe5f45d2fc865dbe7ecd22fe6c882cd"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r2/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "07a387fc8a6009e7ec0f746f58a695a249e1866f3750b716a398425bc0ea971f"
+    "path": "results/final_20261014/native_cp/r9/r2/readcurrent/metrics.json",
+    "sha256": "353acb901075d26008eabf3acba4dc07643391b0aaaa6ccf062e0cb2cbd0f59c"
   },
   {
-    "path": "results/final_20261014/native_cp/r9/r2/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "47f082e589afc7ce66a3910d571002b8bf07420abfe910e1b8aadff663d601b9"
+    "path": "results/final_20261014/native_cp/r9/r2/squigglenet/metrics.json",
+    "sha256": "53993c43bea2fb5c9b01dc08009cde969af3ba10e69c64a6d90b69e97b24a9bf"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g1/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "ebbc5ea106f010c827aac5ebf8f4b91a7b389a9a7e6a35f9a31bfc6c54db7a0d"
+    "path": "results/final_20261014/native_cp/sim_g1/r0/nanodeep_upstream/metrics.json",
+    "sha256": "0f152e13e92fe05fa4468fcd46c3a062c40eeb69b68e6d033dfbdc05b562cd12"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g1/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "28d58d5f84d11944841ea945e9c59c62e201f0c626535a444603e95bd677b5c9"
+    "path": "results/final_20261014/native_cp/sim_g1/r0/readcurrent/metrics.json",
+    "sha256": "a089bd06d199db6e0e3d295bd0cd456b95937cabac7a2b53a5e765d5f78e4eee"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g1/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "d99aa03f9691327b4306aebd1abd3c3d2e67702df228b061d5c4a294c6629bd4"
+    "path": "results/final_20261014/native_cp/sim_g1/r0/squigglenet/metrics.json",
+    "sha256": "d6c2a69a8e51bf5c5308301b5b1d8e8c0e942ba23a82e7d63723ea795ee5723c"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g2/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "2ee06164b0a3e85e012bd720865bffce0a0ef11d024f59a28a85c1e24947ccad"
+    "path": "results/final_20261014/native_cp/sim_g2/r0/nanodeep_upstream/metrics.json",
+    "sha256": "9f660507a394bc2a31f16ecfea88651fe7d20e7365e0758008d5fcc61d477d72"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g2/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "40040161fbf44d532016f2d45839d4e3940c2e19b0c1eb74e9b71b271d13398e"
+    "path": "results/final_20261014/native_cp/sim_g2/r0/readcurrent/metrics.json",
+    "sha256": "e7b409366813fe30e9f4fca3c6885c5e3b9ddb0a498df21697163e5f6b5b666f"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g2/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "c7e27c8d9dba66cdb467e1c2eae348e2ff6edbc4ba671a671c4c93ccb5aa3b63"
+    "path": "results/final_20261014/native_cp/sim_g2/r0/squigglenet/metrics.json",
+    "sha256": "0b1fadac6e0f04b6e424b2c9611a362e13b65bd63d3694a4fce5258bd85a8983"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g3/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "7b617d8a06f414ef40ef9ee90087b91d38d5005d59c7d757e3626d0eabc0ddba"
+    "path": "results/final_20261014/native_cp/sim_g3/r0/nanodeep_upstream/metrics.json",
+    "sha256": "9917c44af684e09419f8d3e88937213c90cf91903515f7dc5f41ff8ee1dfc2b4"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g3/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "c5fc4e15063034660802c537b462bf47d3e3686929a92ac4cbd5289b428a6b82"
+    "path": "results/final_20261014/native_cp/sim_g3/r0/readcurrent/metrics.json",
+    "sha256": "18b41165c5c9bfe0ca8b66bed93ea8be83a2d6a366c795719917187d0f11708e"
   },
   {
-    "path": "results/final_20261014/native_cp/sim_g3/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "d147d0ce4f1203f3947c667c75f1932888e7a5216a2a4f7d3106bbd5dfd3df2b"
+    "path": "results/final_20261014/native_cp/sim_g3/r0/squigglenet/metrics.json",
+    "sha256": "e1b18fe6191dc91fc425a3f4cd3c7b4fe9ddd83df314aecd680a9bfa67ce4a13"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g1/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "02349377fad80fbc04930e05a6fc1c5b2f4a165fe1b634916d9df0c7c16a4a9a"
+    "path": "results/final_20261014/native_cp/sputum_g1/r0/nanodeep_upstream/metrics.json",
+    "sha256": "4ad9d63a7e062024ce6849cdb3c087251c59b26b056c7ec59f9c7abfc2946086"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g1/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "6042d4a00690ee61f42213422744922eb762d021907f129a28b4725adaf5b4d9"
+    "path": "results/final_20261014/native_cp/sputum_g1/r0/readcurrent/metrics.json",
+    "sha256": "f86871a436c8cfb1a43b8dd7ea4c3277cd632dc7b7d2486af6cc1cf1a370435d"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g1/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "c44b94481f4c150b01c0dd237d5cfa9e1a53b5e60d0b27af57516dc4b4b25857"
+    "path": "results/final_20261014/native_cp/sputum_g1/r0/squigglenet/metrics.json",
+    "sha256": "af1a11360c30a1e35013abf772ecf24cc3e632e623c566c86342758967314f4c"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g2/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "f09d69af04b8f9751402c0438dd410e51e6cb70509aafa7e34e7114c1f95984f"
+    "path": "results/final_20261014/native_cp/sputum_g2/r0/nanodeep_upstream/metrics.json",
+    "sha256": "5422d1925cfc2f61b2aeaa64e5d754ac417dee1cf5f9227c0c6f6498d7abbaf9"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g2/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "abf6be5130bacd6b64ddf3c22120a45b0de516e978f7a63b69575e5223c65dac"
+    "path": "results/final_20261014/native_cp/sputum_g2/r0/readcurrent/metrics.json",
+    "sha256": "6ab297ecc89e2726ed394ecd0b70a32f084543d8e1d5644e99228d5831e6f88d"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g2/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "257c1afde548c615bd3a4d118500322f2d0d22b6f7cab361368771251538a6a1"
+    "path": "results/final_20261014/native_cp/sputum_g2/r0/squigglenet/metrics.json",
+    "sha256": "0868a95a6c266c4ce2de3af7f5ff995898a5ef55063a7b3a028e899cc3d1361e"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g3/r0/nanodeep_upstream/test_outcomes_0.4.npz",
-    "sha256": "8be4bd25a0b32530f5d25036c33055fbd31f01cdd5157c1011139ca291ddca82"
+    "path": "results/final_20261014/native_cp/sputum_g3/r0/nanodeep_upstream/metrics.json",
+    "sha256": "b42e002bcf6d4baac338480914b32dfbbe9f6e1943ae5015221ff3e6811905f2"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g3/r0/readcurrent/test_outcomes_0.4.npz",
-    "sha256": "650b33b4ab952b1c5e3f72f0273a4cc0bd69bedd4564aa12c7d0b9b0ddecd71f"
+    "path": "results/final_20261014/native_cp/sputum_g3/r0/readcurrent/metrics.json",
+    "sha256": "62188defd0a5ee87664527d9ea80c1950e88c62092fde40d75abaf8676553122"
   },
   {
-    "path": "results/final_20261014/native_cp/sputum_g3/r0/squigglenet/test_outcomes_0.4.npz",
-    "sha256": "d2085d0dad94fb2ec77e5a95bdfbef3ee0ed9c146e79e2f1ff19a3dc746f953a"
+    "path": "results/final_20261014/native_cp/sputum_g3/r0/squigglenet/metrics.json",
+    "sha256": "944c3d21c7771276cbd745d4e868c731b409b759652b229aafbe283dfd89de0a"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r10_run01/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "671388266943263bb37ac33421e5f9bcb2b0b24a7af587975ef5c86fc8148a52"
   },
   {
     "path": "results/final_20261014/runs/main/r10_run01/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -284,12 +352,24 @@
     "sha256": "ff4dfbb2f55e1ade61e5ed1ddbffcd07f7680503600629b653a464fe4870d580"
   },
   {
+    "path": "results/final_20261014/runs/main/r10_run01/readcurrent_r0/test/metrics.json",
+    "sha256": "dadd2fafb826b185c5572575a3ae957b727730c10c9d93089a143a3c273fccc1"
+  },
+  {
     "path": "results/final_20261014/runs/main/r10_run01/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "982f8a40a1c127a876daed5438de8e62253cd1abb894890f350920c5adaabcd4"
   },
   {
+    "path": "results/final_20261014/runs/main/r10_run01/squigglenet_r0/test/metrics.json",
+    "sha256": "e0769de55e4f5acae7646bfc48fbaf941919619349fe71217c3237db06228744"
+  },
+  {
     "path": "results/final_20261014/runs/main/r10_run01/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "6dbbdab22102c05660a1495bbf529269ff58fb7bb2838f12aa665e68e44b1e07"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r10_run02/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "be230326744f5801438512de9c16819ba7f72809a8803a4323adb64d9b2e499e"
   },
   {
     "path": "results/final_20261014/runs/main/r10_run02/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -304,12 +384,24 @@
     "sha256": "f27d1db99947c81c189a289f92e5fcacd7439959173dc795e8e21ba825d69f86"
   },
   {
+    "path": "results/final_20261014/runs/main/r10_run02/readcurrent_r0/test/metrics.json",
+    "sha256": "96e866f90ac835c05c6387fde46d6392131ff38559e2dc198209dfab7429d57a"
+  },
+  {
     "path": "results/final_20261014/runs/main/r10_run02/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "c7bb58cc01232fc44ebb3e8710a75e98af1e7cb3be4eee2fb7fee0150d6937dd"
   },
   {
+    "path": "results/final_20261014/runs/main/r10_run02/squigglenet_r0/test/metrics.json",
+    "sha256": "8bdd6380afd351b9ac63ebe4710de24ea8691728d6b882638ebb07e85acb066e"
+  },
+  {
     "path": "results/final_20261014/runs/main/r10_run02/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "4079f77b4200de0f51ffc13bcd644e8b82b3d5574641d7d1b440ab118caf5b5a"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r10_run03/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "478707c18db9160bdad4ed69f9a6acb8b9bbd53970898cad4293c26aa6e38a01"
   },
   {
     "path": "results/final_20261014/runs/main/r10_run03/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -324,20 +416,40 @@
     "sha256": "ba669e2829d8d4c37198ab0f2fe38b3cd1475de250623acb15943d8cea4c77c7"
   },
   {
+    "path": "results/final_20261014/runs/main/r10_run03/readcurrent_r0/test/metrics.json",
+    "sha256": "b0f0540a5380207d8b9ef04e4014421b4f330231adaa2299c36e2a747694bfc2"
+  },
+  {
     "path": "results/final_20261014/runs/main/r10_run03/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "01bbac865bfa18160972a3372e25da675e755d0e3d7c122f979572402079d5ea"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r10_run03/squigglenet_r0/test/metrics.json",
+    "sha256": "3e29d6a94477ca5c1e1f87c8378a432823622e6ccb9870942f4a49fc40455c73"
   },
   {
     "path": "results/final_20261014/runs/main/r10_run03/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "cd9965630713726a7e1192c6c7a8e4127534aa46e87f5c8f610ba0f985bc6cd8"
   },
   {
+    "path": "results/final_20261014/runs/main/r9/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "d04ad99187a1254896f5945bef5cf3d60fe8ac85e38a2dbd25f7eab94bd6ae88"
+  },
+  {
     "path": "results/final_20261014/runs/main/r9/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "9c53696b24b3be746bb364582da9fffe1fac441b6505313ad1eb356707148a7f"
   },
   {
+    "path": "results/final_20261014/runs/main/r9/nanodeep_upstream_r1/test/metrics.json",
+    "sha256": "918b8cd5ce9ab2262a7d39accbd9fd8df89a77d02f811f1455fcf11ee8cc1275"
+  },
+  {
     "path": "results/final_20261014/runs/main/r9/nanodeep_upstream_r1/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "922eeb8f4cabf0e05f2675a86eb6ebc62f912e20b8f822053317faa264c45683"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r9/nanodeep_upstream_r2/test/metrics.json",
+    "sha256": "817fae77b59e587064056a43ad87f68d0956ab7f99ed308bc167c1a95bdaaa2d"
   },
   {
     "path": "results/final_20261014/runs/main/r9/nanodeep_upstream_r2/test/outcomes_max_acc_0.4_measured.npz",
@@ -368,28 +480,56 @@
     "sha256": "41290fa43aed797a46decaddd74ec4b82fdd24e64ac074b0130362decc5ac78a"
   },
   {
+    "path": "results/final_20261014/runs/main/r9/readcurrent_r0/test/metrics.json",
+    "sha256": "3e7ed2c69cf98bc5e699f8b08e287926fb60b4a26cd348de3b894771adbb00da"
+  },
+  {
     "path": "results/final_20261014/runs/main/r9/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "e0e20f907ccfdc1a9a7c6717646fd5c2f37936a57ea0285c70d118ea929a8ccf"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r9/readcurrent_r1/test/metrics.json",
+    "sha256": "15ed159162beeedfd89c618e95ce9ca528b83da9cd7e4383bc620409d413298d"
   },
   {
     "path": "results/final_20261014/runs/main/r9/readcurrent_r1/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "20108cc05ff0bfd063d2afc7fc00088bc8774f37443b66a7609bc3fd4cdc7236"
   },
   {
+    "path": "results/final_20261014/runs/main/r9/readcurrent_r2/test/metrics.json",
+    "sha256": "deab5197b7fa3ef2f362762a1bcff651b4ad4325f7446505828f6a0aedcdd783"
+  },
+  {
     "path": "results/final_20261014/runs/main/r9/readcurrent_r2/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "d8d5fd90936f7411d242bea268f7e323ee296bd5a5ac3c1ef5def7ae7c3ad205"
+  },
+  {
+    "path": "results/final_20261014/runs/main/r9/squigglenet_r0/test/metrics.json",
+    "sha256": "68a39f5a480e88082d610b702bfa212a3d0148e6747d5e7cee934a68a140d63e"
   },
   {
     "path": "results/final_20261014/runs/main/r9/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "38cc5ebc074b802154bfefc9a6f069f04f99556f705d69d93b77aaeea324bf7d"
   },
   {
+    "path": "results/final_20261014/runs/main/r9/squigglenet_r1/test/metrics.json",
+    "sha256": "c769d52fe499ffaeb1cb532ac8fba6616c2e5a28e1192cfee399fc2b43a54286"
+  },
+  {
     "path": "results/final_20261014/runs/main/r9/squigglenet_r1/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "1101e149cc96e3e4fc06dc22edfeada38b74219aa2d266adb2057b2dfc9a00c8"
   },
   {
+    "path": "results/final_20261014/runs/main/r9/squigglenet_r2/test/metrics.json",
+    "sha256": "e4148d71d7b2283d4ea5b0305874388e588244a7183f79721d93d03082fe2764"
+  },
+  {
     "path": "results/final_20261014/runs/main/r9/squigglenet_r2/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "2b14a0310f762afd77d2456911f4b03b43444bebf9d5ab23cabf98987307a602"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sim_g1/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "ec3a31ab01d87d3bec0ca1e3bf5b59a31be81bd1ea347d896d0de9716e05b166"
   },
   {
     "path": "results/final_20261014/runs/main/sim_g1/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -404,12 +544,24 @@
     "sha256": "14af446bde2e9e3352c04776e80a6109bc4da22a83ec348c00f8d6db0ab5aef4"
   },
   {
+    "path": "results/final_20261014/runs/main/sim_g1/readcurrent_r0/test/metrics.json",
+    "sha256": "edad05162470b13d255a11f143b44a10c88063790ada4ce654b436ad9d4f432c"
+  },
+  {
     "path": "results/final_20261014/runs/main/sim_g1/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "610df99396cebb7001267b483b6f9217f1b899f6eae15ac2345fac34b876dfcf"
   },
   {
+    "path": "results/final_20261014/runs/main/sim_g1/squigglenet_r0/test/metrics.json",
+    "sha256": "846808d4d55f00f608bd4c6a117f8228537f79c0f02f80c3d42e9e4c6f1d1a5a"
+  },
+  {
     "path": "results/final_20261014/runs/main/sim_g1/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "191230ef2d90d8f7caf174643dff6f1d67512bd267b08e9973a246e5cd45142e"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sim_g2/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "0f9d05337d1891d2926dc378af05867c01bb420b5b9f2c412f3254c3d7a91dde"
   },
   {
     "path": "results/final_20261014/runs/main/sim_g2/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -424,12 +576,24 @@
     "sha256": "14bd8cd3b2a69af3447ebe097e7b58e2d8140a87bdb14be0fde71839ec19788a"
   },
   {
+    "path": "results/final_20261014/runs/main/sim_g2/readcurrent_r0/test/metrics.json",
+    "sha256": "82f476ed7c72ab0c79d1938201b272b51321b3504606086236e09dcaacfd55e4"
+  },
+  {
     "path": "results/final_20261014/runs/main/sim_g2/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "0d075c512bb0f76ed81537f5350ed3a24cc4aa01c7f48ee84760c996afb7ca19"
   },
   {
+    "path": "results/final_20261014/runs/main/sim_g2/squigglenet_r0/test/metrics.json",
+    "sha256": "8700bc78dd37b3787810914488806c957ca2f7436a1b2b6e3265c4b4f5d6eb20"
+  },
+  {
     "path": "results/final_20261014/runs/main/sim_g2/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "00ac496135467f19b12fdd5fd698d09ca5eeec785569b059fc695aca8eb68231"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sim_g3/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "bc559f89a03494fb14f5b906695ef87aaa325e085aa1a97db5936c87de00ca9a"
   },
   {
     "path": "results/final_20261014/runs/main/sim_g3/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -444,12 +608,24 @@
     "sha256": "2a6450ac1c1962cae8e6742c21b1604a5b25bee9043fb68fbd208ebeb0739812"
   },
   {
+    "path": "results/final_20261014/runs/main/sim_g3/readcurrent_r0/test/metrics.json",
+    "sha256": "0a043b58122e87a94ce79236857a63984ff94f09117a7301467893567de85b08"
+  },
+  {
     "path": "results/final_20261014/runs/main/sim_g3/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "17674ca7e961b09d6867123ae1454d3433914fbc409621e44b8b8a4f673b32b6"
   },
   {
+    "path": "results/final_20261014/runs/main/sim_g3/squigglenet_r0/test/metrics.json",
+    "sha256": "08470b0b8809acb92f36174a1086774f9b24ec4ebea950512bdab4cb9a161f85"
+  },
+  {
     "path": "results/final_20261014/runs/main/sim_g3/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "948963ed3bb97827af19d660e8e61c99dd947d33090589c97bcaaaa7b604c050"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sputum_g1/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "e08114c388015fdffedc61d3516c512a58c249939561e01c5e05a31f2cc5d5d6"
   },
   {
     "path": "results/final_20261014/runs/main/sputum_g1/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -464,12 +640,24 @@
     "sha256": "ed55ae7314f08a3ae151ca7641cf3fec55624db2e503f520ebd0c53608f6d844"
   },
   {
+    "path": "results/final_20261014/runs/main/sputum_g1/readcurrent_r0/test/metrics.json",
+    "sha256": "4523ad2f1ef1b58a0f672da72a0bf684feadf4c98a127e0be41ee18b318af39f"
+  },
+  {
     "path": "results/final_20261014/runs/main/sputum_g1/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "b7077b6f3d9d5b0a9188f338cbac93221be4f5d0b85f8f67f0b7541f5255c38b"
   },
   {
+    "path": "results/final_20261014/runs/main/sputum_g1/squigglenet_r0/test/metrics.json",
+    "sha256": "3fc1846e55b584996783d49a9bb22abcadcc4815fe871f6367e54c1153ff1591"
+  },
+  {
     "path": "results/final_20261014/runs/main/sputum_g1/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "008b1b1b42f9d2f6f38252b8a0e2f3bb799650bd4b7df11f25fc04cfb30cd76a"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sputum_g2/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "43d8fc143c09cddcbe001133f8a36d58a92d64b285b3252042d84be0343508bd"
   },
   {
     "path": "results/final_20261014/runs/main/sputum_g2/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -484,12 +672,24 @@
     "sha256": "28259f45b82e91dc118ff865f4144ae50e4dd4b7128b4f4aec31e10f76adbe7b"
   },
   {
+    "path": "results/final_20261014/runs/main/sputum_g2/readcurrent_r0/test/metrics.json",
+    "sha256": "8e170aa72e891a968475b9f820bcc793fc1157434ced650287c219088cfcd70f"
+  },
+  {
     "path": "results/final_20261014/runs/main/sputum_g2/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "274e13b7e815e9c60b2a0c14788f45965f3e3b13c5e737ac2cfe6753c8bc92c8"
   },
   {
+    "path": "results/final_20261014/runs/main/sputum_g2/squigglenet_r0/test/metrics.json",
+    "sha256": "0b2e039b7b2ee83d6884af5c5c5dffc89c829ecf79a1d8eeeab988baa12f229a"
+  },
+  {
     "path": "results/final_20261014/runs/main/sputum_g2/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "e7090f6375cf0303cadd966d575594b8dacb5f85d6112b84f23b5850d2dc7f83"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sputum_g3/nanodeep_upstream_r0/test/metrics.json",
+    "sha256": "c0102c2f6596338f8291ca5ccb559adfb520674a52784ea6fc26b26a70c505ae"
   },
   {
     "path": "results/final_20261014/runs/main/sputum_g3/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
@@ -504,20 +704,356 @@
     "sha256": "5b63525045ecb0fdf36562b0d3391fa4213629a455ebb7a9b697bb0ac142b034"
   },
   {
+    "path": "results/final_20261014/runs/main/sputum_g3/readcurrent_r0/test/metrics.json",
+    "sha256": "45fa2034f76c26b0f8bf0e4cede979bd7bc3c43b30e793632310268604510866"
+  },
+  {
     "path": "results/final_20261014/runs/main/sputum_g3/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "226f2881279239c6f07b0e3a6b44fa2174c256039bd8fc35f2e812b34123a18f"
+  },
+  {
+    "path": "results/final_20261014/runs/main/sputum_g3/squigglenet_r0/test/metrics.json",
+    "sha256": "0c30fff3dd5dbec43e3b5ea4f5a25703f24a9aa06fc0b0e9de65f9e750023f28"
   },
   {
     "path": "results/final_20261014/runs/main/sputum_g3/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
     "sha256": "dc6e04d140110b79a19556a71803bcecd2fae9c7e4f9840c7fc4cf6c40fb51bd"
   },
   {
+    "path": "results/final_20261014/win6000/r10_run01/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "15d54d70b0c962c7923cd15f115f1e2ff843ce484673c278d8e5fedcaa389217"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run01/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "00bcdd5c98a2f2d53907032d443aa952e32cb8c279b65816715d7535e3728233"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run01/readcurrent_r0/fit/config.json",
+    "sha256": "fc08e0792e6725cae0d7f711bfdfbc6e9d6c27f81cf61f70d93edec0ce7cd4eb"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run01/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "429008a4af341231cf1c4c23b740776c7fa272801a4cb4f3b922c3c52510cd50"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run01/squigglenet_r0/fit/config.json",
+    "sha256": "c98ef63896060a645bd6b0dc4cbff24dbd9040913ac99aec4b8746519ff86c4a"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run01/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "3a86199fadd872e247995d84b089d65a3425f44c7aa8ec891441c6cdb7d9b61a"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run02/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "6a76667ebb7d0dd6276034eb4111da0eea051a5e4ea9a79871a11eadde9597c8"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run02/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "f8d291f290f39766540cfcf9f69b0b9ef8f57de78559b0e17100eb65aceef84f"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run02/readcurrent_r0/fit/config.json",
+    "sha256": "0a7f44afbf1cbdbda8f065e5b2efda36c4f456bfb05f90daed88f3315c81ac17"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run02/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "482476f14086483781683272d1f3ee1397b31f541e7006a40a75c8bead1d2630"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run02/squigglenet_r0/fit/config.json",
+    "sha256": "1994ced39467021cb5fd94811f28fb9cb65f37dff4d3a8223bcac950b3546fec"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run02/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "4edc216654a82b34d49b90f597d2ef376ea15d8bdf7d6dc76b54008af8029523"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run03/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "016a253478777b21eedabb06c332dc2d5ef043054b7bd9fe1a3524129dd1eb2e"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run03/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "400bceb83e3911fcfdabdf0966de6c9f4bd5411bb4ba61d84967fa352c297279"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run03/readcurrent_r0/fit/config.json",
+    "sha256": "1a58aa7264e7060a7b796cba51f44949322e220954354ace158bdbe522fd28c5"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run03/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "e870340185073427eaa39b5adb089a57fdfd56cf2a19cb848ea0f6f5cc722107"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run03/squigglenet_r0/fit/config.json",
+    "sha256": "0b8b2966507bdb0ea30c4c876362c5719d14fcd7a0b3e47f10a2700fa2310b42"
+  },
+  {
+    "path": "results/final_20261014/win6000/r10_run03/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "0620a4356bf03479f477570e49bb29d6d111ba7b80c967d69a08e81f39c5a81d"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "c2d1d5f32ce0cac647df8f0b552a48ef0054c67c2d93f0818035367631926e8e"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "05f06c86b38ef6f4642ee4d83984d377df4d068e8b71abd0f0014958538c40f9"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/nanodeep_upstream_r1/fit/config.json",
+    "sha256": "474fefb029d5068537422bc054bba651cf437a3ad6bef71627e97f20e53c4216"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/nanodeep_upstream_r1/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "5df2646fe6cc6ec1776a66b9ae3e6cbe7fe1c099f3c95f66e6b54205b97fec91"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/nanodeep_upstream_r2/fit/config.json",
+    "sha256": "3f6c4db2e7cb6732ccb0082e2c92a54f3a2efa8599ae372daa34f9bbc250e9cd"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/nanodeep_upstream_r2/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "1378e3fc3c534c8c22a183eac509363c5d8d348fe0207f4eed9b55f69fe9b95f"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/readcurrent_r0/fit/config.json",
+    "sha256": "71bbfd9cccc27333f0fc8c0a3f6baa8c92c544d3287ccce6a5fc956b1e94e68c"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "97d7e813dcfb9b8af74c3250e13c65c1046893d21e186e9e6c3d8235768358a2"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/readcurrent_r1/fit/config.json",
+    "sha256": "8461f855220c8321d1fa28131db2c767e782023ca7bbed11e6f94a37b148858d"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/readcurrent_r1/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "91daaf0fd6c704fad65972c84b3f67ed1505fe9b081f6082b989d1d316ceb186"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/readcurrent_r2/fit/config.json",
+    "sha256": "55758a44086b36c5a0a9486af1a5b48a1e34a1e33af98d1a7a92313c0e34938d"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/readcurrent_r2/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "c514ec547bb6a0ec75c657ddc8207dc786844d35968ff7b1d7a64026e24d7a0f"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/squigglenet_r0/fit/config.json",
+    "sha256": "7656e68f8c30e1a0f29e25dbe8d5694ac964bd60b797da369ef5e193955e142d"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "177025b4cf1fcb47876acdfd8e4b43f97bf853c65d88baef532aba51b7397365"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/squigglenet_r1/fit/config.json",
+    "sha256": "ebd9116ab3a8e2a0363af4add4761ee1499d6c73e51bbb227ee29d8d8c31f5dd"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/squigglenet_r1/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "f3bbebf5bd8b8c1e7b0250eef25148cbfcd93db497fff8a6ffc4897ae6a9fc91"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/squigglenet_r2/fit/config.json",
+    "sha256": "447747202d769fa0f9740f45d94146d8fdafbc4607a186991daa9700269a0339"
+  },
+  {
+    "path": "results/final_20261014/win6000/r9/squigglenet_r2/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "c0e8accf25091b3b0c91795c59209a70f2e0366b3aeb40f9710673d73ebe1a84"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g1/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "ebfa8795026b5d330f9f81b6c79ca9356e7e152212877a558fa221adbffb35d3"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g1/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "6a7d8bf521d02f96ca16bcbf61e91382f44c35773ecf40d4c8e54ab8ede0eb7e"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g1/readcurrent_r0/fit/config.json",
+    "sha256": "1b36fe3db047be7e6b6de890b1667856407a7603c099d891f88c9a9316c6c5c9"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g1/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "3390c40736b4459f02d830df6d665f9896214b778d8c7486942b1b64af6a42bd"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g1/squigglenet_r0/fit/config.json",
+    "sha256": "bbe1af179e42cfc331e71413fd4a039058aa0bd89571d21a1f789250fda8c476"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g1/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "ee8e42f3758b9c324c16f1123249afc00acfe419f062bcd9873ffdb88e7128d6"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g2/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "3811320ddbf90cd2662e539a429ceff44876844980e79bcc93d46df9b6d3b18a"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g2/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "6ca914a8afd80016425f0041e0e317f8c7ed7f1c39716e1b36501410d1fd1f01"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g2/readcurrent_r0/fit/config.json",
+    "sha256": "edc3ea3c5f062a272a8ceb249a8612462e8f9ed8eafa691102873d82d0e866a5"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g2/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "745ddd00b56144768e8a26db8a2ff298b48c188411c72d3d1e43987df7fa30da"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g2/squigglenet_r0/fit/config.json",
+    "sha256": "31a76eebbef7d8f0a0c4410821ffa77d2cd74b2db993bb72453afb60f84ab6ef"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g2/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "afa9378337d803f05e234464f67d641ce7c84662d17d4e2c95c13866d69077d9"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g3/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "77f4d2b0792ae38169ef5bbd68a044382efa2a5dad8f90b3b5de441e2152f13b"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g3/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "a750f8a792eb3bc8ddf11a32712949f87f82306efe695450d9651ed9a2924228"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g3/readcurrent_r0/fit/config.json",
+    "sha256": "822c2771d464d542f4342cbea85e7c2fd28a6769aa009f94ef034f9ab939b639"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g3/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "e393ac6f7c63e7c41241e0c0052454a3c64ddefb85dfeed065f1b0d512dce333"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g3/squigglenet_r0/fit/config.json",
+    "sha256": "5b24e23632749f4854ea8fae1c5460678cf612342b350ec485027ad1787ef1dd"
+  },
+  {
+    "path": "results/final_20261014/win6000/sim_g3/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "430c2fb3d7bcb1dc9236e143bcc31acdac9aaf68a6292d3a9263fbc67d95e326"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g1/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "0af9c3a0c9cbe5a1d4643276c4ea4831a21554b437515cd8b46b049f359bc869"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g1/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "08839104a4f2d6bcdf15d87e671858b6ebc5e808207e0eb324b54b4d6809b14e"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g1/readcurrent_r0/fit/config.json",
+    "sha256": "d3a20f60e13176b821adb50c3c9c494e26aeb85d2711a320f03cab5e52565451"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g1/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "c0ede7475f12f3bc8cc7d78452ce4137586f5a250c3bdf05b0aee367b7f72350"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g1/squigglenet_r0/fit/config.json",
+    "sha256": "792019056de9fca544b1145898170251ded263d7b626ba4401a22d2ce26d3e65"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g1/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "a3fa73aa04ff0b85843c394bc4f37d52de21a7bd01020fbeccb61c1842779cae"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g2/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "ab93115724e0c4577f2954b5159bfe48d5549fcdb581d1b4bf89fe0cd2867b00"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g2/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "3568386721c80a3ddb9b511ce94e44c3276d5b4fb69446840a07bc7ab48bf057"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g2/readcurrent_r0/fit/config.json",
+    "sha256": "b83663767373cdb46751f13e6e3632130ce4500657d3bf7af388ca502820b329"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g2/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "429142c282e4404ee6d42e3851712e25c74d3f18dde9ee05f00c836434d23d53"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g2/squigglenet_r0/fit/config.json",
+    "sha256": "53e2c662c139c4160554f9dce0576959740d9908db7f493c39036ce87e23c14b"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g2/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "5c6c3530001a774c12e077eeb55c9e056126680f4a31b03f35878ed5b4814d10"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g3/nanodeep_upstream_r0/fit/config.json",
+    "sha256": "3c364797254cb87bc448dd2e446460ab7140a09f02d3c7dead3f6ed16fdd7d67"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g3/nanodeep_upstream_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "bce444f11e90067575a67dd406b97a9507b218a119cab710ae614d95d7f236e0"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g3/readcurrent_r0/fit/config.json",
+    "sha256": "b902a3c98f4914656e448e6465fdd9584d25ad1f6ee576ac0248cf96f2f07911"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g3/readcurrent_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "586cf199aac7e9190671d9d0a263912b1f08d748944fa49317beefe0ecae950e"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g3/squigglenet_r0/fit/config.json",
+    "sha256": "ae3a74f562ac00721a6fb7ecac896ed2cc116ca4cf8df72613bd54d81baf5cbc"
+  },
+  {
+    "path": "results/final_20261014/win6000/sputum_g3/squigglenet_r0/test/outcomes_max_acc_0.4_measured.npz",
+    "sha256": "402a99d8a7c8b09452bfc0ac87f2239843a329809056f6ec1fb6e477f783d481"
+  },
+  {
     "path": "results/final_20261014/win6000/summary_zh.json",
     "sha256": "d8ae4235d19e074233c7ce3a473418967ed4c72bf99089cb97a8978f7ffcf2e5"
   },
   {
-    "path": "results/final_20261014/window_tools/summary_zh.json",
-    "sha256": "aba3dce64ba1c7750e42dc0fd24e6c30e5fe875f8ae11d5116c0ac6bf53a8726"
+    "path": "results/icarust_w6000_20261018/aggregate.json",
+    "sha256": "c43ceabe670eb5ed248bdcf9ef4ebe46fb895045495dbff2807ac903368e777d"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/check.json",
+    "sha256": "136ae2536c26b22bea52fe0973bfde29ade7b79b21f08b497a20783167ec7164"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/live/30pct_20331103_squigglenet_w6000/manifest.json",
+    "sha256": "6dd27cdfdfbf83ad75e08c42299beaa4a9f0fb56339d3ab9156d0dd4df86463f"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/live/30pct_20331103_squigglenet_w6000/read_outcomes.jsonl",
+    "sha256": "a0477f0b3f7acc87372ce8043432419d4899ab451c2455884704708b3401e96f"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/models/nanodeep_upstream_r0/selection.json",
+    "sha256": "15eea45f19d551a620994ea012ce821b6d7346337963894c7afb72fa1304299a"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/models/nanodeep_upstream_r0/window.json",
+    "sha256": "bc6d62694ac3bf649ca7ae838df068be028b8975ed6c575dfc01b07bc51820bd"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/models/readcurrent_r0/selection.json",
+    "sha256": "b96eee6349504baede2dbeb3ac400da4d9b47135ea652d91f37a4bbde87dc38f"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/models/readcurrent_r0/window.json",
+    "sha256": "bc6d62694ac3bf649ca7ae838df068be028b8975ed6c575dfc01b07bc51820bd"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/models/squigglenet_r0/selection.json",
+    "sha256": "254240166a70e2462d7cc966e7cd7d77f71ae0223876b5d282ca969b6c03ccb9"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/models/squigglenet_r0/window.json",
+    "sha256": "bc6d62694ac3bf649ca7ae838df068be028b8975ed6c575dfc01b07bc51820bd"
+  },
+  {
+    "path": "results/icarust_w6000_20261018/plan.json",
+    "sha256": "ad17450374cd84bf2e32ac340efa531a84d5ca345795ccff44fac085b2492c06"
   },
   {
     "path": "results/stream_timing_20261016/rtx2080ti/timing.json",

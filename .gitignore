@@ -86,8 +86,7 @@ docs/**/*.pdf
 .DS_Store
 .superpowers/
 
-# ===== Baseline 上游代码（仅本地，不上传；见 third_party/README.md）=====
-/third_party/CAFES/
+# ===== Baseline 上游代码（仅本地，不上传；见 README.md）=====
 /third_party/NanoDeep/
 /third_party/SquiggleNet/
-/third_party/ReadCurrent_patched/
+/third_party/ReadCurrent/

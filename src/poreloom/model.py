@@ -1,7 +1,6 @@
-"""ReadCurrent short-window adapter and supervised causal history classifier."""
+"""Window-pretraining model container and shared feature/loss helpers."""
 import torch
 from torch import nn
-
 
 
 class PoreLoom(nn.Module):
@@ -48,16 +47,7 @@ class PoreLoom(nn.Module):
         return self
 
 
-# Backbone-replacement experiment hook (experiments/20261015_backbone): a callable returning (conv layers, channels)
-# that replaces the ReadCurrent backbone in every build_model call of the process. None = ReadCurrent (default).
-BACKBONE_FACTORY=None
-
-
 def build_model(checkpoint=None,max_windows=8):
-    if BACKBONE_FACTORY is not None:
-        if checkpoint is not None:raise ValueError('window-classifier checkpoints exist only for the ReadCurrent backbone')
-        layers,channels=BACKBONE_FACTORY()
-        return PoreLoom(layers,channels,max_windows=max_windows)
     # Vendored ReadCurrent architecture (poreloom.method.backbone, identical to third_party/ReadCurrent at 6db8921).
     from .method.backbone import window_classifier
     base=window_classifier()

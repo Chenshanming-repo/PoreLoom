@@ -8,7 +8,7 @@
 #SBATCH --mem=48G
 #SBATCH --gres=gpu:1
 #SBATCH --time=24:00:00
-# One training run: METHOD (poreloom | readcurrent | nanodeep | squigglenet) on DATA (dataset root) at FS Hz,
+# One training run: METHOD (poreloom | readcurrent | nanodeep_upstream | squigglenet) on DATA (dataset root) at FS Hz,
 # replicate REP, output OUT. Re-submitting the same job resumes: finished stages are skipped.
 set -euo pipefail
 W=/path/to/poreloom_work
@@ -18,6 +18,7 @@ export PYTHONPATH=$W/PoreLoom/src OMP_NUM_THREADS=8
 export PORELOOM_DATA=$W/data PORELOOM_RESULTS=$W/runs
 cd $W/PoreLoom
 echo "$(date '+%F %T') host $(hostname) gpu $(nvidia-smi --query-gpu=name --format=csv,noheader) method $METHOD data $DATA fs $FS rep $REP"
+case "$METHOD" in poreloom|readcurrent|nanodeep_upstream|squigglenet) ;; *) echo "Unknown manuscript method: $METHOD" >&2; exit 2 ;; esac
 RECIPE=project; [ "$METHOD" = nanodeep_upstream ] && RECIPE=upstream
 if [ "$METHOD" = poreloom ]; then
   python -m poreloom.method all --data "$DATA" --out "$OUT" --fs "$FS" --replicate "$REP" --device cuda:0

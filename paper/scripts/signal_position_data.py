@@ -9,7 +9,7 @@ import json
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
+from result_archive import ROOT, ARCHIVE
 SERVICE = .0158467092551291
 INTERVAL = .4
 PHASE_SEED = 20261012
@@ -22,8 +22,8 @@ def family(ds):
 
 def prepare():
     sources = set()
-    fixed_path = ROOT/'results/final_20261014/fixed_window/report.json'
-    sources.add(str(fixed_path.relative_to(ROOT)))
+    fixed_path = ARCHIVE/'results/final_20261014/fixed_window/report.json'
+    sources.add(str(fixed_path.relative_to(ARCHIVE)))
     report = json.loads(fixed_path.read_text())
     prefix, cdfs, summaries, checks = [], [], [], []
     for unit, r in report.items():
@@ -32,9 +32,9 @@ def prepare():
         assert len(r['grid']) == len(r['acc']) == 32 and r['limit'] in (None, 0)
         for length, acc in zip(r['grid'], r['acc']):
             prefix.append(dict(unit=unit, family=fam, usable_samples=length, acc=acc, n_test=r['n_test']))
-        base = ROOT/'results/final_20261014/runs/main'/ds/f'poreloom_{rep}'
+        base = ARCHIVE/'results/final_20261014/runs/main'/ds/f'poreloom_{rep}'
         run_path, outcome_path = base/'run.json', base/'test/outcomes_0.4_nominal.npz'
-        sources.update(str(p.relative_to(ROOT)) for p in [run_path, outcome_path])
+        sources.update(str(p.relative_to(ARCHIVE)) for p in [run_path, outcome_path])
         fs = float(json.loads(run_path.read_text())['fs'])
         assert fs == r['fs']
         with np.load(outcome_path, allow_pickle=False) as z:
@@ -78,7 +78,7 @@ def prepare():
                                sample_positions_match_two_reconstructions=True))
     for name, rows in [('fixed_prefix', prefix), ('decision_position_cdf', cdfs), ('decision_position_summary', summaries)]:
         pd.DataFrame(rows).to_csv(ROOT/'figure_data'/f'{name}.csv', index=False, float_format='%.15g')
-    provenance = dict(source_files=[dict(path=p, sha256=hashlib.sha256((ROOT/p).read_bytes()).hexdigest()) for p in sorted(sources)],
+    provenance = dict(source_files=[dict(path=p, sha256=hashlib.sha256((ARCHIVE/p).read_bytes()).hexdigest()) for p in sorted(sources)],
                       fixed_prefix_rows=len(prefix), units=len(checks),
                       cdf_rows=len(cdfs),
                       cdf_support='Every observed integer sample position per unit/category, plus 0 and 6000 anchors; no fixed plotting grid.',

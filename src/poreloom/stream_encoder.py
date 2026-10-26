@@ -4,12 +4,11 @@ No layer pads on the right, so a frame exists only once every sample it depends 
 afterwards. Two left-padding choices:
   delayed  each layer keeps its original left padding: frames are exactly the original (non-causal) ReadCurrent
            frames, emitted 529 samples late (frame t depends on [48t-524, 48t+529]); transferred weights stay valid.
-  causal   every layer pads k - s on the left: frame t depends on [48t-1006, 48t+47], no delay, but the residual
-           branches no longer line up, which breaks transferred weights (2026-10-12 diagnostic).
+  causal   every layer pads k - s on the left: frame t depends on [48t-1006, 48t+47].
 Online updates recompute "context + new samples" (overlap-save) and keep only the new frames, which makes `step`
 equal to the offline `forward` however the signal is chunked.
 
-StreamR0 (plan §4.6) streams R0 exactly: the stage A backbone over the whole stream, mean-pooled over all frames.
+StreamR0 streams the stage A backbone over the whole prefix, mean-pooled over all frames.
 Its frames are the delayed frames plus a tail of 11 frames that reach the right zero padding; only the tail is
 recomputed at each update.
 """
@@ -36,7 +35,7 @@ BOTTLENECKS = (('conv1', 'bn1', 'conv2', 'bn2', 'conv3', 'bn3'),   # SquiggleNet
 
 def _bottleneck(module):
     """[(conv, bn) x 3] of a three-conv residual block (relu after the first two, then + identity or downsample(x),
-    relu), or None. Used by the backbone-replacement experiment (experiments/20261015_backbone)."""
+    relu), or None."""
     if _is_block(module) or not all(hasattr(module, n) for n in ('relu', 'downsample')): return None
     for names in BOTTLENECKS:
         if all(hasattr(module, n) for n in names):
@@ -227,25 +226,8 @@ class StreamBackbone(nn.Module):
 
 
 @dataclass
-class StreamState:
-    """One read. `received` counts absolute samples accepted. raw/z (CPU, preallocated) hold the first `length`
-    stream samples (from `skip`, at most max_samples - skip); stats holds per-block (m, s); h/e_sum live on the
-    model device."""
-    raw: torch.Tensor
-    z: torch.Tensor
-    h: torch.Tensor
-    e_sum: torch.Tensor
-    stats: torch.Tensor = field(default_factory=lambda: torch.zeros(0, 2))
-    received: int = 0
-    length: int = 0
-    frames: int = 0
-    last: float = 0.
-    failed: bool = False
-
-
-@dataclass
 class R0State:
-    """One read for StreamR0: like StreamState, with the sum of final frames (`f_sum`), the sum and count of the
+    """One read for StreamR0, with the sum of final frames (`f_sum`), the sum and count of the
     current tail frames, and `used`, the stream samples (a multiple of 48) the tail was computed for."""
     raw: torch.Tensor
     z: torch.Tensor
@@ -345,102 +327,8 @@ class _StreamBase(nn.Module):
         return [state for state, *_ in jobs], new, count
 
 
-class StreamEncoder(_StreamBase):
-    """Normalizer -> streaming backbone -> per-frame projection -> GRU; s(n) = [h, mean e, n/max_samples, log1p(n/fs)].
-
-    The stream starts at absolute sample `skip`; frame t is final ("ends") at skip + 48*t + right + 1. At most
-    `max_samples` samples are used.
-    """
-    feature_dim = 258
-
-    def __init__(self, layers, projection, normalizer, skip=1500, max_samples=7500, fs=FS, alignment='delayed'):
-        super().__init__(layers, normalizer, skip, max_samples, fs, alignment)
-        self.projection = projection
-        self.gru = nn.GRU(128, 128, batch_first=True)
-
-    def frame_ends(self, frames):
-        return self.skip + self.stride*np.arange(frames) + self.backbone.right + 1
-
-    def time_features(self, n):
-        n = torch.as_tensor(n, dtype=torch.float32, device=self.normalizer.prior.device).clamp(max=self.max_samples)
-        return torch.stack([n/self.max_samples, torch.log1p(n/self.fs)], -1)
-
-    def _embed(self, z):
-        return self.projection(self.backbone(z).transpose(1, 2))
-
-    def forward(self, pa, lengths):
-        """Offline: pa [B,L] from read start, lengths [B] -> memory [B,F,256] = [h, mean e] per frame, valid [B,F]."""
-        lengths = torch.as_tensor(lengths, device=pa.device).clamp(max=self.max_samples)
-        x = pa[:, self.skip:self.max_samples].float()
-        stream = (lengths - self.skip).clamp(min=0)
-        x = x.masked_fill(torch.arange(x.shape[1], device=x.device) >= stream[:, None], 0)
-        if self.backbone.frames(x.shape[1]) == 0:
-            return x.new_zeros((len(x), 0, 256)), torch.zeros((len(x), 0), dtype=torch.bool, device=x.device)
-        e = self._embed(self.normalizer(x))
-        h, _ = self.gru(e)
-        count = torch.arange(1, e.shape[1] + 1, device=e.device, dtype=e.dtype)[:, None]
-        valid = torch.arange(e.shape[1], device=e.device) < self.frames_at(stream + self.skip)[:, None]
-        return torch.cat([h, e.cumsum(1)/count], -1), valid
-
-    def state_at(self, memory, n):
-        """Decision state s(n) [B,258] from offline memory: last frame ending at or before n."""
-        n = torch.as_tensor(n, device=memory.device).clamp(max=self.max_samples)
-        frames = self.frames_at(n).clamp(max=memory.shape[1])
-        picked = memory[torch.arange(len(memory), device=memory.device), (frames - 1).clamp(min=0)]
-        picked = torch.where((frames > 0)[:, None], picked, torch.zeros_like(picked))
-        return torch.cat([picked, self.time_features(n)], -1)
-
-    def init_state(self, signal_device='cpu'):
-        """signal_device: where raw/z and the normalization run (the model device avoids host-side medians)."""
-        device = self.normalizer.prior.device
-        size = self.max_samples - self.skip
-        return StreamState(raw=torch.zeros(size, device=signal_device), z=torch.zeros(size, device=signal_device),
-                           h=torch.zeros(128, device=device), e_sum=torch.zeros(128, device=device),
-                           stats=torch.zeros(0, 2, device=signal_device))
-
-    @torch.no_grad()
-    def step(self, states, chunks):
-        """Online: chunks[i] = (absolute offset, pA samples) or None for states[i]; updates states in place."""
-        grown = self._ingest(states, chunks)
-        jobs, new, count = self._new_frames(grown, [self.frames_at(self.skip + s.length) for s in grown], self._embed)
-        if not jobs: return
-        device = new.device
-        out, _ = self.gru(new, torch.stack([state.h for state in jobs])[None])
-        h = out[torch.arange(len(jobs), device=device), count - 1]
-        e_sum = torch.stack([state.e_sum for state in jobs]) + new.sum(1)
-        for i, state in enumerate(jobs):
-            state.h, state.e_sum, state.frames = h[i], e_sum[i], state.frames + int(count[i])
-
-    def readout(self, states):
-        """Current decision states s(n) [B,258]; n = samples received (capped at max_samples)."""
-        memory = torch.stack([torch.cat([s.h, s.e_sum/max(s.frames, 1)]) for s in states])
-        return torch.cat([memory, self.time_features([s.received for s in states])], -1)
-
-
-class StreamClassifier(nn.Module):
-    """StreamEncoder + auxiliary head p(target | s(n)) (258 -> 64 -> 2, same shape as PoreLoom's head)."""
-    def __init__(self, encoder):
-        super().__init__()
-        self.encoder = encoder
-        self.head = nn.Sequential(nn.Linear(encoder.feature_dim, 64), nn.GELU(), nn.Dropout(.1), nn.Linear(64, 2))
-
-    def frame_logits(self, memory):
-        """Logits [B,F,2] with s taken at each frame end."""
-        ends = torch.as_tensor(self.encoder.frame_ends(memory.shape[1]), device=memory.device)
-        time = self.encoder.time_features(ends).to(memory.dtype).expand(len(memory), -1, -1)
-        return self.head(torch.cat([memory, time], -1))
-
-    def forward(self, pa, lengths):
-        """Per-frame logits [B,F,2], valid [B,F]."""
-        memory, valid = self.encoder(pa, lengths)
-        return self.frame_logits(memory), valid
-
-    def logits_at(self, memory, n):
-        return self.head(self.encoder.state_at(memory, n))
-
-
 class StreamR0(_StreamBase):
-    """R0 streamed exactly (plan §4.6): at absolute sample count n, the stage A backbone (original two-sided zero
+    """Streaming-prefix encoding: at absolute sample count n, the stage A backbone (original two-sided zero
     padding) over the normalized stream [skip, skip + L'), L' = (min(n, max_samples) - skip) rounded down to a
     multiple of 48, mean-pooled over all frames -> projection -> head. No decision before L' >= min_samples.
 
@@ -449,7 +337,7 @@ class StreamR0(_StreamBase):
     L' >= 1056, so every read's tail goes through the network in one batch.
 
     time_features=True adds Linear(phi(n)) to the logits, phi(n) = [n/max_samples, log1p(n/fs)] at n = skip + L',
-    zero-initialized so training starts from R0 (plan §10 M2.7).
+    zero-initialized so training starts from the pretrained classifier.
     """
     def __init__(self, layers, projection, head, normalizer, skip=1500, max_samples=DEFAULT_MAX_SAMPLES, fs=FS, min_samples=400,
                  time_features=False):
@@ -556,17 +444,6 @@ class StreamR0(_StreamBase):
         ready = torch.tensor([s.used >= self.min_samples for s in states], device=pooled.device)
         used = torch.tensor([s.used for s in states], device=pooled.device)
         return self.logits(pooled, used).masked_fill(~ready[:, None], math.nan)
-
-
-def build_stream_encoder(checkpoint=None, *, median, mad, prior_weight=400., skip=1500, max_samples=7500,
-                         alignment='delayed'):
-    """Causal encoder with the backbone and projection of a PoreLoom checkpoint (stage A or later), or random init."""
-    base = build_model()
-    if checkpoint is not None:
-        state = torch.load(checkpoint, map_location='cpu')
-        base.load_state_dict(state.get('model_state', state), strict=True)
-    return StreamEncoder(base.encoder, base.projection, CausalNormalizer(median, mad, prior_weight),
-                         skip=skip, max_samples=max_samples, alignment=alignment).train(False)
 
 
 def build_stream_r0(checkpoint=None, *, median, mad, prior_weight=400., skip=1500, max_samples=DEFAULT_MAX_SAMPLES, min_samples=400,

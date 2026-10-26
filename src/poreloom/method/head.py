@@ -4,7 +4,7 @@ Looks: chunk arrivals every `interval` seconds with a per-read random phase; at 
 its logit margin ell(n). C-p sees (ell, n/budget, log1p(n/fs), previous ell, minimum ell, look count) — no hidden
 state. A read acts at most once per bucket (later looks in the same bucket wait, as next_look_used does live), so
 any chunk interval works. Training (poreloom.stream_controller.train_backward): FIT = DEV-A with two phase draws, SEL = DEV-B as the stop
-set; one controller per beta on the M3b grid. Selection: maximum SEL command ACC, ties lower SEL target FRR.
+set; one controller per beta on the penalty grid. Selection: maximum SEL command ACC, ties lower SEL target FRR.
 Times are samples / fs (fs = the data's sampling rate); every length is in samples.
 """
 import json

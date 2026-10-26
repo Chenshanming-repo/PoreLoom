@@ -371,7 +371,6 @@ def draw(out):
     fig.savefig(stem.with_suffix(".svg"), metadata={"Title": "PoreLoom method overview", "Date": "2026-10-16"})
     fig.savefig(stem.with_suffix(".pdf"), metadata={"Title": "PoreLoom method overview", "Author": "PoreLoom"})
     fig.savefig(stem.with_suffix(".png"), dpi=600)
-    fig.savefig(out / "poreloom_main_figure_preview.png", dpi=270)
     plt.close(fig)
     (ROOT / "review/overview_caption_extended.txt").write_text(CAPTION, encoding="utf-8")
     provenance = {

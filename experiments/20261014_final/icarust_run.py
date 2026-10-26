@@ -2,6 +2,7 @@
 """Icarust closed-loop matrix for the final comparison: sim g1 models; target 1%, 10%, 30%;
 strategies No-AS, PoreLoom, ReadCurrent, NanoDeep (authors' recipe), SquiggleNet (single window); seeds 20331101-03.
 512 channels, 1200 s fixed window, 20 s follow-up (simloop defaults). Order shuffled within each seed block.
+The 6000-sample extension in experiments/20261018_icarust_w6000 adds 27 runs to these 45.
 
     icarust_run.py smoke --strategy PoreLoom --duration 120     short run, not part of the matrix
     icarust_run.py matrix                                       45 runs on parallel lanes (retries failed runs)
@@ -9,6 +10,7 @@ strategies No-AS, PoreLoom, ReadCurrent, NanoDeep (authors' recipe), SquiggleNet
 """
 import argparse
 import json
+import os
 import random
 import subprocess
 import threading
@@ -21,7 +23,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 PYTHON = '/path/to/poreloom_work/.venv-nanodeep/bin/python'
 OUT = Path('/path/to/poreloom_work/results/final_20261014/icarust')
-SIMLOOP = REPO/'experiments/20261011_simloop'
+SIMLOOP = Path(os.environ.get('PORELOOM_SIMLOOP', REPO/'experiments/20261011_simloop'))
 STRATEGIES = ['No-AS', 'PoreLoom', 'readcurrent', 'nanodeep', 'squigglenet']
 PERMILLE = (10, 100, 300)
 SEEDS = (20331101, 20331102, 20331103)
@@ -44,6 +46,9 @@ def cells():
 
 
 def launch(c, out, device, port, duration=DURATION, follow=FOLLOW):
+    for name in ('closed_loop.py', 'analyze_live.py'):
+        if not (SIMLOOP/name).is_file():
+            raise FileNotFoundError(f'{SIMLOOP/name} is required; set PORELOOM_SIMLOOP to the external simloop support directory')
     cmd = [PYTHON, str(HERE/'icarust_live.py'), '--strategy', c['strategy'], '--out', str(out), '--seed', str(c['seed']),
            '--channels', str(CHANNELS), '--duration', str(duration), '--follow', str(follow),
            '--target-permille', str(c['permille']), '--port', str(port), '--device', device]

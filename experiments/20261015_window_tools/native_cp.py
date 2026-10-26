@@ -2,7 +2,7 @@
 """Trained single-window baselines (3000-sample windows) as sliding-window scorers + C-p.
 
 Per unit, the main-run baseline models are reused unchanged (no retraining): runs/main/<ds>/<m>_r<r>/fit/best.pt for
-m = readcurrent, squigglenet, nanodeep (project recipe), nanodeep_upstream (authors' recipe). Each keeps its own native
+m = readcurrent, squigglenet, nanodeep_upstream (authors' recipe). Each keeps its own native
 input contract (poreloom.baselines.preprocessing: NanoDeep ADC (x - mean)/var, ReadCurrent ADC MAD + outlier fill,
 SquiggleNet calibrated pA + official normalization).
   looks  at every 0.4 s chunk arrival n (head.HEAD phase seeds), ell = logit(target) - logit(host) of the latest 3000
@@ -13,8 +13,7 @@ SquiggleNet calibrated pA + official normalization).
          768-sample buckets from the first scored stream length (raw - 1500 = 2500 NanoDeep / 3000 others: 5 / 4
          buckets + forced).
   TEST   0.4 s, nominal service 0.0158 s, eject 0.1 s.
-Report (window_tools.py report): the same model's native single-window decision (max-ACC, measured service), streaming
-PoreLoom and the 1000-window tools.
+Results retain the native single-window models for the manuscript's frozen-baseline FACP comparison.
 
     native_cp.py run --data <data>/<ds> --main <runs>/main/<ds> --fs F --rep r --out <runs>/native_cp/<ds>/r<r> --device cuda:0
 """
@@ -28,11 +27,13 @@ import numpy as np
 import torch
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE))
-import window_tools as WT  # noqa: E402  (sets sys.path for poreloom and the ablation helpers)
-from window_tools import AB, D, H, P  # noqa: E402
+REPO = HERE.parents[1]
+sys.path.insert(0, str(REPO/'src'))
+sys.path.insert(0, str(REPO/'experiments'/'20261015_ablation'))
+import ablation as AB  # noqa: E402
+from poreloom.method import data as D, head as H, pipeline as P  # noqa: E402
 
-MODELS = dict(readcurrent='readcurrent', squigglenet='squigglenet', nanodeep='nanodeep', nanodeep_upstream='nanodeep')
+MODELS = dict(readcurrent='readcurrent', squigglenet='squigglenet', nanodeep_upstream='nanodeep')
 WINDOW, SKIP, BUDGET, BUCKET = 3000, 1500, 7500, 768
 
 

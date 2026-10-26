@@ -1,45 +1,24 @@
 #!/usr/bin/env python3
-"""Decision-budget increase on one dataset.
+"""Observation-budget experiment on R10 mixed group 1 and sputum group 1.
 
-Dataset: r10_run01 (R10.4.1, HG002 host vs Zymo target, 4 kHz, TRAIN 40k / DEV 20k / TEST 20k). The budget has to
-bind, and here it does: 77-86 % of host and of target reads in every split are at least raw 19500 long, and the length
-distributions of TRAIN / DEV / TEST match. sputum_g1 was not chosen because its TEST targets are much shorter than its
-TRAIN / DEV targets (median 13.4k vs 18.8k / 22.5k samples): a higher budget would mix in that split shift.
+R10 mixed uses usable budgets 6000, 9000, 12000, 15000 and 18000; sputum uses
+6000, 9000 and 12000. Three training repeats share a stage-A initialization
+across budgets within each repeat, then refit the streaming encoder and FACP.
+Each policy selects its beta on DEV-B and is evaluated at 0.4-s intervals with
+the nominal processing delay. Sputum budget 6000 repeat 0 reuses the main model.
+The long signal cache must match all metadata and the first 9000 samples of the
+main cache before use. Budgets exclude the initial 1500 skipped samples.
 
-Budget B = signal samples after the 1500-sample skip (the paper convention). B in {6000 (method default),
-9000, 12000, 15000, 18000}: the forced decision lands at raw 1500 + B (7500 ... 19500, i.e. 1.9 ... 4.9 s at 4 kHz).
-Each (B, replicate r) changes only the budget. Everything else is the method default (poreloom.method, docs/method.md):
-  stage A  shared by every budget of replicate r: the method's stage A on the default 9000-sample cache (r0: the main
-           run's stage_A.pt; r1, r2: `python -m poreloom.method stageA --replicate r`). Stage A only ever sees windows
-           up to raw 9000.
-  S1       StreamR0 from that stage A with R0_DEFAULTS, except max_samples = 1500 + B (training prefix lengths uniform up
-           to the budget, normalizer prior over [1500, 1500 + B)), seed + r. DEV-A early stopping uses dev_lengths =
-           the default ten plus 6000 + 1488 k up to the budget plus the budget's own stream length (the default for B = 6000).
-  head     C-p on DEV-A looks up to the budget, with 768-sample buckets: ceil((B - 432) / 768) of them (6000 -> 8,
-           9000 -> 12, 12000 -> 16, 15000 -> 19, 18000 -> 23). The forced look is scored on exactly the first 1500 + B
-           samples. The time inputs n/7500 and log1p(n/4000) are the method's, but n is clamped at the budget, not at
-           7500 (looks_capped; head.looks clamps at 7500, which would make every look past raw 7500 look like 7500;
-           for B = 6000 the two are identical). beta is picked by max DEV-B ACC and locked before TEST.
-  test     the same as pipeline.test (0.4 s primary; 0.2 / 1.0 s and zero service as sensitivity), plus the TEST replay
-           of every beta at 0.4 s nominal (the ACC vs host pore time front) and decision diagnostics.
-Data: the same reads with a 27000-sample prefix cache built from the original raw records (stream_real run.py reader;
-budgets up to 22500 keep S1's full 1500-sample start jitter). Before use, the first 9000 samples and all metadata are
-checked equal to the main-run cache.
-
-Second dataset: sputum_g1 (5 kHz) at B in {6000, 9000, 12000}, 16500-sample
-cache from the POD5 records (stream_sputum prepare.py reader), same design. Its B = 6000 r0 is the main run itself: the main run's S1 and head
-are copied unchanged and only replayed on TEST by this script
-(adds the front and the diagnostics); r1 / r2 at 6000 are trained as for R10, as same-replicate references.
-
-    budget_up.py prefix   --dataset D [--out <root>]   local (.venv-nanodeep): long cache + equality check
-    budget_up.py register --dataset D --main <main run> [--out registration[_D].json]   (before any training)
-    budget_up.py run      --data <27000 root> --stagea <stage_A.pt> --budget B --rep r --fs 4000 --out <dir>
-    budget_up.py report   --dataset D --root <runs>/budget_up/D --main <main run dir> [--md summary_zh.md]
+    budget_up.py prefix --dataset D [--out <root>]
+    budget_up.py register --dataset D --main <main run> [--out registration[_D].json]
+    budget_up.py run --data <cache> --stagea <stage_A.pt> --budget B --rep r --fs F --out <dir>
+    budget_up.py report --dataset D --root <runs>/budget_up/D --main <main run dir> [--md summary_zh.md]
 """
 import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -49,6 +28,7 @@ import torch
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
+DATA_PREP = Path(os.environ.get('PORELOOM_DATA_PREP', REPO/'experiments'))
 sys.path.insert(0, str(REPO/'src'))
 from poreloom.method import data as D, head as H, pipeline as P  # noqa: E402
 from poreloom.stream_controller import look_grid, look_inputs, one_look_per_bucket, Looks  # noqa: E402
@@ -67,7 +47,6 @@ DATASETS = {
 }
 BUDGETS = tuple(sorted({b for d in DATASETS.values() for b in d['budgets']}))
 SPLITS = ('train', 'dev', 'test')
-BOOT, BOOT_SEED = 2000, 20261016
 
 
 def n_buckets(budget):
@@ -85,13 +64,17 @@ def dev_lengths(budget):
 
 def prefix(a):
     ds = DATASETS[a.dataset]; out = a.out or ds['local']
+    relative = '20261013_stream_real/run.py' if a.dataset == 'r10_run01' else '20261013_stream_sputum/prepare.py'
+    reader = DATA_PREP/relative
+    if not reader.is_file():
+        raise FileNotFoundError(f'{reader} is required to rebuild raw-signal caches; set PORELOOM_DATA_PREP to the external preprocessing scripts or provide an existing cache to run --data')
     if a.dataset == 'r10_run01':
-        spec = importlib.util.spec_from_file_location('stream_real_run', REPO/'experiments'/'20261013_stream_real'/'run.py')
+        spec = importlib.util.spec_from_file_location('stream_real_run', reader)
         real = importlib.util.module_from_spec(spec); spec.loader.exec_module(real)
         real.PREFIX = ds['prefix']
         for split in SPLITS: real.build_prefix('run_01', split, dest=out/split)
     else:   # the sputum POD5 reader writes OUT/stream/prefix/<split> from OUT/dataset/splits.csv (worker processes fork)
-        spec = importlib.util.spec_from_file_location('sputum_prepare', REPO/'experiments'/'20261013_stream_sputum'/'prepare.py')
+        spec = importlib.util.spec_from_file_location('sputum_prepare', reader)
         prep = importlib.util.module_from_spec(spec); sys.modules['sputum_prepare'] = prep; spec.loader.exec_module(prep)
         base = out.parent/(out.name + '_build'); (base/'dataset').mkdir(parents=True, exist_ok=True)
         link = base/'dataset'/'splits.csv'
@@ -129,7 +112,7 @@ def register(a):
     manifests = {s: json.loads((ds['local']/s/'manifest.json').read_text())['files'] for s in SPLITS}
     out.write_text(json.dumps(dict(
         written=time.strftime('%Y-%m-%d %H:%M:%S') + ', before any budget-increase training',
-        request='decision-budget increase on one dataset: B in {6000, 9000, 12000, 15000, 18000}',
+        request=f'Observation budgets on {a.dataset}: {list(budgets)}',
         design=__doc__.split('    budget_up.py prefix')[0].strip(),
         dataset=dict(name=a.dataset, fs=ds['fs'], prefix_samples=ds['prefix'], files=manifests, equality_with=str(ds['old'])),
         budgets_signal=list(budgets), forced_raw=[SKIP + b for b in budgets], replicates=list(REPS),
@@ -140,14 +123,9 @@ def register(a):
             'B = 6000 r0 is rerun here through this script (code-path check against the main run, same recipe); every '
             'comparison uses this script\'s runs' if a.dataset == 'r10_run01' else
             'B = 6000 r0 = the main run: its S1 and head copied unchanged, replayed on TEST by this script')),
-        primary=dict(metric='TEST command ACC and host mean pore seconds, 0.4 s, nominal service, max DEV-B ACC beta',
-                     comparison='each B vs B = 6000 of the same replicate: paired bootstrap over TEST reads '
-                                f'({BOOT} draws, seed {BOOT_SEED}); summary = mean over the 3 replicates and how many '
-                                'replicates have a 95 % CI excluding 0',
-                     noise='run-to-run noise of the method is about 0.3 pp ACC (2026-10-14 rerun)'),
-        secondary=['target command FRR, host command / effective reject', 'TEST front of every beta (ACC vs host pore s)',
-                   'decision diagnostics: signal used at the decision, share decided at the forced look, share of reads '
-                   'that end without a command', '0.2 / 1.0 s chunk and zero-service sensitivity'],
+        primary=dict(metric='TEST accuracy, host rejection, target rejection and mean host pore time',
+                     comparison='Three training-repeat values and their means for each observation budget',
+                     interval_seconds=0.4, service='nominal'),
     ), indent=2, ensure_ascii=False) + '\n')
 
 
@@ -233,129 +211,52 @@ def run(a):
         choice = json.loads((out/'head'/'selection.json').read_text())
         data = split('test'); (out/'test').mkdir(parents=True, exist_ok=True)
         ctrl = H.load_controller(out/'head'/'controllers.pt', choice['beta'], a.device)
-        rows, extra = [], {}
-        for interval in [a.interval] + [i for i in (.2, .4, 1.) if i != a.interval]:
-            z = extract(net, data, a.fs, interval, H.HEAD['phase_seed'], a.device, a.budget)
-            for service, tag in ((H.HEAD['service'], 'nominal'), (0., 'zero')):
-                o = H.evaluate(ctrl, z, a.fs, a.device, service=service)
-                np.savez(out/'test'/f'outcomes_{interval}_{tag}.npz', read_id=z['read_id'], is_target=z['is_target'],
-                         **{k: v for k, v in o.items() if k != 'missing'})
-                rows.append(dict(interval=interval, service=tag, group='pooled', **H.metrics(o, z['is_target'])))
-                if interval == a.interval and tag == 'nominal': extra['diagnostics'] = diagnostics(z, o, a.fs, a.budget)
-            if interval == a.interval:
-                saved = torch.load(out/'head'/'controllers.pt', map_location='cpu')
-                extra['front'] = [dict(beta=b, **H.metrics(H.evaluate(H.load_controller(out/'head'/'controllers.pt', b, a.device),
-                                                                     z, a.fs, a.device), z['is_target'])) for b in saved['betas']]
-        (out/'test'/'metrics.json').write_text(json.dumps(dict(beta=choice['beta'], rows=rows, **extra), indent=2))
-        for r in rows:
-            if r['interval'] == a.interval and r['service'] == 'nominal':
-                log('TEST', {k: round(r[k], 4) for k in ('acc', 'host_command_reject', 'target_command_frr', 'host_mean_pore_seconds')})
+        z = extract(net, data, a.fs, a.interval, H.HEAD['phase_seed'], a.device, a.budget)
+        outcome = H.evaluate(ctrl, z, a.fs, a.device, service=H.HEAD['service'])
+        np.savez(out/'test'/f'outcomes_{a.interval}_nominal.npz', read_id=z['read_id'], is_target=z['is_target'],
+                 **{k: v for k, v in outcome.items() if k != 'missing'})
+        row = dict(interval=a.interval, service='nominal', group='pooled', **H.metrics(outcome, z['is_target']))
+        (out/'test'/'metrics.json').write_text(json.dumps(dict(beta=choice['beta'], rows=[row]), indent=2))
+        log('TEST', {k: round(row[k], 4) for k in ('acc', 'host_command_reject', 'target_command_frr', 'host_mean_pore_seconds')})
     (out/'JOB_DONE').touch()
-
-
-def diagnostics(z, o, fs, budget):
-    """Where the locked policy decides: stream samples used at the command, share at the forced look, share without one."""
-    lk = looks_capped(z, fs)
-    n = look_grid(z['m'], fs=fs, max_samples=SKIP + budget, n_buckets=n_buckets(budget))[0]
-    y = np.asarray(z['is_target'], bool); k = np.asarray(o['steps']); has = np.asarray(o['command'], bool) & (k >= 0)
-    i = np.flatnonzero(has)
-    used = np.full(len(y), np.nan); used[i] = np.minimum(n[i, k[i]], SKIP + budget) - SKIP
-    forced = np.zeros(len(y), bool); forced[i] = lk.forced[i, k[i]]
-    q = lambda v: [float(x) for x in np.nanpercentile(v, [25, 50, 75, 90])] if np.isfinite(v).any() else None
-    out = {}
-    for name, m in (('host', ~y), ('target', y)):
-        out[name] = dict(no_command=float((~has[m]).mean()), forced=float(forced[m].mean()),
-                         used_q25_50_75_90=q(used[m]), used_mean=float(np.nanmean(used[m])),
-                         reject_at_forced=float((forced & np.asarray(o['command_reject'], bool))[m].mean()),
-                         read_shorter_than_budget=float((np.asarray(z['raw_length'])[m] < SKIP + budget).mean()))
-    return out
 
 
 # ---------------------------------------------------------------- report
 
-def correct(o):
-    y = o['is_target'].astype(bool); rej = o['command_reject'].astype(bool)
-    return np.where(y, ~rej, rej).astype(float)
-
-
-def boot(new, old, mask, seed=BOOT_SEED):
-    d = (new - old)[mask]; rng = np.random.default_rng(seed)
-    draws = np.array([d[rng.integers(0, len(d), len(d))].mean() for _ in range(BOOT)])
-    return float(d.mean()), [float(x) for x in np.quantile(draws, [.025, .975])]
-
 
 def report(a):
-    root = a.root; table, deltas = {}, {}
-    ds = DATASETS[a.dataset]; BUDGETS, FS = ds['budgets'], ds['fs']
-    for b in BUDGETS:
-        for r in REPS:
-            f = root/f'b{b}_r{r}'/'test'/'metrics.json'
-            if not f.exists(): continue
-            m = json.loads(f.read_text())
-            row = next(x for x in m['rows'] if x['interval'] == .4 and x['service'] == 'nominal')
-            table[(b, r)] = dict(row, beta=m['beta'], diagnostics=m['diagnostics'], front=m['front'],
-                                 sens={f"{x['interval']}_{x['service']}": x['acc'] for x in m['rows']})
-    for (b, r) in table:
-        ref = root/f'b6000_r{r}'/'test'/'outcomes_0.4_nominal.npz'
-        if b == 6000 or not ref.exists(): continue
-        new, old = dict(np.load(root/f'b{b}_r{r}'/'test'/'outcomes_0.4_nominal.npz')), dict(np.load(ref))
-        assert np.array_equal(new['read_id'], old['read_id'])
-        host = ~new['is_target'].astype(bool)
-        deltas[(b, r)] = dict(acc=boot(correct(new), correct(old), np.ones(len(host), bool)),
-                              host_pore=boot(new['pore_seconds'], old['pore_seconds'], host))
-    main = json.loads((a.main/'test'/'metrics.json').read_text())
-    main_row = next(x for x in main['rows'] if x['interval'] == .4 and x['service'] == 'nominal' and x['group'] == 'pooled')
-    lines = [f'# PoreLoom 决策预算提高（{a.dataset}）', '',
-             f'预算 = 跳过前 1500 点之后的信号点数；强制决策在 raw 1500 + 预算（{FS/1000:g} kHz）。每个预算重训 S1 和 C-p，stage A 按重复共用。',
-             'TEST 0.4 s、名义服务时间、DEV-B 最大 ACC 锁定的 β。Δ 相对同一重复的预算 6000，配对 bootstrap（2000 次）95% CI。', '',
-             f"代码路径检查：本脚本 b6000_r0 ACC {table.get((6000, 0), {}).get('acc', float('nan'))*100:.2f}% vs 主实验 "
-             f"{main_row['acc']*100:.2f}%；host 占孔 {table.get((6000, 0), {}).get('host_mean_pore_seconds', float('nan')):.3f} vs "
-             f"{main_row['host_mean_pore_seconds']:.3f} s。", '',
-             '| 预算 | 强制决策 s | 重复 | ACC % | host 拒绝 % | target 误拒 % | host 占孔 s | ΔACC pp [95% CI] | Δhost 占孔 s [95% CI] |',
-             '|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
-    for b in BUDGETS:
-        for r in REPS:
-            if (b, r) not in table: continue
-            t = table[(b, r)]; d = deltas.get((b, r))
-            da = f"{d['acc'][0]*100:+.2f} [{d['acc'][1][0]*100:+.2f}, {d['acc'][1][1]*100:+.2f}]" if d else '—'
-            dp = f"{d['host_pore'][0]:+.3f} [{d['host_pore'][1][0]:+.3f}, {d['host_pore'][1][1]:+.3f}]" if d else '—'
-            lines.append(f"| {b} | {(SKIP + b)/FS:.2f} | r{r} | {t['acc']*100:.2f} | {t['host_command_reject']*100:.2f} | "
-                         f"{t['target_command_frr']*100:.2f} | {t['host_mean_pore_seconds']:.3f} | {da} | {dp} |")
-    lines += ['', '## 重复均值', '', '| 预算 | n | ACC % | host 占孔 s | ΔACC pp 均值 | CI 不含 0 的重复（ACC 升 / 降） | 决策时 host 用到的信号中位数 | target 无指令 % | 强制决策 %（host / target） |',
-              '|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
+    dataset = DATASETS[a.dataset]
+    rows = []
+    for budget in dataset['budgets']:
+        for rep in REPS:
+            path = a.root/f'b{budget}_r{rep}'/'test/metrics.json'
+            if not path.exists():
+                continue
+            result = json.loads(path.read_text())
+            selected = next(r for r in result['rows']
+                            if r['interval'] == .4 and r['service'] == 'nominal' and r['group'] == 'pooled')
+            rows.append(dict(budget=budget, replicate=rep, beta=result['beta'], **selected))
+    metrics = ('acc', 'host_command_reject', 'target_command_frr', 'host_mean_pore_seconds')
     summary = {}
-    for b in BUDGETS:
-        rs = [r for r in REPS if (b, r) in table]
-        if not rs: continue
-        acc = np.mean([table[(b, r)]['acc'] for r in rs]); pore = np.mean([table[(b, r)]['host_mean_pore_seconds'] for r in rs])
-        ds = [deltas[(b, r)]['acc'] for r in rs if (b, r) in deltas]
-        up = sum(lo > 0 for _, (lo, hi) in ds); down = sum(hi < 0 for _, (lo, hi) in ds)
-        dg = [table[(b, r)]['diagnostics'] for r in rs]
-        med = np.mean([g['host']['used_q25_50_75_90'][1] for g in dg if g['host']['used_q25_50_75_90']])
-        summary[b] = dict(n=len(rs), acc=acc, host_pore=pore, dacc=float(np.mean([d for d, _ in ds])) if ds else None, up=up, down=down)
-        lines.append(f"| {b} | {len(rs)} | {acc*100:.2f} | {pore:.3f} | "
-                     f"{'—' if not ds else f'{np.mean([d for d, _ in ds])*100:+.2f}'} | {up} / {down} | {med:.0f} | "
-                     f"{np.mean([g['target']['no_command'] for g in dg])*100:.1f} | "
-                     f"{np.mean([g['host']['forced'] for g in dg])*100:.1f} / {np.mean([g['target']['forced'] for g in dg])*100:.1f} |")
-    lines += ['', '## ACC vs host 占孔前沿（TEST 0.4 s，每个 β；重复 r0）', '',
-              '同一 host 占孔下的 ACC 才是公平比较：最大 ACC 选点会随预算把 host 占孔一起推高。', '',
-              '| 预算 | host 占孔 ≤1.0 s 最高 ACC | ≤1.5 s | ≤2.0 s | ≤3.0 s |', '|---:|---:|---:|---:|---:|']
-    for b in BUDGETS:
-        if (b, 0) not in table: continue
-        f = table[(b, 0)]['front']
-        best = lambda c: max([x['acc'] for x in f if x['host_mean_pore_seconds'] <= c], default=float('nan'))
-        lines.append(f"| {b} | " + ' | '.join(f'{best(c)*100:.2f}' for c in (1., 1.5, 2., 3.)) + ' |')
-    lines += ['', '## chunk 间隔与服务时间敏感性（ACC %，重复均值）', '', '| 预算 | 0.2 s | 0.4 s | 1.0 s | 0.4 s 零服务 |', '|---:|---:|---:|---:|---:|']
-    for b in BUDGETS:
-        rs = [r for r in REPS if (b, r) in table]
-        if not rs: continue
-        s = lambda k: np.mean([table[(b, r)]['sens'][k] for r in rs])*100
-        lines.append(f"| {b} | {s('0.2_nominal'):.2f} | {s('0.4_nominal'):.2f} | {s('1.0_nominal'):.2f} | {s('0.4_zero'):.2f} |")
+    lines = [f'# Observation budgets: {a.dataset}', '',
+             'TEST at 0.4-s observations; separately refitted encoders and DEV-B-selected policies.', '',
+             '| Budget | Repeat | Accuracy (%) | Host rejection (%) | Target rejection (%) | Host pore time (s) |',
+             '|---:|---:|---:|---:|---:|---:|']
+    for row in rows:
+        lines.append(f"| {row['budget']} | {row['replicate']} | {100*row['acc']:.2f} | "
+                     f"{100*row['host_command_reject']:.2f} | {100*row['target_command_frr']:.2f} | "
+                     f"{row['host_mean_pore_seconds']:.3f} |")
+    for budget in dataset['budgets']:
+        values = [r for r in rows if r['budget'] == budget]
+        if values:
+            summary[str(budget)] = dict(n=len(values), **{k: float(np.mean([r[k] for r in values])) for k in metrics})
+    main = json.loads((a.main/'test/metrics.json').read_text())
+    reference = next(r for r in main['rows'] if r['interval'] == .4 and r['service'] == 'nominal' and r['group'] == 'pooled')
     text = '\n'.join(lines) + '\n'
     print(text)
-    if a.md: Path(a.md).write_text(text)
-    (root/'report.json').write_text(json.dumps(dict(summary={str(k): v for k, v in summary.items()},
-                                                    deltas={f'b{b}_r{r}': v for (b, r), v in deltas.items()}), indent=2))
+    if a.md:
+        Path(a.md).write_text(text)
+    (a.root/'report.json').write_text(json.dumps(dict(rows=rows, summary=summary, main_reference=reference), indent=2))
 
 
 def main(argv=None):
@@ -367,7 +268,7 @@ def main(argv=None):
     p = sub.add_parser('run')
     for k in ('--data', '--stagea', '--out'): p.add_argument(k, type=Path, required=True)
     p.add_argument('--budget', type=int, required=True, choices=BUDGETS); p.add_argument('--rep', type=int, required=True)
-    p.add_argument('--fs', type=float, required=True); p.add_argument('--interval', type=float, default=H.HEAD['interval'])
+    p.add_argument('--fs', type=float, required=True); p.add_argument('--interval', type=float, choices=(0.4,), default=0.4)
     p.add_argument('--device', default='cuda:0')
     p.add_argument('--limit', type=int, default=0, help='smoke only: class-balanced subset size per split')
     p.add_argument('--smoke-epochs', type=int, default=0, help='smoke only: S1 / head epochs and a 3-beta grid')

@@ -1,6 +1,6 @@
 {
   "written": "2026-10-15 09:01:38, before any full-data fixed_window job (smoke subset only: sputum_g1, 3000 rows)",
-  "design": "Why one fixed signal window is the wrong design.\n\nThe frozen S1 encoder of the main run (trained on every prefix length 432-6000 of the stream) scores every DEV-B and TEST\nread at a common grid of stream lengths u (samples after the 1500-sample skip; prefix n = min(1500 + u, read length),\nno decision when the read ends before 1500 + 432). At every u a fixed-window rule \"reject if margin < t_u\" has t_u\nlocked at maximum DEV-B ACC before TEST is read. On TEST:\n  A  more signal -> higher accuracy: ACC(u) with a bootstrap CI over reads (2000 resamples)\n  B  reads differ in how much signal they need: per read, u* = the shortest grid length from which the fixed-window\n     decision stays correct up to 6000 (reads >= 7500 samples, so every grid point is real signal); the share of\n     reads with u* <= 432 / 1200 / 3000, > 3000, and never correct. At the 3000-sample window (NanoDeep / ReadCurrent\n     size): \"wasted\" = correct and stable already by 1200, \"too short\" = wrong at 3000 but stable correct later\n  C  the early-decidable reads can be recognized online: TEST reads ranked by |margin - t_u| at u = 432 / 1200, ACC\n     of the most confident 25 / 50 % at u and at 6000, against the rest\n  D  per-read stopping vs one window: the oracle (each read stops at u*) and the realized PoreLoom C-p point against\n     the best fixed window, from runs/ablation/<unit>/{main,fixed_len}/metrics.json (chunk replay, host pore time)\n\n    fixed_window.py run    --main <runs>/main/<ds> --data <data>/<ds> --rep r --out <runs>/fixed_window/<ds>/r<r>\n    fixed_window.py report --root <runs>/fixed_window --ablation <runs>/ablation [--md summary_zh.md]\n",
+  "design": "Fixed-prefix accuracy of the frozen streaming encoder (main Fig. 2a).\n\nAt each usable prefix length, the decision threshold maximizes DEV-B accuracy and\nis locked before TEST. Short reads use the available signal; reads shorter than\n1500 skipped plus 432 usable samples are retained.\n\n    fixed_window.py run --main <runs>/main/<ds> --data <data>/<ds> --rep r --out <runs>/fixed_window/<ds>/r<r>\n    fixed_window.py report --root <runs>/fixed_window [--md summary_zh.md]",
   "grid": [
     432,
     624,
@@ -35,15 +35,6 @@
     5808,
     6000
   ],
-  "early": [
-    432,
-    1200
-  ],
-  "window": 3000,
-  "bootstrap": {
-    "resamples": 2000,
-    "seed": 20261015
-  },
   "units": [
     "r10_run01/r0",
     "r10_run02/r0",
@@ -57,5 +48,6 @@
     "sputum_g1/r0",
     "sputum_g2/r0",
     "sputum_g3/r0"
-  ]
+  ],
+  "scope_note": "Retained fixed-prefix accuracy analysis; original registration date preserved."
 }

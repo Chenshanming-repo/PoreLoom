@@ -24,7 +24,10 @@ def row(run):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('runs', type=Path); ap.add_argument('--json', type=Path); a = ap.parse_args()
-    rows = [row(p.parent.parent) for p in sorted(a.runs.glob('*/*/*/test/metrics.json'))]
+    methods = {'poreloom', 'readcurrent', 'nanodeep_upstream', 'squigglenet'}
+    rows = [row(p.parent.parent) for p in sorted(a.runs.glob('*/*/*/test/metrics.json'))
+            if p.parent.parent.parent.parent.name in {'main', 'lso', 'win6000'}
+            and p.parent.parent.name.rsplit('_r', 1)[0] in methods]
     for r in rows:
         print(f"{r['experiment']:5s} {r['dataset']:30s} {r['method']:12s} r{r['replicate']}  ACC {100*r['acc']:5.2f}  "
               f"host {100*r['host_command_reject']:5.1f}  FRR {100*r['target_command_frr']:5.1f}  pore {r['host_mean_pore_seconds']:.3f}")

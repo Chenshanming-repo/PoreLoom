@@ -1,4 +1,4 @@
-"""Learned action head over streaming R0 looks (plan §10 M3b), trained backward over time buckets.
+"""Factorized action-cost heads over streaming-prefix scores, trained backward over time buckets.
 
 A look is a chunk arrival at which R0 can act (L' >= min_samples). Its input comes from the frozen encoder; the
 labels of every action come from chunk_replay.replay, so training and evaluation share one outcome model.
@@ -6,8 +6,8 @@ labels of every action come from chunk_replay.replay, so training and evaluation
 Buckets split the used stream length L' into equal ranges (`bucket` samples each) plus one forced head (the first
 arrival holding >= max_samples, accept or reject only). With chunks of at least `bucket` + 47 samples, consecutive
 looks of a read always fall in strictly later buckets, so heads are trained from the last bucket back to the first:
-the label of DEFER at a look is the outcome of the already trained later heads (factorized cost regression, as
-train_factorized: u = host pore seconds / reference, r = target command reject; action score u + beta * r).
+the label of DEFER at a look is the outcome of the already trained later heads. The factorized costs are
+u = host pore seconds / reference and r = target command reject; the action score is u + beta * r.
 """
 import copy
 from dataclasses import dataclass

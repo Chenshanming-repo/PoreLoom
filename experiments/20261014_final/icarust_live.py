@@ -17,6 +17,7 @@ from collections import deque
 from pathlib import Path
 import importlib.util
 import json
+import os
 import sys
 import time
 
@@ -25,28 +26,17 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(REPO/'src'))
-_spec = importlib.util.spec_from_file_location('simloop_closed_loop', REPO/'experiments/20261011_simloop/closed_loop.py')
+SIMLOOP = Path(os.environ.get('PORELOOM_SIMLOOP', REPO/'experiments/20261011_simloop'))
+if not (SIMLOOP/'closed_loop.py').is_file():
+    raise FileNotFoundError(f'{SIMLOOP}/closed_loop.py is required; set PORELOOM_SIMLOOP to the external simloop support directory')
+_spec = importlib.util.spec_from_file_location('simloop_closed_loop', SIMLOOP/'closed_loop.py')
 cl = importlib.util.module_from_spec(_spec); sys.modules[_spec.name] = cl; _spec.loader.exec_module(cl)
 
 MODELS = json.loads((HERE/'icarust_models.json').read_text())
 cl.TRAIN_CAL = dict(MODELS['calibration'])
 TOOLS = ('readcurrent', 'nanodeep', 'squigglenet')
-NAMES = ['No-AS', 'PoreLoom', *TOOLS, 'PoreLoom-head0.2']
-# --break-ms (chunk time of the simulated sequencer; ablation 2026-10-15) is taken out before simloop parses argv;
-# default 400 = the simloop profile unchanged. PoreLoom-head0.2 = the same encoder with the C-p head trained at 0.2 s.
-BREAK_MS = 400
-if '--break-ms' in sys.argv:
-    i = sys.argv.index('--break-ms'); BREAK_MS = int(sys.argv[i + 1]); del sys.argv[i:i + 2]
-_profile_text = cl.profile_text
-
-
-def _profile(*args):
-    text = _profile_text(*args)
-    assert text.count('break_read_ms = 400') == 1
-    return text.replace('break_read_ms = 400', f'break_read_ms = {BREAK_MS}')
-
-
-cl.profile_text = _profile
+NAMES = ['No-AS', 'PoreLoom', *TOOLS]
+FS, BREAK_MS = 4000, 400
 
 
 def pa(adc, c):
@@ -216,7 +206,6 @@ class NativePolicy(cl.Strategy):
 def build(name, device, calibration):
     if name == 'No-AS': return cl.NoAS()
     if name == 'PoreLoom': return PoreLoomPolicy(device, calibration)
-    if name == 'PoreLoom-head0.2': return PoreLoomPolicy(device, calibration, bundle_path=MODELS['PoreLoom-head0.2'])
     return NativePolicy(name, device, calibration)
 
 

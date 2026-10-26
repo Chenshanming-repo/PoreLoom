@@ -5,10 +5,9 @@ Every tool sees one fixed 3000-sample window of the read's native signal:
 - NanoDeep: ADC raw[1000:4000], ``(x - mean) / var`` of the observed window.
 - ReadCurrent: ADC raw[1500:4500], ``(x - median) / (1.4826 * MAD)``, then each
   original |z| > 3.5 index is replaced in ascending order by its neighbors' mean.
-- CAFES: ADC raw[1500:4500], the six upstream features computed at batch time.
 - SquiggleNet: calibrated pA raw[1500:4500], the official ``normalization``.
 
-Project labels are microbe 0 / host 1. ReadCurrent and CAFES were trained with
+Project labels are microbe 0 / host 1. ReadCurrent was trained with
 network labels flipped (host 0), so the host margin indexes logits per tool.
 """
 import ast
@@ -17,11 +16,10 @@ import numpy as np
 from scipy import stats
 import torch
 
-from .models import SQUIGGLENET_ROOT, cafes_preprocessor
+from .models import SQUIGGLENET_ROOT
 
 CONTRACTS = {
     'nanodeep': dict(units='ADC', key='adc_1000_4000', raw_start=1000, raw_end=4000, host_index=1, microbe_index=0),
-    'cafes': dict(units='ADC', key='adc_1500_4500', raw_start=1500, raw_end=4500, host_index=0, microbe_index=1),
     'readcurrent': dict(units='ADC', key='adc_1500_4500', raw_start=1500, raw_end=4500, host_index=0, microbe_index=1),
     'squigglenet': dict(units='pA', key='pa_1500_4500', raw_start=1500, raw_end=4500, host_index=1, microbe_index=0),
 }
@@ -64,23 +62,6 @@ def readcurrent_inputs(adc):
             else:
                 z[row, i] = (z[row, i - 1] + z[row, i + 1]) / 2
     return z.astype(np.float32), valid
-
-
-def cafes_features(adc, preprocessor=None):
-    """Six-channel CAFES features as a float32 tensor [N, 6, 3000]."""
-    raw = np.asarray(adc)
-    if raw.ndim != 2 or raw.shape[1] != WINDOW or not np.issubdtype(raw.dtype, np.integer):
-        raise ValueError('CAFES expects raw integer ADC windows [N, 3000]')
-    preprocessor = cafes_preprocessor() if preprocessor is None else preprocessor
-    features = preprocessor.add_features(raw, norm=True, s_len=WINDOW, w_len=3).to(torch.float32)
-    if features.shape != (len(raw), 6, WINDOW) or not torch.isfinite(features).all():
-        raise FloatingPointError('invalid CAFES features')
-    return features
-
-
-def cafes_inputs(adc):
-    adc = _windows(adc, np.int16)
-    return cafes_features(adc).numpy(), np.ones(len(adc), bool)
 
 
 _official_normalization = None
@@ -143,8 +124,6 @@ def prepare_windows(windows, tool):
         return x[:, None, :], valid
     if tool == 'readcurrent':
         return readcurrent_inputs(windows)
-    if tool == 'cafes':
-        return cafes_inputs(windows)
     if tool == 'squigglenet':
         return squigglenet_inputs(windows)
     raise ValueError(f'unknown baseline tool: {tool}')

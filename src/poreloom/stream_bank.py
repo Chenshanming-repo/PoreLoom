@@ -1,4 +1,4 @@
-"""Device-resident state bank for StreamR0 (plan §10 M3): many reads in preallocated tensors, batched updates.
+"""Device-resident state bank for StreamR0: many reads in preallocated tensors, batched updates.
 
 `StreamR0.step` keeps one R0State per read and loops over reads in Python; in the live client that per-read work
 dominates the update time. The bank keeps the same quantities for up to `capacity` reads in a few [capacity, ...]

@@ -2,6 +2,9 @@
 
 Streaming adaptive decisions for selective nanopore sequencing from raw signals.
 
+This repository contains the implementation and experiments reported in the Bioinformatics manuscript and its
+Supplementary Information.
+
 Fixed-window classifiers wait for the same amount of signal on every read. PoreLoom instead reads raw signal as chunks
 arrive and, at each callback, chooses Accept, Reject, or Continue for each read. Reads whose origin is already clear are
 decided early, while uncertain reads keep observing up to a maximum budget.
@@ -77,22 +80,6 @@ The complete table is Table 2 of the paper.
   7.84, 4.88, and 2.62 times that of nonselective sequencing at 1%, 10%, and 30% targets. The best baseline,
   3000-sample NanoDeep, reaches 6.15, 4.19, and 2.43, so PoreLoom's enrichment is 27.5%, 16.4%, and 7.9% higher.
 
-### Limitations
-
-- Some baselines preserve targets better: the 6000-sample NanoDeep model has lower target rejection on R9 (5.68% vs
-  6.91%) and R10 mixed data (2.23% vs 3.60%), but misses more hosts and uses more host pore time.
-- FACP has higher target rejection than length-calibrated thresholds on R9, R10 mixed, and sputum data, and the lowest
-  sputum accuracy among the four stopping rules (92.68% vs 93.26% for the best).
-- In closed-loop simulation at 1% targets, 6000-sample SquiggleNet has higher accuracy (98.50% vs 96.37%) by ejecting
-  more hosts, although it ejects 33.51% of targets and has lower enrichment.
-- Target rejection rises when an entire genus is removed from training, and some genera have high rejection even when
-  included.
-- Models do not transfer between datasets without retraining. Models trained on R10 mixed data and applied to sputum
-  reject 79.97% of targets on average, so PoreLoom currently requires matched training data.
-- The R10 mixed host and target reads come from separate sequencing runs, and the sputum data are a spiked
-  quality-control panel after host depletion.
-- All results come from replay of recorded signals and simulation; PoreLoom has not yet been run on a sequencing device.
-
 ## Installation
 
 ```bash
@@ -128,10 +115,11 @@ selection on DEV-B (`head`), and TEST replay (`test`). Each stage can be run on 
 | `--max-samples N` | Raw decision endpoint, including the skipped prefix (default 7500, i.e. a 6000-sample budget). |
 | `--max-decision-seconds T` | Endpoint given as a duration: `floor(T * fs)` samples. `--fs 5000 --max-decision-seconds 2.1` equals `--fs 5000 --max-samples 10500`. |
 | `--replicate r` | Training repeat; all stage seeds are offset by r. |
-| `--select` | Operating point on DEV-B: `max_acc` (default) or `frr:<limit>`. |
 
 The dataset layout (TRAIN, DEV and TEST prefix caches) is documented in `poreloom.method.data`. Prefix caches must
-cover the requested endpoint. Later stages and inference read the saved configuration.
+cover the requested endpoint. Later stages and inference read the saved configuration. The budget experiment can use
+prepared caches directly; rebuilding them from raw data requires the original preprocessing readers, configured with
+`PORELOOM_DATA_PREP`.
 
 ## Baselines
 
@@ -142,21 +130,9 @@ normalization and a DEV-B threshold:
 python -m poreloom.method.baselines --tool readcurrent --data <dataset root> --out <run dir> --fs <Hz> --device cuda:0
 ```
 
-`--tool` is one of `readcurrent`, `nanodeep`, `squigglenet`. For NanoDeep, `--recipe upstream` uses the authors'
-training settings instead of the shared recipe.
-
-`poreloom.baselines` and `scripts/` contain an earlier native-window setup (NanoDeep on raw[1000:4000]; ReadCurrent,
-CAFES, and SquiggleNet on raw[1500:4500]) with model builders, per-tool normalization, training and host-margin
-scoring:
-
-```bash
-python scripts/train_baseline.py --tool nanodeep --output runs/nanodeep/seed20260929
-python scripts/prepare_baseline_tiles.py --output runs/tiles          # ReadCurrent and CAFES need tiles first
-python scripts/train_baseline.py --tool readcurrent --tiles runs/tiles --output runs/readcurrent/seed20260929
-python scripts/score_baseline.py --tool readcurrent --role C_screen --output scores/readcurrent_C.npz
-```
-
-`--smoke` runs a tiny fit. The ReadCurrent and CAFES trainer needs torch >= 1.13.
+`--tool` is one of `readcurrent`, `nanodeep`, `squigglenet`. Use `--recipe upstream` for NanoDeep to reproduce the
+training configuration used in the paper. The 6000-sample comparison is run by
+`experiments/20261016_window6000/win6000.py`.
 
 These baselines load upstream code from `third_party/`, which is not distributed with this repository. Clone the
 upstream repositories there before running them:
@@ -166,7 +142,6 @@ upstream repositories there before running them:
 | `third_party/ReadCurrent` | https://github.com/Ming-Ni-Group/ReadCurrent (commit 6db8921) | MIT |
 | `third_party/NanoDeep` | https://github.com/lysovosyl/NanoDeep | MIT |
 | `third_party/SquiggleNet` | https://github.com/welch-lab/SquiggleNet | MIT |
-| `third_party/CAFES` | https://github.com/Chenshanming-repo/CAFES | MIT |
 
 The PoreLoom backbone in `src/poreloom/method/backbone.py` is a copy of the ReadCurrent convolutional architecture and
 keeps its MIT license notice, so PoreLoom itself does not need `third_party/`.
@@ -196,17 +171,24 @@ working directory and cluster settings.
 | Paper result | Scripts |
 |---|---|
 | Main comparison with 3000- and 6000-sample baselines (Table 2) | `experiments/20261014_final/hpc/`, `summarize.py`; `experiments/20261016_window6000/win6000.py` |
-| Icarust closed-loop simulation (Table 3; Supplementary Section S10) | `experiments/20261014_final/icarust_run.py`, `icarust_live.py` |
+| Icarust closed-loop simulation (Table 3; Supplementary Section S5) | `experiments/20261014_final/icarust_run.py`; `experiments/20261018_icarust_w6000/icarust_w6000.py` |
 | Fixed-prefix accuracy (Fig. 2a) | `experiments/20261015_ablation/fixed_window.py` |
 | Decision positions (Fig. 2b) | `experiments/20261014_final/signal_budget.py`; `paper/scripts/signal_position_data.py` |
-| Streaming versus window encoder, stopping-rule controls (Fig. 3a,b; Table 4) | `experiments/20261015_ablation/ablation.py` |
-| Feature reuse versus full recomputation time (Fig. 3c; Supplementary Fig. S2) | `experiments/20261016_stream_timing/timing.py` |
-| FACP on frozen 3000-sample baselines (Table 5) | `experiments/20261015_window_tools/native_cp.py` |
-| Larger observation budgets (Fig. 4) | `experiments/20261016_budget_up/budget_up.py` |
-| Online/offline decision agreement (Supplementary Section S5) | `experiments/20261014_final/icarust_check.py` |
-| Observation-interval sensitivity (Supplementary Fig. S1) | `experiments/20261015_ablation/icarust_chunk.py` |
-| Cross-dataset transfer (Supplementary Section S6, Fig. S3) | `experiments/20261015_cross_domain/` |
-| Leave-taxon-out (Supplementary Section S11) | `experiments/20261014_final/lso.py` |
+| Streaming versus sliding-window encoder (Supplementary Fig. S2; `Encoder` sheet) | `experiments/20261015_ablation/ablation.py` |
+| Stopping-rule controls (Supplementary Section S2; `Stopping` sheet) | `experiments/20261015_ablation/ablation.py` |
+| Target-rejection penalty sensitivity (Supplementary Fig. S1; `Beta_sensitivity` sheet) | `experiments/20261015_ablation/ablation.py`; `paper/scripts/plot_beta.py` |
+| Fixed 0.5 versus DEV-B-selected baseline thresholds (`Threshold_comparison` sheet) | `paper/scripts/threshold_comparison.py` |
+| Host pore time at matched target rejection (Supplementary Section S7, Fig. S4) | `paper/scripts/analyze_matched_rejection.py` |
+| Feature reuse versus full recomputation time (Supplementary Fig. S2) | `experiments/20261016_stream_timing/timing.py` |
+| FACP on frozen 3000-sample baselines (`Baseline_FACP` sheet) | `experiments/20261015_window_tools/native_cp.py` |
+| Larger observation budgets (Fig. 3; Supplementary Section S4) | `experiments/20261016_budget_up/budget_up.py` |
+| Read-length eligibility (Supplementary Section S3) | `paper/scripts/length_eligibility.py` |
+| Leave-taxon-out (Supplementary Section S6, Fig. S3) | `experiments/20261014_final/lso.py` |
+
+The closed-loop comparison combines 45 runs of nonselective sequencing, PoreLoom, and 3000-sample baselines with
+27 runs of the 6000-sample baselines. Running these scripts requires Icarust 0.6.0, the trained checkpoints, and
+the original simulation support files `closed_loop.py` and `analyze_live.py`, which are not bundled here. Set
+`PORELOOM_SIMLOOP` to their directory and configure the model paths and compute settings before running the matrix.
 
 `paper/` regenerates the figures, tables, and numbers of the manuscript. `paper/figure_data/` holds the unrounded CSV
 input of every plotted comparison, so the figures can be redrawn without the raw results:
@@ -214,25 +196,25 @@ input of every plotted comparison, so the figures can be redrawn without the raw
 ```bash
 cd paper
 python -m pip install -r requirements.txt    # Python >= 3.10; no PyTorch or GPU needed
-python scripts/plot_figures.py               # writes figures/
-python scripts/draw_overview.py              # Fig. 1 schematic
+python scripts/plot_figures.py               # writes the three main and four supplementary figures to figures/
 ```
 
-The raw experimental results (read-level decisions and outcomes, selections, and logs for all reported runs) and the
-read-level partition tables are archived on Zenodo: DOI to be added. To rebuild `figure_data/`, `tables/`, and
-`numbers.tex` from them, extract the `results/` directory of the archive into `paper/results/` and run:
+Rebuilding `figure_data/`, `tables/`, and `numbers.tex` requires the completed experimental results, including
+read-level outcomes, selections, logs, and partition metadata. Set `PORELOOM_RESULTS_ARCHIVE` to the archive root
+containing `results/` and `provenance/`:
 
 ```bash
-python scripts/prepare_results.py
+PORELOOM_RESULTS_ARCHIVE=/path/to/archive python scripts/prepare_results.py
 ```
+
+Without this variable, the scripts look for the archive contents under `paper/`.
 
 ## Repository layout
 
 ```
 src/poreloom/method/      PoreLoom: data, backbone, streaming encoder, FACP heads, pipeline, main-comparison baselines
-src/poreloom/baselines/   native-window baselines (NanoDeep, ReadCurrent, CAFES, SquiggleNet)
+src/poreloom/baselines/   baseline models and preprocessing (NanoDeep, ReadCurrent, SquiggleNet)
 src/poreloom/             streaming, replay, controller, and evaluation modules used by the experiments
-scripts/                  native-baseline CLI entry points
 experiments/              scripts and job files of the reported experiments
 paper/                    figure data, tables, and scripts that regenerate the manuscript figures
 configs/, env/            path template and environment specs

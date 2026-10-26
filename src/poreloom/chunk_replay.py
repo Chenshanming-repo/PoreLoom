@@ -1,8 +1,8 @@
-"""Offline decision replay at chunk arrivals (plan §7 V2), vectorized over reads.
+"""Offline decision replay at chunk arrivals, vectorized over reads.
 
 Every read starts at t = 0. Chunks arrive at sample counts m_j = phase + j*chunk (phase in [0, chunk), both in
-samples); at time m_j/fs the client holds floor(m_j) samples and may act. chunk=None is the compatibility mode:
-data counts as available exactly when it is needed (the old ReplayEnv). Outcomes follow ReplayEnv: the read ends
+samples); at time m_j/fs the client holds floor(m_j) samples and may act. With chunk=None,
+data counts as available exactly when it is needed. The read ends
 naturally if it ends before a decision completes; a reject is effective if the eject completes before the natural
 end, and the pore time is then decision + eject, otherwise the natural end. A service counts as compute if it
 starts while the read is still in the pore.
@@ -36,8 +36,8 @@ def replay(times, actions, starts, costs, t_end, eject=.1):
 
     times [N,K]: completion time of step k (nan: no step); actions [N,K]: Action, or NO_DECISION for an update
     that cannot act; starts [N,K]: when its service starts; costs: service seconds ([N,K], [K] or scalar), or a
-    tuple of consecutive service phases, each counted only if the read is still in the pore when it starts (as
-    ReplayEnv does for the window service and then the head); t_end [N]: natural end. Returns a dict of [N] arrays: command, command_reject, effective_reject, pore_seconds, decision_seconds
+    tuple of consecutive service phases, each counted only if the read is still in the pore when it starts;
+    t_end [N]: natural end. Returns a dict of [N] arrays: command, command_reject, effective_reject, pore_seconds, decision_seconds
     (nan without a command), compute_seconds, steps (index of the terminal step, -1 for a natural end).
     """
     times, actions, starts = np.asarray(times, float), np.asarray(actions), np.asarray(starts, float)
@@ -95,20 +95,3 @@ def summarize(outcome, is_target):
                 target_effective_frr=float(outcome['effective_reject'][target].mean()),
                 host_mean_pore_seconds=float(outcome['pore_seconds'][~target].mean()),
                 mean_compute_seconds=float(outcome['compute_seconds'].mean()))
-
-
-def rows(outcome, read_id, is_target):
-    """Per-read dicts for hostfloor.paired_summary."""
-    return [dict(read_id=str(r), is_target=bool(t), command_issued=bool(c), command_reject=bool(cr),
-                 effective_reject=bool(e), pore_seconds=float(p))
-            for r, t, c, cr, e, p in zip(read_id, is_target, outcome['command'], outcome['command_reject'],
-                                         outcome['effective_reject'], outcome['pore_seconds'])]
-
-
-def paired_mean_difference(new, old, mask, reps=20000, seed=20261010, alpha=.05):
-    """mean(new - old) over `mask` reads with a paired percentile bootstrap."""
-    diff = (np.asarray(new, float) - np.asarray(old, float))[np.asarray(mask, bool)]
-    rng = np.random.default_rng(seed)
-    draws = np.array([diff[rng.integers(0, len(diff), len(diff))].mean() for _ in range(reps)])
-    lo, hi = np.quantile(draws, [alpha/2, 1 - alpha/2])
-    return dict(delta=float(diff.mean()), ci=[float(lo), float(hi)], n=int(len(diff)), reps=reps, seed=seed)

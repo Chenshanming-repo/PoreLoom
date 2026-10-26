@@ -1,0 +1,586 @@
+{
+  "pairs": 72,
+  "unit_accuracy_improved": 50,
+  "unit_accuracy_equal": 1,
+  "unit_accuracy_reduced": 21,
+  "mean_accuracy_improved": 21,
+  "sources": [
+    {
+      "source": "results/final_20261014/runs/main/r10_run01/readcurrent_r0/selection.json",
+      "sha256": "f6092c370435fc7b3f97f744bda782e3ee8e931919732d2d9242e39294f8a8b7"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run01/readcurrent_r0/test/metrics.json",
+      "sha256": "dadd2fafb826b185c5572575a3ae957b727730c10c9d93089a143a3c273fccc1"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run01/readcurrent_r0/selection.json",
+      "sha256": "68c526abc87fbf0d0ecba2931827a96a2d0b76fe614082992b69739a617168fa"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run01/readcurrent_r0/test/metrics.json",
+      "sha256": "13075068036a43796ecf5d474180cf08cedfe2c913e5b86886e2c5ddb5469df9"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run01/nanodeep_upstream_r0/selection.json",
+      "sha256": "08b6dafd2a804656cf9b98243305d48a3fd471c79e4040698798ed83d02569cd"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run01/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "671388266943263bb37ac33421e5f9bcb2b0b24a7af587975ef5c86fc8148a52"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run01/nanodeep_upstream_r0/selection.json",
+      "sha256": "86c10a1d73e9dc1bc5d383fd4fcb094200e5ce1b7f358b10fc22658ce8d19885"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run01/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "83f732f6e7c51712184df37baf3967c525f2e68e85aebaace50db294bd3e130c"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run01/squigglenet_r0/selection.json",
+      "sha256": "f427cebd7a1e7d06884230beb26f89ecdbde1920fbb1c97aa76363dd6f09e9cd"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run01/squigglenet_r0/test/metrics.json",
+      "sha256": "e0769de55e4f5acae7646bfc48fbaf941919619349fe71217c3237db06228744"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run01/squigglenet_r0/selection.json",
+      "sha256": "697b49354eee200edbdfd026330cdf55215f4c85496f805f80ed3ef1ea11cb82"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run01/squigglenet_r0/test/metrics.json",
+      "sha256": "ad97e8bb5f47ff5a5fa281ff73139c05762711d7ed15f6adc6e8e063f5f95550"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run02/readcurrent_r0/selection.json",
+      "sha256": "0c3e6450ae6060f1340b2f25b434e97c96256fd5d4aed4f8d31c775c10dda1cc"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run02/readcurrent_r0/test/metrics.json",
+      "sha256": "96e866f90ac835c05c6387fde46d6392131ff38559e2dc198209dfab7429d57a"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run02/readcurrent_r0/selection.json",
+      "sha256": "41fdef5b27650eeda129af69cef88a7136112f8f2ddac091e8594e03f7990076"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run02/readcurrent_r0/test/metrics.json",
+      "sha256": "557becf953f5708c9a35663f44dee714fcd0b51ebc79eb492c266af75ec293ab"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run02/nanodeep_upstream_r0/selection.json",
+      "sha256": "3cfd65d76ae492182c1a035d1554254b7f3f0f3c2624fc71b6d98c70f555c6fc"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run02/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "be230326744f5801438512de9c16819ba7f72809a8803a4323adb64d9b2e499e"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run02/nanodeep_upstream_r0/selection.json",
+      "sha256": "493659a8131d5dd87c155b76ec8c03c4d5e4bbd282d9a7bd364f0169f1945ae3"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run02/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "364924e355010b7d4e48867ce3e5855f5f145a2bf3e119934f6948aad2e35a4c"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run02/squigglenet_r0/selection.json",
+      "sha256": "fde25eb00df21252ddb30ba5b2bc7d7d2982bfbaa2d83d07ca5cfd9bc5c9cc3c"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run02/squigglenet_r0/test/metrics.json",
+      "sha256": "8bdd6380afd351b9ac63ebe4710de24ea8691728d6b882638ebb07e85acb066e"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run02/squigglenet_r0/selection.json",
+      "sha256": "3e2c5a35ea428717c87dffa50fcb4862b13ea7ba0bc499a5fff931a752a2c28f"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run02/squigglenet_r0/test/metrics.json",
+      "sha256": "3ef1a6e10cbab48af14094cfa1dd5c75368fda345bb4e6a242d82e4b644ea6da"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run03/readcurrent_r0/selection.json",
+      "sha256": "9ecf2dafa495ebda252ba4dc93d7b935fdc0e90b18a4404c419e94d01b0ca19c"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run03/readcurrent_r0/test/metrics.json",
+      "sha256": "b0f0540a5380207d8b9ef04e4014421b4f330231adaa2299c36e2a747694bfc2"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run03/readcurrent_r0/selection.json",
+      "sha256": "5c63b1ca466bfb0be06d310c84914a751d1e52b54cff0dcdbc765b73a2eba669"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run03/readcurrent_r0/test/metrics.json",
+      "sha256": "01c9042dd7fd83ecdfab7b25c54771810ce388d185107d0e33d72cd51be63cf0"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run03/nanodeep_upstream_r0/selection.json",
+      "sha256": "3a800989e573257f12f6abc6919ecaaf6e63e2e61a04f100d077a0b478376540"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run03/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "478707c18db9160bdad4ed69f9a6acb8b9bbd53970898cad4293c26aa6e38a01"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run03/nanodeep_upstream_r0/selection.json",
+      "sha256": "5dc900980ef447eb510fa30f60c4b19f178f708b74638f29f5899474f5bdf27b"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run03/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "95a5f9badd0c09dcb72096a9dc84820e560d01536bcff4772e1b8938d67022ff"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run03/squigglenet_r0/selection.json",
+      "sha256": "6fa6c48a802f2faa977cb5dcaf6ac851c6e9d56d1cbb6b3e014a0d79ec1f42c9"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r10_run03/squigglenet_r0/test/metrics.json",
+      "sha256": "3e29d6a94477ca5c1e1f87c8378a432823622e6ccb9870942f4a49fc40455c73"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run03/squigglenet_r0/selection.json",
+      "sha256": "66a6ce8ec2bdf77cc884bbeb99f9a1d8c4994d7b4070127e986e481f0d0e711b"
+    },
+    {
+      "source": "results/final_20261014/win6000/r10_run03/squigglenet_r0/test/metrics.json",
+      "sha256": "1114501ee3240a91366a7186e63a01a8228b0791b5cd22b2d21ce83cc29ade7e"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/readcurrent_r0/selection.json",
+      "sha256": "cf675d08ac355bb3783caf01968b045ca5031a31645285d2aa6eeea7a19e6b8f"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/readcurrent_r0/test/metrics.json",
+      "sha256": "3e7ed2c69cf98bc5e699f8b08e287926fb60b4a26cd348de3b894771adbb00da"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/readcurrent_r0/selection.json",
+      "sha256": "e2c9c1c9d335dc27e9bbac576d7bb93f5d0a0cdcca4e0339e2e854c3145bc29b"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/readcurrent_r0/test/metrics.json",
+      "sha256": "240c9766e315ebdf9214515d0b80d353b77c8d2d42a59fde3707fcb772bc216b"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/nanodeep_upstream_r0/selection.json",
+      "sha256": "130c4c68faa458072ea1f0f9f4ce19fc80fa0263fbc530df76bc1ee5356b4a1a"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "d04ad99187a1254896f5945bef5cf3d60fe8ac85e38a2dbd25f7eab94bd6ae88"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/nanodeep_upstream_r0/selection.json",
+      "sha256": "804c95201320a02b05ba9474e4f50955324d62d1ce77dc3435d6e49f9d1cd919"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "4a7a075b77d7d44c7b97d528d372cda956e3e8c7cd6a4f4686f4bef512281e76"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/squigglenet_r0/selection.json",
+      "sha256": "505a1702842bcfc71039e1d602d625eeff7aaec6865b5807af0237fd11758349"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/squigglenet_r0/test/metrics.json",
+      "sha256": "68a39f5a480e88082d610b702bfa212a3d0148e6747d5e7cee934a68a140d63e"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/squigglenet_r0/selection.json",
+      "sha256": "1503d29aad0d2c0f975bb3bdaaffff42872429cb96380dddffbea2ce8700e566"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/squigglenet_r0/test/metrics.json",
+      "sha256": "f85d6197b414977be86d5752bba5a85477c288c57146a0ca0709b1cc49305a32"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/readcurrent_r1/selection.json",
+      "sha256": "71138b9447a39393dc28072b76d8c90d063c84f2a98807709894c8f2f5f06162"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/readcurrent_r1/test/metrics.json",
+      "sha256": "15ed159162beeedfd89c618e95ce9ca528b83da9cd7e4383bc620409d413298d"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/readcurrent_r1/selection.json",
+      "sha256": "5603d9e0eb5f92cdf8774b8feff341740ebce2645ab59bfc26382841ca991b6f"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/readcurrent_r1/test/metrics.json",
+      "sha256": "430aed85ebaa10a5c5a27c6d5cf69251b74bc07720bab3ca71102667249a2fcb"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/nanodeep_upstream_r1/selection.json",
+      "sha256": "d25ff669884f053c1ba791fa6108bc98743be0dc2fc8d6dcd59348e174c304b2"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/nanodeep_upstream_r1/test/metrics.json",
+      "sha256": "918b8cd5ce9ab2262a7d39accbd9fd8df89a77d02f811f1455fcf11ee8cc1275"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/nanodeep_upstream_r1/selection.json",
+      "sha256": "efefe98ac1615ee81f902e1cdee862818633e5f77a649598ed52f8159ef20f9c"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/nanodeep_upstream_r1/test/metrics.json",
+      "sha256": "bf12a274864ab1f2a927152ffec6bdb0d8aa169e3d05ce1e152003cfc5ecdc51"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/squigglenet_r1/selection.json",
+      "sha256": "187dbdcacbb7f6cea5cb4d8eca9378cab0a72cf2acf436412478b44af57bdb7f"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/squigglenet_r1/test/metrics.json",
+      "sha256": "c769d52fe499ffaeb1cb532ac8fba6616c2e5a28e1192cfee399fc2b43a54286"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/squigglenet_r1/selection.json",
+      "sha256": "22e9c6461fdfb88b328884f57fac32210dae3c589ee387dfc3069057d3860d01"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/squigglenet_r1/test/metrics.json",
+      "sha256": "5f0f037dde0f444087ceb3b72a8f21bf66c2afd10d40ab34124c9d4301d0de8b"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/readcurrent_r2/selection.json",
+      "sha256": "3c8c91907e6362a406fe8aad674307254afe4af15fc46e69557e22d0a8b59b65"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/readcurrent_r2/test/metrics.json",
+      "sha256": "deab5197b7fa3ef2f362762a1bcff651b4ad4325f7446505828f6a0aedcdd783"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/readcurrent_r2/selection.json",
+      "sha256": "feb1066f9be1d827eb13d106f446ad7935aa071266e2905d49764cd02f876b95"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/readcurrent_r2/test/metrics.json",
+      "sha256": "3a43a15e51cc01a22e5a742a79fe106f554656e3e828c48b174d9f0392613b58"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/nanodeep_upstream_r2/selection.json",
+      "sha256": "caeb08f342ea6ad9ca82f1916a6e62cdfaa5ad6590113aba385021c9805eda6e"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/nanodeep_upstream_r2/test/metrics.json",
+      "sha256": "817fae77b59e587064056a43ad87f68d0956ab7f99ed308bc167c1a95bdaaa2d"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/nanodeep_upstream_r2/selection.json",
+      "sha256": "3c43064f690de5798f80100b8dd9c33e0dbf9275db0a3c2a3b7aa067fd5b89b0"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/nanodeep_upstream_r2/test/metrics.json",
+      "sha256": "861ddb8aeaf44effac2278b0a2ecf37d404745d2a9e29acae1acd628f8abbea4"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/squigglenet_r2/selection.json",
+      "sha256": "6c8631e40360adf3c2636df7a26510198091b66e19be45ce7280b125416a94d6"
+    },
+    {
+      "source": "results/final_20261014/runs/main/r9/squigglenet_r2/test/metrics.json",
+      "sha256": "e4148d71d7b2283d4ea5b0305874388e588244a7183f79721d93d03082fe2764"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/squigglenet_r2/selection.json",
+      "sha256": "48756a9a7fd26795082c11c88fa67e0b1aa8a02d2e28fb83a647cfec08092ecb"
+    },
+    {
+      "source": "results/final_20261014/win6000/r9/squigglenet_r2/test/metrics.json",
+      "sha256": "338f3d65d09cec8937ed7b46fafee27a259d121d619349aac393eb796ef91967"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g1/readcurrent_r0/selection.json",
+      "sha256": "e20027e55d194ddc70b847c94490cbbd4be316e4cc4c889e99d35bb8f4d3497d"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g1/readcurrent_r0/test/metrics.json",
+      "sha256": "edad05162470b13d255a11f143b44a10c88063790ada4ce654b436ad9d4f432c"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g1/readcurrent_r0/selection.json",
+      "sha256": "b96eee6349504baede2dbeb3ac400da4d9b47135ea652d91f37a4bbde87dc38f"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g1/readcurrent_r0/test/metrics.json",
+      "sha256": "9c0a526cad98f31a1ca4721f8afd0d50ff575b9b7d05dc7e8faabcd01c38e9c9"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g1/nanodeep_upstream_r0/selection.json",
+      "sha256": "817d999965fcd5c1a0ae120847501e5a9d774ec86db5fef9ac4deecdb890f6c5"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g1/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "ec3a31ab01d87d3bec0ca1e3bf5b59a31be81bd1ea347d896d0de9716e05b166"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g1/nanodeep_upstream_r0/selection.json",
+      "sha256": "15eea45f19d551a620994ea012ce821b6d7346337963894c7afb72fa1304299a"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g1/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "41c1bd6d9ec1f8631a79ec013138186734807a6d5aa52813444d524dbc0958e3"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g1/squigglenet_r0/selection.json",
+      "sha256": "ccbad38b02322f0567a554a14111870d57a382245680d85010ca4e8caf5c50c3"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g1/squigglenet_r0/test/metrics.json",
+      "sha256": "846808d4d55f00f608bd4c6a117f8228537f79c0f02f80c3d42e9e4c6f1d1a5a"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g1/squigglenet_r0/selection.json",
+      "sha256": "254240166a70e2462d7cc966e7cd7d77f71ae0223876b5d282ca969b6c03ccb9"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g1/squigglenet_r0/test/metrics.json",
+      "sha256": "0b2a26f1f8c34c64f93c70ecee551e46207d1040ca58fe0550a3056a80d9da9e"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g2/readcurrent_r0/selection.json",
+      "sha256": "686557f1a8ace569d48d24e44fee040666438b4760fc274ead8b8309d227a538"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g2/readcurrent_r0/test/metrics.json",
+      "sha256": "82f476ed7c72ab0c79d1938201b272b51321b3504606086236e09dcaacfd55e4"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g2/readcurrent_r0/selection.json",
+      "sha256": "42464b83aea957c4401f64151c9b47ff2ea7db7443a3e7b43bf8432b026634db"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g2/readcurrent_r0/test/metrics.json",
+      "sha256": "a9b34d3f244a3c648c1bedb3b8f35d5f9e650ae38b0c910ba8dad6c9f5d26ba9"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g2/nanodeep_upstream_r0/selection.json",
+      "sha256": "18a63fed4d786e605f79ef4b84519735cd0275ea4f5d774d987208d472130ef0"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g2/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "0f9d05337d1891d2926dc378af05867c01bb420b5b9f2c412f3254c3d7a91dde"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g2/nanodeep_upstream_r0/selection.json",
+      "sha256": "498b6ac0d30f4ac28623025042213378e1211f0d8b217077fa1ff6d85fb87e38"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g2/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "6e420953b2eafb816a297bcfed85e72bb72825be57c9c94bb8a847e396790add"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g2/squigglenet_r0/selection.json",
+      "sha256": "bb4e7e2be2d1053958f806fc780f7a4bc3923d0a897af5f3853a5808cd5206c8"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g2/squigglenet_r0/test/metrics.json",
+      "sha256": "8700bc78dd37b3787810914488806c957ca2f7436a1b2b6e3265c4b4f5d6eb20"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g2/squigglenet_r0/selection.json",
+      "sha256": "870cf28512fc29c9e947f2be4991cd15451ac6b7b061987ddd33d6b171017e12"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g2/squigglenet_r0/test/metrics.json",
+      "sha256": "d9d8832d757ca25827717438c4e8c249f550f60d7880287dc8fe782fa6a05cb3"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g3/readcurrent_r0/selection.json",
+      "sha256": "b939b31d036fe5ceef53d060930c54281c7960b77ab4b0a5ff63999ee3131020"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g3/readcurrent_r0/test/metrics.json",
+      "sha256": "0a043b58122e87a94ce79236857a63984ff94f09117a7301467893567de85b08"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g3/readcurrent_r0/selection.json",
+      "sha256": "475df8e58bf832922a6ce85edd17237f47974ac8db000510f37da6ec278c9e5f"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g3/readcurrent_r0/test/metrics.json",
+      "sha256": "580d7878818d046682cd88ae8d6e24f7bf670eae3048c32cc62c3e38304be1b1"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g3/nanodeep_upstream_r0/selection.json",
+      "sha256": "7c8564349997cab591ea56f8de1b508919aea525488c3dffc985e42d15731ccc"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g3/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "bc559f89a03494fb14f5b906695ef87aaa325e085aa1a97db5936c87de00ca9a"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g3/nanodeep_upstream_r0/selection.json",
+      "sha256": "d27fdde0307dbd54c6d93a7915a6e7360172e970fea96d641ffc21718fbc2251"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g3/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "cec42c1588ddf632a1eab1596e7c15bdadf1873d4c3b55adb41ca7ef70b3751e"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g3/squigglenet_r0/selection.json",
+      "sha256": "6ec0fe678487e4c630814bef63be16ed351ff8f1ed6458bd5d547d208ae4ddc2"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sim_g3/squigglenet_r0/test/metrics.json",
+      "sha256": "08470b0b8809acb92f36174a1086774f9b24ec4ebea950512bdab4cb9a161f85"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g3/squigglenet_r0/selection.json",
+      "sha256": "063eb634198751074529024e73cca9ca63e055a19b0d2d07725353de6f90ed0b"
+    },
+    {
+      "source": "results/final_20261014/win6000/sim_g3/squigglenet_r0/test/metrics.json",
+      "sha256": "eb1d86eb8bd4f737960d8d2126823b91b3493bb6575b22fb1d3796bfc186c680"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g1/readcurrent_r0/selection.json",
+      "sha256": "bc251067a2443ede0b3938a8d680bec466b0933dd29610891b56859691a81ee5"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g1/readcurrent_r0/test/metrics.json",
+      "sha256": "4523ad2f1ef1b58a0f672da72a0bf684feadf4c98a127e0be41ee18b318af39f"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g1/readcurrent_r0/selection.json",
+      "sha256": "eb2688b64ea382ecf6e2e01bd6f7ced0b3f60269c7a07a04c5c5337d62c3f40f"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g1/readcurrent_r0/test/metrics.json",
+      "sha256": "87b34476e33360f30b0eadd0b2be6781aca0b6f0d346de9a95f9c61e3850901f"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g1/nanodeep_upstream_r0/selection.json",
+      "sha256": "fc17eff1668315654166b5c6fde542bbe46eb9bdc3a78b421294482e49b7dd1b"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g1/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "e08114c388015fdffedc61d3516c512a58c249939561e01c5e05a31f2cc5d5d6"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g1/nanodeep_upstream_r0/selection.json",
+      "sha256": "0d2b9c5442049d86b8a7c59abd2949a2e22990c0c648823aef9f9038c8c9f23d"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g1/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "5783530359b8d5816f8e83d8c2e1f24e799ab8e88f703cef6316c45a81f54ca6"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g1/squigglenet_r0/selection.json",
+      "sha256": "326162e5e97d3f4d304a5659d407c419be08d94371ec6565e8b9b8e75e10588a"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g1/squigglenet_r0/test/metrics.json",
+      "sha256": "3fc1846e55b584996783d49a9bb22abcadcc4815fe871f6367e54c1153ff1591"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g1/squigglenet_r0/selection.json",
+      "sha256": "b14539f76913e79efc3247c70ec861b77f381b4ebd038b57fcf905ed84b059f3"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g1/squigglenet_r0/test/metrics.json",
+      "sha256": "aa17cc3788609108365ec9b3859e15cce73693d86c3726e7db3b31d03f6d3373"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g2/readcurrent_r0/selection.json",
+      "sha256": "a419393281ebba722b719d39faff2ce61d7d42687cbecb9399cb460bc802a66f"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g2/readcurrent_r0/test/metrics.json",
+      "sha256": "8e170aa72e891a968475b9f820bcc793fc1157434ced650287c219088cfcd70f"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g2/readcurrent_r0/selection.json",
+      "sha256": "016156b483008f1ab75503c46c976f4b674ace96a7d58bc10ef1fc70dfd68351"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g2/readcurrent_r0/test/metrics.json",
+      "sha256": "014dc5e26e5cf1779b4e565060d75dc4572e03d28600951ecc823253c0b475d2"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g2/nanodeep_upstream_r0/selection.json",
+      "sha256": "4f84e0e2625512ac4591978e2c0cab4f1617795a4e5259aeff3587ecc2735243"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g2/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "43d8fc143c09cddcbe001133f8a36d58a92d64b285b3252042d84be0343508bd"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g2/nanodeep_upstream_r0/selection.json",
+      "sha256": "add6d50392e7143fd108203a4599ec1f4a8e69f4acbf073305e34cea4178552a"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g2/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "c0281794b7d3b41ea9b091e950ca1fd2d49d39c126fc10adbd5287d0bbcc69d0"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g2/squigglenet_r0/selection.json",
+      "sha256": "30f7a736ed37e519d1b7136e3ed2d02b98b26f1fd3c111ace281df83ef7c95f4"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g2/squigglenet_r0/test/metrics.json",
+      "sha256": "0b2e039b7b2ee83d6884af5c5c5dffc89c829ecf79a1d8eeeab988baa12f229a"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g2/squigglenet_r0/selection.json",
+      "sha256": "0c31669112f8df43bbbf8236d859513d239fbace69d2c7a5e0ffbf0595ab650d"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g2/squigglenet_r0/test/metrics.json",
+      "sha256": "33859fc156f391b1f42ba574bcfa592936ddbd7a26752d30f80241bd1a793f60"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g3/readcurrent_r0/selection.json",
+      "sha256": "96aecb421de38c9668fa071cd2478b32516a5de76f19aebf73b4b671d48c3ae7"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g3/readcurrent_r0/test/metrics.json",
+      "sha256": "45fa2034f76c26b0f8bf0e4cede979bd7bc3c43b30e793632310268604510866"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g3/readcurrent_r0/selection.json",
+      "sha256": "a33593078b512b7a941508a2d3b41e3c1194114b6ce55d22e09a9f2480858df6"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g3/readcurrent_r0/test/metrics.json",
+      "sha256": "b78183ab692887627894fa4c5b3d2714e54e70285f4e0468013e75e0e3106a37"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g3/nanodeep_upstream_r0/selection.json",
+      "sha256": "0edf8730d36198961614806c7eb87b184946dca9d4e581ddd621600d1c01e2e6"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g3/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "c0102c2f6596338f8291ca5ccb559adfb520674a52784ea6fc26b26a70c505ae"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g3/nanodeep_upstream_r0/selection.json",
+      "sha256": "df8e32c2c264fbed4d4a8559bd010a028b27cd475c6ef66a9fcb908607f242e6"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g3/nanodeep_upstream_r0/test/metrics.json",
+      "sha256": "d16cab71afc7a8e98d5e4a35644327f2611416faa4e5622c730a3630840067d7"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g3/squigglenet_r0/selection.json",
+      "sha256": "c42f68e092ec0b3e8bc95b2bf7b5e21c475e39b480bde0674e34fc0a3af7db20"
+    },
+    {
+      "source": "results/final_20261014/runs/main/sputum_g3/squigglenet_r0/test/metrics.json",
+      "sha256": "0c30fff3dd5dbec43e3b5ea4f5a25703f24a9aa06fc0b0e9de65f9e750023f28"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g3/squigglenet_r0/selection.json",
+      "sha256": "59aaabb1425050a0cf673505015e34c08437af08f1e82bfb7d1bf92c7d173d00"
+    },
+    {
+      "source": "results/final_20261014/win6000/sputum_g3/squigglenet_r0/test/metrics.json",
+      "sha256": "70608837c846a62f5559c65c7fcabff7e937707dac1881aed7c69ca7df2f0fa9"
+    }
+  ],
+  "definition": "DEV-B-selected minus fixed 0.5; same TEST scores and measured delays."
+}

@@ -1,6 +1,7 @@
 """Runtime sampling rate / decision budget survive CLI, checkpoints and replay."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -150,6 +151,9 @@ def test_online_policy_matches_offline_inputs_at_custom_endpoint(tmp_path, monke
     repo = Path(__file__).resolve().parents[2]
     path = repo/'experiments/20261014_final/icarust_live.py'
     if not path.exists(): pytest.skip('experiments/ is not part of this checkout')
+    simloop = Path(os.environ.get('PORELOOM_SIMLOOP', repo/'experiments/20261011_simloop'))
+    if not (simloop/'closed_loop.py').is_file():
+        pytest.skip('external Icarust simloop support is not installed (PORELOOM_SIMLOOP)')
     spec = importlib.util.spec_from_file_location('runtime_final_live', path)
     live = importlib.util.module_from_spec(spec); spec.loader.exec_module(live)
     budget = 7500 if legacy else 10003
@@ -223,3 +227,4 @@ def test_custom_configuration_through_complete_cli_pipeline(tmp_path, monkeypatc
     metrics = json.loads((run/'test'/'metrics.json').read_text())
     assert metrics['fs'] == fs and metrics['max_samples'] == budget
     assert metrics['max_decision_seconds'] == pytest.approx(seconds)
+    assert {(row['interval'], row['service']) for row in metrics['rows']} == {(.4, 'nominal')}

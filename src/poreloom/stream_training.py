@@ -1,12 +1,4 @@
-"""S1: train the streaming encoder end to end with per-frame cross-entropy (plan §6), early-stopped on model_DEV.
-
-Every read is one full forward; the loss averages CE over the read's frames that end within
-[skip + min_frame_samples, min(raw_length, max_samples)], then over reads (prefix_loss), so all prefixes are
-trained at once. BatchNorm statistics stay frozen.
-
-train_stream_r0 is S1 for streaming R0 (plan §10 M2.7): CE at a few random stream lengths per read, each computed
-exactly as at inference (cached final frames + recomputed tail).
-"""
+"""Train streaming-prefix encoding with cross-entropy at sampled lengths per read."""
 import json
 import time
 from pathlib import Path
@@ -15,17 +7,12 @@ import numpy as np
 import torch
 
 from .data import file_sha256
-from .model import prefix_loss
 from torch.nn import functional as F
 
-from .stream_encoder import StreamClassifier, build_stream_encoder, build_stream_r0
+from .stream_encoder import build_stream_r0
 from .stream_config import DEFAULT_FS, DEFAULT_MAX_SAMPLES, sampling_rate
 from .stream_evaluation import frr_at_host_reject
 from .training_common import balanced_indices
-
-DEFAULTS = dict(alignment='delayed', skip=1500, max_samples=7500, min_frame_samples=400, prior_weight=400., epochs=20, patience=3,
-                batch_size=128, backbone_lr=1e-4, lr=3e-4, weight_decay=1e-4, clip=1., jitter_p=.5, jitter_max=1500,
-                gain=(.9, 1.1), shift_pa=3., eval_batch=256, seed=20261012)
 
 
 def normalizer_prior(data, rows, skip, max_samples, batch=2048):
@@ -39,11 +26,6 @@ def normalizer_prior(data, rows, skip, max_samples, batch=2048):
     medians, mads = np.concatenate(medians), np.concatenate(mads)
     ok = np.isfinite(medians) & (mads > 0)
     return float(np.median(medians[ok])), float(np.median(mads[ok]))
-
-
-def first_frame(encoder, config):
-    """Index of the first trained frame: the first t whose end skip + stride*t + right + 1 >= skip + min_frame_samples."""
-    return max(0, -(-(config['min_frame_samples'] - encoder.backbone.right - 1) // encoder.stride))
 
 
 def batch_signal(data, rows, config, rng=None):
@@ -62,91 +44,6 @@ def batch_signal(data, rows, config, rng=None):
         offset = rng.uniform(-config['shift_pa'], config['shift_pa'], len(rows)).astype(np.float32)
         x = np.where(np.arange(width) < lengths[:, None], x*gain[:, None] + offset[:, None], 0).astype(np.float32)
     return torch.from_numpy(x), torch.from_numpy(lengths)
-
-
-def trained_mask(valid, encoder, config):
-    mask = valid.clone(); mask[:, :first_frame(encoder, config)] = False
-    return mask
-
-
-@torch.no_grad()
-def score_memory(model, data, rows, config, device, points):
-    """Per-read logits at absolute sample counts `points` [N, P, 2] and the read-normalized frame CE."""
-    model.eval(); out = []; ce_total = 0.; ce_reads = 0
-    labels_all = torch.as_tensor(data.is_target.astype(np.int64))
-    for start in range(0, len(rows), config['eval_batch']):
-        part = rows[start:start + config['eval_batch']]
-        pa, lengths = batch_signal(data, part, config)
-        pa, lengths, labels = pa.to(device), lengths.to(device), labels_all[part].to(device)
-        memory, valid = model.encoder(pa, lengths)
-        logits = model.frame_logits(memory)
-        mask = trained_mask(valid, model.encoder, config); active = mask.any(1)
-        if active.any():
-            ce_total += prefix_loss(logits[active], labels[active], mask[active]).item()*int(active.sum())
-            ce_reads += int(active.sum())
-        out.append(torch.stack([model.logits_at(memory, torch.full((len(part),), n, device=device)) for n in points], 1).cpu())
-    return torch.cat(out).numpy(), ce_total/max(ce_reads, 1)
-
-
-def train_stream_encoder(train, model_dev, init_checkpoint, output, device='cuda', points=(1900, 2300, 3000, 4500, 7500),
-                         log=print, **overrides):
-    config = {**DEFAULTS, **overrides}
-    output = Path(output); output.mkdir(parents=True, exist_ok=True)
-    torch.manual_seed(config['seed']); rng = np.random.default_rng(config['seed'])
-    median, mad = normalizer_prior(train, np.arange(len(train)), config['skip'], config['max_samples'])
-    encoder = build_stream_encoder(init_checkpoint, median=median, mad=mad, prior_weight=config['prior_weight'],
-                                   skip=config['skip'], max_samples=config['max_samples'], alignment=config['alignment'])
-    model = StreamClassifier(encoder).to(device)
-    backbone = list(model.encoder.backbone.parameters()); ids = {id(p) for p in backbone}
-    rest = [p for p in model.parameters() if id(p) not in ids]
-    opt = torch.optim.AdamW([dict(params=backbone, lr=config['backbone_lr']), dict(params=rest, lr=config['lr'])],
-                            weight_decay=config['weight_decay'])
-    labels = torch.as_tensor(train.is_target.astype(np.int64))
-    dev_rows = np.arange(len(model_dev))
-    provenance = dict(init_checkpoint=str(init_checkpoint), init_checkpoint_sha256=file_sha256(init_checkpoint),
-                      normalizer_prior=dict(median_pa=median, mad_pa=mad, weight=config['prior_weight']),
-                      receptive_field=encoder.backbone.receptive_field, frame_extent=[encoder.backbone.left, encoder.backbone.right],
-                      context=encoder.context, config=config)
-    (output/'training_registration.json').write_text(json.dumps(provenance, indent=2) + '\n')
-    best, stale, history = float('inf'), 0, []
-    steps = len(train)//config['batch_size']
-    for epoch in range(1, config['epochs'] + 1):
-        model.train(); started = time.time(); total = 0.
-        for _ in range(steps):
-            rows = balanced_indices(train.is_target, config['batch_size'], rng)
-            pa, lengths = batch_signal(train, rows, config, rng)
-            logits, valid = model(pa.to(device), lengths.to(device))
-            mask = trained_mask(valid, model.encoder, config); active = mask.any(1)
-            loss = prefix_loss(logits[active], labels[rows].to(device)[active], mask[active])
-            opt.zero_grad(); loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), config['clip']); opt.step(); total += loss.item()
-        scores, dev_ce = score_memory(model, model_dev, dev_rows, config, device, points)
-        p = torch.softmax(torch.as_tensor(scores), -1)[..., 1].numpy()
-        frr = {}
-        for j, n in enumerate(points):
-            alive = model_dev.raw_length >= n
-            frr[str(n)] = frr_at_host_reject(p[alive, j], model_dev.is_target[alive])
-        history.append(dict(epoch=epoch, train_ce=total/steps, dev_ce=dev_ce, dev_frr_host95=frr,
-                            seconds=round(time.time() - started, 1)))
-        log(json.dumps(history[-1]))
-        (output/'training_history.json').write_text(json.dumps(history, indent=2) + '\n')
-        if dev_ce < best:
-            best, stale = dev_ce, 0
-            torch.save(dict(model_state=model.state_dict(), epoch=epoch, dev_ce=dev_ce, **provenance), output/'best.pt')
-        else:
-            stale += 1
-            if stale >= config['patience']: break
-    return output/'best.pt'
-
-
-def load_stream_classifier(path, device='cpu'):
-    payload = torch.load(path, map_location='cpu')
-    config, prior = payload['config'], payload['normalizer_prior']
-    encoder = build_stream_encoder(median=prior['median_pa'], mad=prior['mad_pa'], prior_weight=prior['weight'],
-                                   skip=config['skip'], max_samples=config['max_samples'],
-                                   alignment=config.get('alignment', 'causal'))  # runs before 2026-10-12 15:50 were causal
-    model = StreamClassifier(encoder); model.load_state_dict(payload['model_state'])
-    return model.to(device).eval(), payload
 
 
 R0_DEFAULTS = dict(skip=1500, max_samples=DEFAULT_MAX_SAMPLES, fs=DEFAULT_FS, min_samples=400, prior_weight=400., lengths_per_read=4, epochs=20,

@@ -9,8 +9,8 @@ import json
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-FINAL = ROOT / 'results/final_20261014'
+from result_archive import ROOT, ARCHIVE
+FINAL = ARCHIVE / 'results/final_20261014'
 ENDPOINT = 7500
 METHODS = ['poreloom', 'readcurrent', 'nanodeep_upstream', 'squigglenet']
 
@@ -23,14 +23,14 @@ def family(dataset):
 def prepare():
     sources, coverage, results, metric_rows, checks = set(), [], [], [], []
     report_path = FINAL / 'win6000/summary_zh.json'
-    sources.add(str(report_path.relative_to(ROOT)))
+    sources.add(str(report_path.relative_to(ARCHIVE)))
     report = json.loads(report_path.read_text())
     units = sorted({(r['dataset'], r['rep']) for r in report})
     metadata = {}
     for dataset in sorted({ds for ds, rep in units}):
         for split in ['train', 'test']:
-            path = ROOT / 'provenance/legacy_story/cache' / dataset / split / 'metadata.npz'
-            sources.add(str(path.relative_to(ROOT)))
+            path = ARCHIVE / 'provenance/legacy_story/cache' / dataset / split / 'metadata.npz'
+            sources.add(str(path.relative_to(ARCHIVE)))
             with np.load(path, allow_pickle=False) as z:
                 order = np.argsort(z['read_id'])
                 ids, target, length = (z[key][order] for key in ['read_id', 'is_target', 'raw_length'])
@@ -62,7 +62,7 @@ def prepare():
                 filename = ('outcomes_0.4_nominal.npz' if method == 'poreloom'
                             else 'outcomes_max_acc_0.4_measured.npz')
                 path = FINAL / folder / dataset / f'{method}_r{rep}' / 'test' / filename
-                sources.add(str(path.relative_to(ROOT)))
+                sources.add(str(path.relative_to(ARCHIVE)))
                 with np.load(path, allow_pickle=False) as z:
                     order = np.argsort(z['read_id'])
                     assert np.array_equal(ids, z['read_id'][order]), (unit, method, variant)
@@ -97,7 +97,7 @@ def prepare():
                                             host_pore=float(pore[host_mask].mean()), subset_sha256=subset_hash if scope == 'ge7500' else ''))
                 if variant == 'w6000':
                     config_path = FINAL / folder / dataset / f'{method}_r{rep}' / 'fit/config.json'
-                    sources.add(str(config_path.relative_to(ROOT)))
+                    sources.add(str(config_path.relative_to(ARCHIVE)))
                     config = json.loads(config_path.read_text())
                     training = next(r for r in coverage if r['dataset'] == dataset and r['split'] == 'train')
                     assert config['eligible_train'] == training['n_eligible']
@@ -117,10 +117,10 @@ def prepare():
     audit = dict(raw_endpoint=ENDPOINT, outcome='command-level ACC, host rejection, target FRR, and host pore occupancy',
                  population='Same TEST read IDs with raw_length >= 7500 for all seven model/window configurations within each unit; no class rebalancing.',
                  decisions='Frozen archived decisions and DEV-B-selected operating points; no TEST tuning or retraining.',
-                 short_read_policy='All-read operational outcomes retain short reads; main fixed-window comparisons explicitly use the shared length-eligible subset.',
+                 short_read_policy='Main operational comparisons include all TEST reads; length-restricted results are an additional control.',
                  remaining_timing_effect='Length-eligible reads without a completed command remain in the conditional denominator.',
                  rows=len(result), units=len(units), checks=checks,
-                 sources=[dict(path=p, sha256=hashlib.sha256((ROOT / p).read_bytes()).hexdigest()) for p in sorted(sources)])
+                 sources=[dict(path=p, sha256=hashlib.sha256((ARCHIVE / p).read_bytes()).hexdigest()) for p in sorted(sources)])
     (ROOT / 'review/length_eligibility_audit.json').write_text(json.dumps(audit, indent=2) + '\n')
     return sources
 

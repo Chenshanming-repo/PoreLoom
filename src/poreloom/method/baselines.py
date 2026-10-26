@@ -2,13 +2,14 @@
 
     python -m poreloom.method.baselines --tool readcurrent --data <dataset root> --out <run dir> --fs 5000 --device cuda:0
 
-Same dataset layout, DEV halves and TEST phases as the PoreLoom pipeline (poreloom.method). Recipe = the sputum scratch
-baselines (experiments/20261013_stream_sputum/bench.py): native architecture from a seeded random init (seed 20261014
-+ r), every weight trained on TRAIN's native window (NanoDeep raw[1000:4000], others raw[1500:4500]) with AdamW lr 1e-3,
+Same dataset layout, DEV halves and TEST phases as the PoreLoom pipeline (poreloom.method). The shared recipe uses
+a native architecture from a seeded random init (seed 20261014 + r), every weight trained on TRAIN's native window
+(NanoDeep raw[1000:4000], others raw[1500:4500]) with AdamW lr 1e-3,
 weight decay 1e-4, batch 128, at most 100 epochs, patience 5 on DEV-A cross entropy (seed 20261012 + r). One decision
 per read when the window is complete (next chunk arrival + measured single-read service). Threshold on the host
-margin by maximum DEV-B command ACC (also native argmax and OP1 = target FRR <= 0.5%), locked before TEST.
-TEST: 0.4 s primary; 0.2 / 1.0 s and zero service as sensitivity. Outputs mirror the PoreLoom run directory:
+margin by maximum DEV-B command ACC (also native argmax), locked before TEST. NanoDeep uses its authors' recipe
+with --recipe upstream in the paper comparisons.
+TEST: 0.4 s observations with measured service time. Outputs mirror the PoreLoom run directory:
   fit/best.pt, selection.json (DEV-B rules, measured service), test/metrics.json, test/outcomes_<rule>_<interval>_<service>.npz
 """
 import argparse
@@ -127,15 +128,14 @@ def test(a):
     np.savez(a.out/'test'/'scores.npz', **scores)
     groups = {'pooled': np.ones(len(prefix), bool), **{f'repeat_{r}': repeat == r for r in np.unique(repeat)}}
     rows = []
-    for name, rule in sel['rules'].items():
-        for interval, tag, service in ((.4, 'measured', sel['service_seconds']), (.2, 'measured', sel['service_seconds']),
-                                       (1., 'measured', sel['service_seconds']), (.4, 'zero', 0.)):
-            o = policy.native_policy(scores, meta, threshold=rule['threshold'], service=service, delta=interval,
-                                     raw_end=CONTRACTS[a.tool]['raw_end'])
-            np.savez(a.out/'test'/f'outcomes_{name}_{interval}_{tag}.npz', read_id=meta['read_id'], is_target=meta['is_target'],
-                     repeat=repeat, **o)
-            for g, mask in groups.items():
-                rows.append(dict(rule=name, interval=interval, service=tag, group=g, **policy.metrics(o, meta, rows=mask)))
+    for name in ('native', 'max_acc'):
+        rule = sel['rules'][name]
+        o = policy.native_policy(scores, meta, threshold=rule['threshold'], service=sel['service_seconds'], delta=.4,
+                                 raw_end=CONTRACTS[a.tool]['raw_end'])
+        np.savez(a.out/'test'/f'outcomes_{name}_0.4_measured.npz', read_id=meta['read_id'], is_target=meta['is_target'],
+                 repeat=repeat, **o)
+        for g, mask in groups.items():
+            rows.append(dict(rule=name, interval=.4, service='measured', group=g, **policy.metrics(o, meta, rows=mask)))
     (a.out/'test'/'metrics.json').write_text(json.dumps(dict(threshold=sel['rules']['max_acc']['threshold'], rows=rows), indent=2))
     for r in rows:
         if r['rule'] == 'max_acc' and r['interval'] == .4 and r['service'] == 'measured':

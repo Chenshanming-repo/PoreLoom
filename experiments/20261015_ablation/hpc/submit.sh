@@ -1,5 +1,5 @@
 #!/bin/bash
-# submit.sh: every ablation job (12 steps + 12 scratch_s1 + 4 window). Skips parts already done.
+# submit.sh: the 12 manuscript encoding/stopping-control jobs. Skips parts already done.
 set -euo pipefail
 W=/path/to/poreloom_work
 S=$W/PoreLoom/experiments/20261015_ablation/hpc/abl.sbatch
@@ -11,8 +11,4 @@ sub() {  # name done-file exports
 }
 for u in $UNITS; do ds=${u%%:*} rep=${u##*:}
   sub "abs-$ds-r$rep" $W/runs/ablation/$ds/r$rep/STEPS_DONE "STAGE=steps,DS=$ds,REP=$rep"
-  sub "abz-$ds-r$rep" $W/runs/ablation/$ds/r$rep/scratch_s1/JOB_DONE "STAGE=scratch,DS=$ds,REP=$rep"
 done
-for ds in sputum_g1 r10_run01; do for win in 1000 3000; do
-  sub "abw-$ds-$win" $W/runs/ablation/$ds/r0/window_$win/JOB_DONE "STAGE=window,DS=$ds,REP=0,WIN=$win"
-done; done

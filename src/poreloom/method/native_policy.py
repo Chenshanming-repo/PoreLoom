@@ -1,7 +1,6 @@
 """Native single-window baseline replay, metrics and DEV-B threshold selection.
 
-Copied unchanged from experiments/20261013_nanodeep_baselines/policy.py; FS (Hz) is set by method.baselines to the
-dataset rate before any replay.
+FS (Hz) is set by method.baselines to the dataset rate before any replay.
 
 Shared native operational policies and DEV-only threshold selection.
 
@@ -177,8 +176,7 @@ def select_native(score, data, service, raw_end):
     """Select complete-tie thresholds on DEV, O(N log N), never on TEST.
 
     Max command ACC ties prefer lower target command FRR, then the more
-    conservative threshold. OP1 maximizes host command rejection with target
-    command FRR <= .005, then minimizes target FRR and prefers conservatism.
+    conservative threshold. The native argmax is retained for the fixed-threshold comparison.
     Short/in-flight/no-call reads stay in the class denominators. All finite
     unique margins are candidates, including those belonging to no-command
     reads; this preserves the complete threshold grid and deterministic ties.
@@ -200,13 +198,10 @@ def select_native(score, data, service, raw_end):
     nt = int(target.sum())
     correct = nt + hosts - targets
     max_index = int(np.lexsort((conservative, -targets, correct))[-1])
-    feasible = targets <= nt // 200  # .005 = 1/200, with an exact integer cap.
-    feasible_indices = np.flatnonzero(feasible)
-    op_index = int(feasible_indices[np.lexsort((conservative[feasible], -targets[feasible], hosts[feasible]))[-1]])
     def choice(index):
         return ALL_KEEP if index == len(thresholds) else float(thresholds[index])
     result = {}
-    for name, threshold in [('native', None), ('max_acc', choice(max_index)), ('op1', choice(op_index))]:
+    for name, threshold in [('native', None), ('max_acc', choice(max_index))]:
         out = native_policy(score, data, threshold=threshold, service=service, raw_end=raw_end)
         result[name] = dict(threshold=threshold, dev_metrics=metrics(out, data))
     return result

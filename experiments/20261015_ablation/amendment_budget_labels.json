@@ -1,4 +1,0 @@
-{
-  "written": "2026-10-15 12:16:48",
-  "note": "Labelling only, no rerun: budget_B counts absolute samples from the read start; the paper reports the budget as samples after the 1500-sample skip. Signal budget 3000 = budget_4500, 4500 = budget_6000, 6000 = the main run (absolute 7500); budget_3000 = signal 1500 (extra point). Report labels now show the signal budget."
-}

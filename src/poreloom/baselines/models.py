@@ -8,15 +8,11 @@ from torch.nn import functional as F
 
 from ..paths import THIRD_PARTY
 
-TOOLS = ('nanodeep', 'cafes', 'readcurrent', 'squigglenet')
+TOOLS = ('nanodeep', 'readcurrent', 'squigglenet')
 NANODEEP_SOURCE = THIRD_PARTY / 'NanoDeep/read_deep/model/nanodeep.py'
 READCURRENT_SOURCE = THIRD_PARTY / 'ReadCurrent/models/ReadCurrent.py'
-READCURRENT_TRAINER = THIRD_PARTY / 'ReadCurrent_patched'
-CAFES_ROOT = THIRD_PARTY / 'CAFES'
 SQUIGGLENET_ROOT = THIRD_PARTY / 'SquiggleNet'
-CAFES_MODEL = dict(n_conv_neurons=[32, 64, 128, 256, 512], n_fc_neurons=2048, depth=29, n_classes=2,
-                   shortcut=True, dropout_rate=.2, use_SEBlock=True, n_input_channels=6, use_first_bn=True)
-PARAMETERS = {'nanodeep': 55686, 'cafes': 16917706, 'readcurrent': 16817282, 'squigglenet': 66916}
+PARAMETERS = {'nanodeep': 55686, 'readcurrent': 16817282, 'squigglenet': 66916}
 
 _loaded = {}
 
@@ -74,8 +70,6 @@ def build_model(tool):
     elif tool == 'readcurrent':
         model = load_module(READCURRENT_SOURCE).ReadCurrent([32, 64, 128, 256, 512], n_fc_neurons=2048,
                                                              depth=29, shortcut=True)
-    elif tool == 'cafes':
-        model = load_module(CAFES_ROOT / 'models/CAFES.py').CAFES(**CAFES_MODEL)
     elif tool == 'squigglenet':
         module = load_module(SQUIGGLENET_ROOT / 'model.py')
         model = module.ResNet(module.Bottleneck, [2, 2, 2, 2])
@@ -105,27 +99,3 @@ def load_model(tool, checkpoint, device='cpu'):
     model = build_model(tool)
     model.load_state_dict(checkpoint_state(torch_load(checkpoint)), strict=True)
     return model.to(device).eval()
-
-
-def cafes_preprocessor():
-    return load_module(CAFES_ROOT / 'preprocessor.py')
-
-
-def readcurrent_trainer():
-    """A fresh patched ReadCurrent trainer module (callers may override its hooks).
-
-    Its bare ``from upstream_training import ...`` is bound to the vendored controller.
-    """
-    controller = load_module(READCURRENT_TRAINER / 'upstream_training.py')
-    previous = sys.modules.get('upstream_training')
-    path = list(sys.path)
-    try:
-        sys.modules['upstream_training'] = controller
-        return load_module(READCURRENT_TRAINER / 'trainer.py', cache=False)
-    finally:
-        if previous is None:
-            sys.modules.pop('upstream_training', None)
-        else:
-            sys.modules['upstream_training'] = previous
-        sys.path[:] = path
-

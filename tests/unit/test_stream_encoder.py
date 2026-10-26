@@ -1,29 +1,14 @@
-"""V0 correctness for the streaming encoder and streaming R0 (random weights): causality, chunking/batch
-invariance, edges."""
+"""Streaming-prefix correctness: causality, chunking and batch invariance, and boundary cases."""
 import numpy as np
 import pytest
 import torch
 
 from poreloom.model import build_model
-from poreloom.stream_encoder import build_stream_encoder, build_stream_r0
+from poreloom.stream_encoder import build_stream_r0
 from poreloom.streaming import CausalNormalizer, fresh_samples, to_pa
 
 TOL = dict(rtol=0, atol=1e-5)
 SKIP, BUDGET = 1500, 7500
-
-
-GEOMETRY = {'delayed': dict(left=524, right=529, context=528), 'causal': dict(left=1006, right=47, context=1008)}
-
-
-@pytest.fixture(scope='module', params=sorted(GEOMETRY))
-def encoder(request):
-    torch.manual_seed(0)
-    enc = build_stream_encoder(median=90., mad=10., skip=SKIP, max_samples=BUDGET, alignment=request.param)
-    with torch.no_grad():  # non-trivial frozen BatchNorm maps
-        for module in enc.modules():
-            if isinstance(module, torch.nn.BatchNorm1d):
-                module.running_mean.uniform_(-.1, .1); module.running_var.uniform_(.5, 2.)
-    return enc
 
 
 def squiggle(n, seed):
@@ -35,11 +20,6 @@ def squiggle(n, seed):
     return x.astype(np.float32)
 
 
-def offline(enc, signal):
-    with torch.no_grad():
-        return enc(torch.from_numpy(signal)[None], [len(signal)])[0]
-
-
 def stream(enc, signal, cuts):
     """Feed signal[cuts[i]:cuts[i+1]]; return the state and (n, readout) after every chunk."""
     state, out = enc.init_state(), []
@@ -47,145 +27,6 @@ def stream(enc, signal, cuts):
         enc.step([state], [(lo, signal[lo:hi])])
         out.append((hi, enc.readout([state])[0]))
     return state, out
-
-
-def check_readouts(enc, memory, readouts):
-    for n, got in readouts:
-        torch.testing.assert_close(got, enc.state_at(memory, [n])[0], **TOL)
-
-
-def test_geometry(encoder):
-    g, bb = GEOMETRY[encoder.backbone.alignment], encoder.backbone
-    assert (bb.left, bb.right, bb.stride, bb.receptive_field, encoder.context) == (g['left'], g['right'], 48, 1054, g['context'])
-    for length in (0, 47, 48, g['right'], g['right'] + 1, 1000, 1500, 6000):
-        assert encoder.backbone(torch.zeros(1, length)).shape == (1, 512, max(0, (length - g['right'] - 1)//48 + 1))
-    assert encoder.feature_dim == 258 and list(encoder.frame_ends(2)) == [SKIP + g['right'] + 1, SKIP + g['right'] + 49]
-    assert encoder.frames_at(SKIP + g['right']) == 0 and encoder.frames_at(SKIP + g['right'] + 1) == 1
-
-
-def test_delayed_frames_equal_the_original_network(encoder):
-    if encoder.backbone.alignment != 'delayed': pytest.skip('causal frames are a different function')
-    z = torch.randn(2, 3000)
-    with torch.no_grad():
-        ours, original = encoder.backbone(z), encoder.backbone.layers(z[:, None])
-    torch.testing.assert_close(ours, original[..., :ours.shape[-1]], rtol=0, atol=1e-5)
-    assert ours.shape[-1] == original.shape[-1] - 11  # the last frames of the original see right zero padding
-
-
-def test_backbone_frames_ignore_later_samples(encoder):
-    z = torch.randn(1, 3000)
-    with torch.no_grad():
-        base = encoder.backbone(z)
-        for n in (1000, 1777, 2400):
-            changed = z.clone(); changed[:, n:] += torch.randn_like(changed[:, n:])*5
-            out, final = encoder.backbone(changed), encoder.backbone.frames(n)
-            assert torch.equal(out[..., :final], base[..., :final])
-            assert not torch.allclose(out[..., final:], base[..., final:])
-
-
-def test_encoder_is_causal(encoder):
-    signal = squiggle(7500, 1)
-    memory = offline(encoder, signal)
-    for n in (SKIP + 300, SKIP + 700, 3000, 5123):
-        changed = signal.copy(); changed[n:] = squiggle(len(signal) - n, 2)
-        frames = encoder.frames_at(n)
-        assert torch.equal(offline(encoder, changed)[:, :frames], memory[:, :frames])
-
-
-@pytest.mark.parametrize('schedule', ['chunks_400ms', 'random_cuts', 'block_and_frame_edges', 'single_samples', 'one_big'])
-def test_any_chunking_matches_offline(encoder, schedule):
-    rng = np.random.default_rng(7)
-    signal = squiggle(8000, 3)  # longer than the budget
-    if schedule == 'chunks_400ms':
-        cuts = list(range(int(rng.integers(300, 1600)), len(signal), 1600))
-    elif schedule == 'random_cuts':
-        cuts = sorted(rng.choice(np.arange(1, len(signal)), 60, replace=False).tolist())
-    elif schedule == 'block_and_frame_edges':
-        cuts = sorted({SKIP, SKIP + 48, SKIP + 480, SKIP + 960, SKIP + 1008, SKIP + 1056, 4500, 6000, BUDGET, BUDGET + 1})
-    elif schedule == 'single_samples':
-        cuts = list(range(SKIP - 5, SKIP + 1300)) + [4000, 4001, 6100]
-    else:
-        cuts = [4000]
-    state, readouts = stream(encoder, signal, [0, *cuts, len(signal)])
-    memory = offline(encoder, signal)
-    check_readouts(encoder, memory, readouts)
-    assert state.frames == encoder.frames_at(BUDGET) and state.received == len(signal)
-
-
-def test_batched_reads_match_single_reads(encoder):
-    signals = [squiggle(n, 10 + n) for n in (7500, 2900, 5000)]
-    schedules = [list(range(0, 7500, 1600)), list(range(0, 2900, 333)), list(range(0, 5000, 700))]
-    states = [encoder.init_state() for _ in signals]
-    readouts = [[] for _ in signals]
-    for round_ in range(max(map(len, schedules))):
-        chunks = []
-        for signal, cuts in zip(signals, schedules):
-            lo = cuts[round_] if round_ < len(cuts) else None
-            chunks.append(None if lo is None else (lo, signal[lo:cuts[round_ + 1] if round_ + 1 < len(cuts) else len(signal)]))
-        encoder.step(states, chunks)
-        for i, row in enumerate(encoder.readout(states)):
-            readouts[i].append((states[i].received, row))
-    for signal, rows in zip(signals, readouts):
-        check_readouts(encoder, offline(encoder, signal), rows)
-
-
-def test_frame_depends_on_exactly_its_receptive_field(encoder):
-    z = torch.randn(1, 4800, requires_grad=True)
-    t = 70
-    grad, = torch.autograd.grad(encoder.backbone(z)[0, :, t].sum(), z)
-    used = (grad[0] != 0).nonzero().flatten()
-    assert (used.min().item(), used.max().item()) == (48*t - encoder.backbone.left, 48*t + encoder.backbone.right)
-
-
-def test_longer_context_changes_nothing(encoder):
-    signal = squiggle(7500, 4)
-    context = encoder.context
-    try:
-        encoder.context = context + 48
-        check_readouts(encoder, offline(encoder, signal), stream(encoder, signal, [0, *range(1700, 7500, 1600), 7500])[1])
-    finally:
-        encoder.context = context
-
-
-def test_short_reads_and_reads_before_skip(encoder):
-    signal = squiggle(SKIP + 700, 5)  # shorter than the receptive field, not a multiple of 48
-    state, readouts = stream(encoder, signal, [0, 1000, SKIP + 47, SKIP + 333, SKIP + 529, SKIP + 531, len(signal)])
-    memory = offline(encoder, signal)
-    assert memory.shape[1] == state.frames == encoder.frames_at(len(signal)) > 0
-    check_readouts(encoder, memory, readouts)
-    assert torch.equal(readouts[0][1][:256], torch.zeros(256))  # nothing after skip yet
-    assert offline(encoder, signal[:SKIP + 40]).shape[1] == 0
-    assert offline(encoder, signal[:encoder.frame_ends(1)[0] - 1]).shape[1] == 0
-
-
-def test_repeated_and_empty_chunks_change_nothing(encoder):
-    signal = squiggle(6000, 6)
-    clean, _ = stream(encoder, signal, [0, 2000, 4000, 6000])
-    state = encoder.init_state()
-    for chunk in [(0, signal[:2000]), (0, signal[:1000]), (2000, signal[2000:2000]), (1500, signal[1500:4000]),
-                  (3999, signal[3999:6000])]:
-        encoder.step([state], [chunk])
-    torch.testing.assert_close(encoder.readout([state]), encoder.readout([clean]), rtol=0, atol=0)
-
-
-def test_gaps_and_bad_samples_fail_open(encoder):
-    signal = squiggle(6000, 8)
-    gap, bad, ok = encoder.init_state(), encoder.init_state(), encoder.init_state()
-    corrupt = signal[2000:4000].copy(); corrupt[10] = np.nan
-    encoder.step([gap, bad, ok], [(0, signal[:2000]), (0, signal[:2000]), (0, signal[:2000])])
-    encoder.step([gap, bad, ok], [(2100, signal[2100:4000]), (2000, corrupt), (2000, signal[2000:4000])])
-    assert gap.failed and bad.failed and not ok.failed
-    frozen = (gap.received, gap.frames)
-    encoder.step([gap], [(2000, signal[2000:4000])])
-    assert (gap.received, gap.frames) == frozen
-    check_readouts(encoder, offline(encoder, signal[:4000]), [(4000, encoder.readout([ok])[0])])
-
-
-def test_budget_caps_frames_and_time(encoder):
-    signal = squiggle(9000, 9)
-    state, readouts = stream(encoder, signal, [0, 7000, 9000])
-    assert state.frames == encoder.frames_at(BUDGET) and state.length == BUDGET - SKIP
-    torch.testing.assert_close(readouts[-1][1][256:], encoder.time_features(BUDGET))
 
 
 def test_normalizer_blocks_use_only_earlier_samples():
@@ -219,28 +60,6 @@ def test_normalizer_online_matches_offline():
     torch.testing.assert_close(torch.cat(parts), norm(x[None])[0], rtol=0, atol=1e-6)
 
 
-def test_checkpoint_transfers_backbone_and_projection(tmp_path):
-    torch.manual_seed(3)
-    source = build_model()
-    torch.save({'model_state': source.state_dict()}, tmp_path/'stage_A.pt')
-    enc = build_stream_encoder(tmp_path/'stage_A.pt', median=90., mad=10.)
-    for ours, theirs in ((enc.backbone.layers, source.encoder), (enc.projection, source.projection)):
-        a, b = ours.state_dict(), theirs.state_dict()
-        assert a.keys() == b.keys() and all(torch.equal(a[k], b[k]) for k in a)
-
-
-def test_batchnorm_stays_frozen_in_train_mode(encoder):
-    z = torch.randn(2, 1500)
-    with torch.no_grad():
-        reference = encoder.backbone(z)
-        encoder.train()
-        try:
-            assert not any(m.training for m in encoder.modules() if isinstance(m, torch.nn.BatchNorm1d))
-            assert torch.equal(encoder.backbone(z), reference)
-        finally:
-            encoder.train(False)
-
-
 def test_chunk_intake_and_calibration():
     signal = np.arange(10.)
     assert list(fresh_samples(4, 2, signal[2:8])) == [4, 5, 6, 7]
@@ -250,7 +69,7 @@ def test_chunk_intake_and_calibration():
     np.testing.assert_allclose(to_pa([0, 100], offset=10., range_=1400., digitisation=8192.), [10*1400/8192, 110*1400/8192], rtol=1e-6)
 
 
-# Streaming R0 (plan §4.6)
+# Streaming prefix encoder
 
 def randomize_batchnorm(model):
     with torch.no_grad():

@@ -1,0 +1,6 @@
+{
+  "readcurrent": "/path/to/poreloom_work/results/icarust_w6000_20261018/models/readcurrent_r0",
+  "nanodeep": "/path/to/poreloom_work/results/icarust_w6000_20261018/models/nanodeep_upstream_r0",
+  "squigglenet": "/path/to/poreloom_work/results/icarust_w6000_20261018/models/squigglenet_r0",
+  "note": "sim g1 W6000 baselines (20261016_window6000, HPC runs/win6000/sim_g1/<tool>_r0, copied 2026-10-18); NanoDeep = authors recipe"
+}

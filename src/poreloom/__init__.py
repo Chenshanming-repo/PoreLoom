@@ -1,1 +1,1 @@
-"""PoreLoom causal short-window classification."""
+"""PoreLoom streaming adaptive decisions for selective nanopore sequencing."""

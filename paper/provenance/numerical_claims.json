@@ -4,448 +4,462 @@
     "value": 95.70666666666666,
     "display": "95.71",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimPLReject",
     "value": 95.72888888888889,
     "display": "95.73",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimPLFrr",
     "value": 4.315555555555556,
     "display": "4.32",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimPLPore",
     "value": 1.960493610636101,
     "display": "1.960",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimRCAcc",
     "value": 92.53111111111112,
     "display": "92.53",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimRCReject",
     "value": 92.61333333333333,
     "display": "92.61",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimRCFrr",
     "value": 7.551111111111111,
     "display": "7.55",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimRCPore",
     "value": 3.187769362713555,
     "display": "3.188",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimNDAcc",
     "value": 92.59666666666666,
     "display": "92.60",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimNDReject",
     "value": 92.53555555555555,
     "display": "92.54",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimNDFrr",
     "value": 7.342222222222222,
     "display": "7.34",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimNDPore",
     "value": 3.1628078547081024,
     "display": "3.163",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimSNAcc",
     "value": 90.19555555555556,
     "display": "90.20",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimSNReject",
     "value": 90.39555555555556,
     "display": "90.40",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimSNFrr",
     "value": 10.004444444444445,
     "display": "10.00",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "SimSNPore",
     "value": 3.584775926586913,
     "display": "3.585",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units"
+    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
   },
   {
     "macro": "RninePLAcc",
     "value": 91.83833333333334,
     "display": "91.84",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RninePLReject",
     "value": 90.58333333333334,
     "display": "90.58",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RninePLFrr",
     "value": 6.906666666666666,
     "display": "6.91",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RninePLPore",
     "value": 1.8429368506493173,
     "display": "1.843",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineRCAcc",
     "value": 80.91,
     "display": "80.91",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineRCReject",
     "value": 69.46666666666667,
     "display": "69.47",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineRCFrr",
     "value": 7.6466666666666665,
     "display": "7.65",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineRCPore",
     "value": 2.7934307907462803,
     "display": "2.793",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineNDAcc",
     "value": 82.41999999999999,
     "display": "82.42",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineNDReject",
     "value": 70.51666666666667,
     "display": "70.52",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineNDFrr",
     "value": 5.676666666666667,
     "display": "5.68",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineNDPore",
     "value": 2.6994190924745585,
     "display": "2.699",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineSNAcc",
     "value": 79.73666666666666,
     "display": "79.74",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineSNReject",
     "value": 66.92666666666666,
     "display": "66.93",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineSNFrr",
     "value": 7.453333333333332,
     "display": "7.45",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "RnineSNPore",
     "value": 3.079661254860152,
     "display": "3.080",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units"
+    "aggregation": "equal mean across 3 R9 units; all TEST reads"
   },
   {
     "macro": "MixPLAcc",
     "value": 95.65,
     "display": "95.65",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixPLReject",
     "value": 94.89999999999999,
     "display": "94.90",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixPLFrr",
     "value": 3.5999999999999996,
     "display": "3.60",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixPLPore",
     "value": 1.4389693020637038,
     "display": "1.439",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixRCAcc",
     "value": 89.51666666666668,
     "display": "89.52",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixRCReject",
     "value": 84.28,
     "display": "84.28",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixRCFrr",
     "value": 5.246666666666666,
     "display": "5.25",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixRCPore",
     "value": 2.9279795771542356,
     "display": "2.928",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixNDAcc",
     "value": 91.70833333333333,
     "display": "91.71",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixNDReject",
     "value": 85.64666666666666,
     "display": "85.65",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixNDFrr",
     "value": 2.23,
     "display": "2.23",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixNDPore",
     "value": 2.6640468572342293,
     "display": "2.664",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixSNAcc",
     "value": 87.66,
     "display": "87.66",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixSNReject",
     "value": 82.84666666666668,
     "display": "82.85",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixSNFrr",
     "value": 7.526666666666666,
     "display": "7.53",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "MixSNPore",
     "value": 3.24618852965487,
     "display": "3.246",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units"
+    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
   },
   {
     "macro": "SputumPLAcc",
     "value": 92.68464174559386,
     "display": "92.68",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumPLReject",
     "value": 93.89827075956042,
     "display": "93.90",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumPLFrr",
     "value": 8.528987268372695,
     "display": "8.53",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumPLPore",
     "value": 1.3968711535761544,
     "display": "1.397",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumRCAcc",
     "value": 90.31249009157067,
     "display": "90.31",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumRCReject",
     "value": 91.43500837043025,
     "display": "91.44",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumRCFrr",
     "value": 10.810028187288916,
     "display": "10.81",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumRCPore",
     "value": 2.1649164398862504,
     "display": "2.165",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumNDAcc",
     "value": 88.15491575091721,
     "display": "88.15",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumNDReject",
     "value": 87.59905164613265,
     "display": "87.60",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumNDFrr",
     "value": 11.289220144298245,
     "display": "11.29",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumNDPore",
     "value": 2.324281497844518,
     "display": "2.324",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumSNAcc",
     "value": 87.86565938236258,
     "display": "87.87",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumSNReject",
     "value": 88.66547213494597,
     "display": "88.67",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumSNFrr",
     "value": 12.9341533702208,
     "display": "12.93",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
   },
   {
     "macro": "SputumSNPore",
     "value": 2.2931780443782395,
     "display": "2.293",
     "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units"
+    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
+  },
+  {
+    "macro": "MainPLMinReject",
+    "value": 90.58333333333334,
+    "display": "90.58",
+    "source": "figure_data/main.csv",
+    "aggregation": "minimum of four PoreLoom family means; all TEST reads"
+  },
+  {
+    "macro": "MainPLMaxReject",
+    "value": 95.72888888888889,
+    "display": "95.73",
+    "source": "figure_data/main.csv",
+    "aggregation": "maximum of four PoreLoom family means; all TEST reads"
   },
   {
     "macro": "SimPrefixBaseAcc",
@@ -693,11 +707,25 @@
     "aggregation": "mean of 3 seed-matched ratios to No-AS"
   },
   {
+    "macro": "YieldWsixBestOne",
+    "value": 5.815250176456491,
+    "display": "5.82",
+    "source": "figure_data/icarust_summary.csv",
+    "aggregation": "maximum W6000 baseline mean across 3 seed-matched ratios to No-AS"
+  },
+  {
     "macro": "YieldTen",
     "value": 4.880817953520695,
     "display": "4.88",
     "source": "figure_data/icarust.csv",
     "aggregation": "mean of 3 seed-matched ratios to No-AS"
+  },
+  {
+    "macro": "YieldWsixBestTen",
+    "value": 4.071142102305252,
+    "display": "4.07",
+    "source": "figure_data/icarust_summary.csv",
+    "aggregation": "maximum W6000 baseline mean across 3 seed-matched ratios to No-AS"
   },
   {
     "macro": "YieldThirty",
@@ -707,45 +735,10 @@
     "aggregation": "mean of 3 seed-matched ratios to No-AS"
   },
   {
-    "macro": "TransferForwardAcc",
-    "value": 77.795,
-    "display": "77.80",
-    "source": "figure_data/transfer_all.csv",
-    "aggregation": "descriptive mean of 9 dependent source/test combinations"
-  },
-  {
-    "macro": "TransferForwardFrr",
-    "value": 36.919999999999995,
-    "display": "36.92",
-    "source": "figure_data/transfer_all.csv",
-    "aggregation": "descriptive mean of 9 dependent source/test combinations"
-  },
-  {
-    "macro": "TransferForwardHost",
-    "value": 92.51,
-    "display": "92.51",
-    "source": "figure_data/transfer_all.csv",
-    "aggregation": "descriptive mean of 9 dependent source/test combinations"
-  },
-  {
-    "macro": "TransferReverseAcc",
-    "value": 57.90808157322156,
-    "display": "57.91",
-    "source": "figure_data/transfer_all.csv",
-    "aggregation": "descriptive mean of 9 dependent source/test combinations"
-  },
-  {
-    "macro": "TransferReverseFrr",
-    "value": 79.9707653955781,
-    "display": "79.97",
-    "source": "figure_data/transfer_all.csv",
-    "aggregation": "descriptive mean of 9 dependent source/test combinations"
-  },
-  {
-    "macro": "TransferReverseHost",
-    "value": 95.7869285420212,
-    "display": "95.79",
-    "source": "figure_data/transfer_all.csv",
-    "aggregation": "descriptive mean of 9 dependent source/test combinations"
+    "macro": "YieldWsixBestThirty",
+    "value": 2.401040343253469,
+    "display": "2.40",
+    "source": "figure_data/icarust_summary.csv",
+    "aggregation": "maximum W6000 baseline mean across 3 seed-matched ratios to No-AS"
   }
 ]

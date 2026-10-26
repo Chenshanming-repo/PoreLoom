@@ -1,0 +1,4100 @@
+{
+  "analysis": "Retrospective interpolated TEST tradeoff curves",
+  "grid_step": 0.005,
+  "maximum_displayed_target_rejection": 0.2,
+  "grid_rule": "Within each dataset's common candidate support, take every 0.5-percentage-point level not exceeding 20%; no ranking-based filtering.",
+  "levels_by_family": {
+    "Simulated": [
+      0.055,
+      0.06,
+      0.065,
+      0.07,
+      0.075,
+      0.08,
+      0.085,
+      0.09,
+      0.095,
+      0.1,
+      0.105,
+      0.11,
+      0.115,
+      0.12,
+      0.125,
+      0.13,
+      0.135,
+      0.14,
+      0.145,
+      0.15,
+      0.155,
+      0.16,
+      0.165,
+      0.17,
+      0.175,
+      0.18,
+      0.185,
+      0.19,
+      0.195,
+      0.2
+    ],
+    "R9": [
+      0.09,
+      0.095,
+      0.1,
+      0.105,
+      0.11,
+      0.115,
+      0.12,
+      0.125,
+      0.13,
+      0.135,
+      0.14,
+      0.145,
+      0.15,
+      0.155,
+      0.16,
+      0.165,
+      0.17,
+      0.175,
+      0.18,
+      0.185,
+      0.19,
+      0.195,
+      0.2
+    ],
+    "R10 mixed": [
+      0.055,
+      0.06,
+      0.065,
+      0.07,
+      0.075,
+      0.08,
+      0.085,
+      0.09,
+      0.095,
+      0.1,
+      0.105,
+      0.11,
+      0.115,
+      0.12,
+      0.125,
+      0.13,
+      0.135
+    ],
+    "R10 sputum": [
+      0.1,
+      0.105,
+      0.11,
+      0.115,
+      0.12,
+      0.125,
+      0.13,
+      0.135,
+      0.14,
+      0.145,
+      0.15,
+      0.155,
+      0.16,
+      0.165,
+      0.17,
+      0.175,
+      0.18,
+      0.185,
+      0.19,
+      0.195,
+      0.2
+    ]
+  },
+  "support_by_family": {
+    "Simulated": [
+      0.05106666666666667,
+      0.20646666666666666
+    ],
+    "R9": [
+      0.0895,
+      0.5703
+    ],
+    "R10 mixed": [
+      0.0532,
+      0.1393
+    ],
+    "R10 sputum": [
+      0.09728755880292263,
+      0.39080655024801253
+    ]
+  },
+  "unit_results": 1092,
+  "summary_results": 364,
+  "exact_hits": [
+    {
+      "unit": "sim_g1/r0",
+      "method": "main",
+      "target_rejection": 0.08,
+      "candidate_index": 11
+    },
+    {
+      "unit": "sim_g1/r0",
+      "method": "main",
+      "target_rejection": 0.105,
+      "candidate_index": 8
+    },
+    {
+      "unit": "sim_g1/r0",
+      "method": "fixed_len",
+      "target_rejection": 0.075,
+      "candidate_index": 23
+    },
+    {
+      "unit": "r9/r0",
+      "method": "calib_thr",
+      "target_rejection": 0.185,
+      "candidate_index": 55
+    },
+    {
+      "unit": "r9/r1",
+      "method": "calib_thr",
+      "target_rejection": 0.185,
+      "candidate_index": 47
+    },
+    {
+      "unit": "r10_run03/r0",
+      "method": "calib_thr",
+      "target_rejection": 0.085,
+      "candidate_index": 31
+    }
+  ],
+  "maximum_bracket_width": 0.0504,
+  "extrapolation": false,
+  "original_dev_b_operating_points_changed": false,
+  "candidate_scope": "All 41 FACP penalties; archived DEV-B accuracy-time frontier candidates for each threshold rule.",
+  "method": "Remove TEST target-rejection/time dominated candidates within each unit and method; retain exact grid hits or interpolate adjacent points; equally average three units.",
+  "lowest_mean_counts_on_grid": {
+    "Simulated": {
+      "main": 3,
+      "fixed_len": 0,
+      "const_thr": 5,
+      "calib_thr": 22
+    },
+    "R9": {
+      "main": 0,
+      "fixed_len": 0,
+      "const_thr": 1,
+      "calib_thr": 22
+    },
+    "R10 mixed": {
+      "main": 0,
+      "fixed_len": 0,
+      "const_thr": 0,
+      "calib_thr": 17
+    },
+    "R10 sputum": {
+      "main": 20,
+      "fixed_len": 0,
+      "const_thr": 0,
+      "calib_thr": 1
+    }
+  },
+  "sources": [
+    {
+      "family": "Simulated",
+      "unit": "sim_g1/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/sim_g1/r0/main/metrics.json",
+      "sha256": "2b17b429815968e4612db0faffb315eb4c520f0b227ea2682321655ffdf4f094",
+      "candidates": 41,
+      "frontier_points": 41,
+      "support": [
+        0.00046666666666666666,
+        0.20646666666666666
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g1/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/sim_g1/r0/fixed_len/metrics.json",
+      "sha256": "6c707ca0c674725d5b305e268fd779cc6a3d89a6771764351d7998ae906df5d4",
+      "candidates": 28,
+      "frontier_points": 26,
+      "support": [
+        0.0466,
+        0.9855333333333334
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g1/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/sim_g1/r0/const_thr/metrics.json",
+      "sha256": "1228c33bae9d42a461f6cab3bd85fa6ccc08df457ded5ba5eed66d3249f9b802",
+      "candidates": 74,
+      "frontier_points": 58,
+      "support": [
+        0.039933333333333335,
+        0.9474666666666667
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g1/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/sim_g1/r0/calib_thr/metrics.json",
+      "sha256": "0e29b1822539031fd49896e174d382542a3e8da460cc81a34ad0ff324af1d46e",
+      "candidates": 77,
+      "frontier_points": 59,
+      "support": [
+        0.04633333333333333,
+        0.6046
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g2/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/sim_g2/r0/main/metrics.json",
+      "sha256": "6b86148e0ae3d2550310c2f6485e4e8322e15fc9ee6aef9c22227337ee10e934",
+      "candidates": 41,
+      "frontier_points": 40,
+      "support": [
+        0.0002,
+        0.23653333333333335
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g2/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/sim_g2/r0/fixed_len/metrics.json",
+      "sha256": "5bf240f8a657f0a0d5903925094da9d9bd59de2e95f0d21aca5e293fc1f284a5",
+      "candidates": 32,
+      "frontier_points": 30,
+      "support": [
+        0.05106666666666667,
+        0.9969333333333333
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g2/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/sim_g2/r0/const_thr/metrics.json",
+      "sha256": "f0072d4f594f4e79346764bc362197e828e363d0ea7b930362675ec9c9ab129c",
+      "candidates": 79,
+      "frontier_points": 51,
+      "support": [
+        0.05093333333333333,
+        0.9836
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g2/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/sim_g2/r0/calib_thr/metrics.json",
+      "sha256": "cdd60db3a6073f2af2a70312cbfc76461de5b2c80c52ffc40771fdf34afbf09a",
+      "candidates": 75,
+      "frontier_points": 63,
+      "support": [
+        0.0466,
+        0.6225333333333334
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g3/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/sim_g3/r0/main/metrics.json",
+      "sha256": "874978a0b51296943436d6349b1109013c2f0ef950dd7621ab1cf0ee06c3e08a",
+      "candidates": 41,
+      "frontier_points": 41,
+      "support": [
+        0.0006,
+        0.22986666666666666
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g3/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/sim_g3/r0/fixed_len/metrics.json",
+      "sha256": "77b2b269d5154e88f6577dd9aa2e536d6c475662b6f90097072eacc6f2faef94",
+      "candidates": 32,
+      "frontier_points": 30,
+      "support": [
+        0.04493333333333333,
+        0.8549333333333333
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g3/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/sim_g3/r0/const_thr/metrics.json",
+      "sha256": "9c0b6bdfc4504d3ab31724e623ed748af425d439e066b19a5199853651472d88",
+      "candidates": 60,
+      "frontier_points": 52,
+      "support": [
+        0.046066666666666665,
+        0.8651333333333333
+      ]
+    },
+    {
+      "family": "Simulated",
+      "unit": "sim_g3/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/sim_g3/r0/calib_thr/metrics.json",
+      "sha256": "3ea2de2a4736ad4356ca568aea1f486a6d00c90fd346c633b2ed33ab3597cfc9",
+      "candidates": 62,
+      "frontier_points": 58,
+      "support": [
+        0.04513333333333333,
+        0.5888
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/r9/r0/main/metrics.json",
+      "sha256": "d47dea5811c83a72b5e216cf125e614c91653e8d1b73248494dc8292a0c593b7",
+      "candidates": 41,
+      "frontier_points": 39,
+      "support": [
+        0.0001,
+        0.5703
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/r9/r0/fixed_len/metrics.json",
+      "sha256": "9821b67c8163f82ed79c58101e58c08f26e074787edde1a1478a023752dcf29f",
+      "candidates": 33,
+      "frontier_points": 30,
+      "support": [
+        0.0803,
+        1.0
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/r9/r0/const_thr/metrics.json",
+      "sha256": "02b50cac673186f3c5c17bc8849062c9d39e68d6fe86b46c652ec7712b36f9fc",
+      "candidates": 131,
+      "frontier_points": 73,
+      "support": [
+        0.0716,
+        0.9882
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/r9/r0/calib_thr/metrics.json",
+      "sha256": "a7e6e0b67277158e2f3a76f2b9a77e55eb2ef24d057d3a7e134297a1e9e00b68",
+      "candidates": 73,
+      "frontier_points": 53,
+      "support": [
+        0.0573,
+        0.6767
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r1",
+      "method": "main",
+      "source": "results/final_20261014/ablation/r9/r1/main/metrics.json",
+      "sha256": "e04733ff02fb098736228eb82ff07f44bcc0b8b8d0f30d8235ac0f601ac6d7d8",
+      "candidates": 41,
+      "frontier_points": 40,
+      "support": [
+        0.0001,
+        0.6192
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r1",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/r9/r1/fixed_len/metrics.json",
+      "sha256": "ad6785fc65744985362c37092c5428ecfd41c04b72bbfb2f386dfa9b7f4114d4",
+      "candidates": 32,
+      "frontier_points": 29,
+      "support": [
+        0.0808,
+        1.0
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r1",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/r9/r1/const_thr/metrics.json",
+      "sha256": "e9f45ee41e7986b219827f433a2742d0b50f7d564325a8409fe487152f320ab3",
+      "candidates": 114,
+      "frontier_points": 56,
+      "support": [
+        0.0746,
+        0.9875
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r1",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/r9/r1/calib_thr/metrics.json",
+      "sha256": "131d67cebb8d83241b1625cfcf032466e5e349c6016326f029dd25f186e633ef",
+      "candidates": 64,
+      "frontier_points": 47,
+      "support": [
+        0.0753,
+        0.6812
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r2",
+      "method": "main",
+      "source": "results/final_20261014/ablation/r9/r2/main/metrics.json",
+      "sha256": "71cfbbcc049bf035883dc7982de9d42f865b4390cccec64c95d2ac4f897b0710",
+      "candidates": 41,
+      "frontier_points": 38,
+      "support": [
+        0.0001,
+        0.646
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r2",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/r9/r2/fixed_len/metrics.json",
+      "sha256": "2c27b1318dae412c95947fe1c21bb4de5cbe51d92e254808f5d464e627d38c8b",
+      "candidates": 32,
+      "frontier_points": 31,
+      "support": [
+        0.0895,
+        1.0
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r2",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/r9/r2/const_thr/metrics.json",
+      "sha256": "1f8cf45269e05a8ddb4329dc50a47a104d30c4ef96ecca40e7fec8a7f9daced9",
+      "candidates": 137,
+      "frontier_points": 83,
+      "support": [
+        0.0739,
+        0.9888
+      ]
+    },
+    {
+      "family": "R9",
+      "unit": "r9/r2",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/r9/r2/calib_thr/metrics.json",
+      "sha256": "6989d2d51c4838229a241a8ffb7a3320e0c0c4e31b3024a02589b05f8e76bf9e",
+      "candidates": 81,
+      "frontier_points": 45,
+      "support": [
+        0.0596,
+        0.6809
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run01/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/r10_run01/r0/main/metrics.json",
+      "sha256": "e8aefb2592b3269c2540be1b119a84c0c7635516fb28da8509b71ce185704dff",
+      "candidates": 41,
+      "frontier_points": 39,
+      "support": [
+        0.0,
+        0.1415
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run01/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/r10_run01/r0/fixed_len/metrics.json",
+      "sha256": "232f93fc5a47b8c2df37432e4393e144410c02df96631c7b14d67507ae724cca",
+      "candidates": 20,
+      "frontier_points": 19,
+      "support": [
+        0.0449,
+        0.7297
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run01/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/r10_run01/r0/const_thr/metrics.json",
+      "sha256": "067128f0d98484f6c7ac8071bd915c3853554f55f2bef3171e6b88265c999dc4",
+      "candidates": 59,
+      "frontier_points": 35,
+      "support": [
+        0.0392,
+        0.7964
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run01/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/r10_run01/r0/calib_thr/metrics.json",
+      "sha256": "60062a3b641a0ff7aa3dfe93cfe6bd52c2bab8651669985bcc379c5e49a8082b",
+      "candidates": 59,
+      "frontier_points": 47,
+      "support": [
+        0.027,
+        0.6491
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run02/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/r10_run02/r0/main/metrics.json",
+      "sha256": "eedf15759f726f5fcaba0ed5cceb4f71b8993078f3ed5786d0811d4ae28b928d",
+      "candidates": 41,
+      "frontier_points": 40,
+      "support": [
+        0.0,
+        0.1393
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run02/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/r10_run02/r0/fixed_len/metrics.json",
+      "sha256": "b61bdc93a56b334bfa314e91cafaeef35b4232d5298fcd054de436e98783bf21",
+      "candidates": 22,
+      "frontier_points": 20,
+      "support": [
+        0.0419,
+        0.9271
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run02/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/r10_run02/r0/const_thr/metrics.json",
+      "sha256": "021a2e389e5c811d6a2385d25ef5291539c4b7946415f0e6c4d0efcb146228b1",
+      "candidates": 80,
+      "frontier_points": 52,
+      "support": [
+        0.038,
+        0.9751
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run02/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/r10_run02/r0/calib_thr/metrics.json",
+      "sha256": "a1ec5b9ccca192b39b1c10062afdf6e3b6c579d8c292a109a2205d542563c75e",
+      "candidates": 70,
+      "frontier_points": 42,
+      "support": [
+        0.0345,
+        0.65
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run03/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/r10_run03/r0/main/metrics.json",
+      "sha256": "8bbf8d17e97ffaac36785724b7088a559ea83f301f9301019a997648dd649663",
+      "candidates": 41,
+      "frontier_points": 39,
+      "support": [
+        0.0002,
+        0.1919
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run03/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/r10_run03/r0/fixed_len/metrics.json",
+      "sha256": "3fbbc1204552e89724a2b1e39cd41919ad0bca8687c02f769886e655fa7ba5bd",
+      "candidates": 29,
+      "frontier_points": 25,
+      "support": [
+        0.025,
+        0.9939
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run03/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/r10_run03/r0/const_thr/metrics.json",
+      "sha256": "6149a4c5894127625ef6d118cc5d75c3acd36747bd11f605567e23faf664bcb2",
+      "candidates": 48,
+      "frontier_points": 41,
+      "support": [
+        0.0532,
+        0.9778
+      ]
+    },
+    {
+      "family": "R10 mixed",
+      "unit": "r10_run03/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/r10_run03/r0/calib_thr/metrics.json",
+      "sha256": "ed080ddf62889fc7db2f91030cbcbacfef9b0a25dd3204014c7c6704033f0028",
+      "candidates": 47,
+      "frontier_points": 39,
+      "support": [
+        0.0388,
+        0.6338
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g1/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/sputum_g1/r0/main/metrics.json",
+      "sha256": "8c290a582798e56074a019beb5e960f34d2036f2786ffc55b6952eab11513575",
+      "candidates": 41,
+      "frontier_points": 38,
+      "support": [
+        0.0,
+        0.39080655024801253
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g1/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/sputum_g1/r0/fixed_len/metrics.json",
+      "sha256": "531c63140665f33512c04691011b63991c09d839d0a3cead792728afe8f74271",
+      "candidates": 25,
+      "frontier_points": 20,
+      "support": [
+        0.07973771828497656,
+        0.6569273629136373
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g1/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/sputum_g1/r0/const_thr/metrics.json",
+      "sha256": "1da8f71b02f927d7794be7fff049be64e26714b654d29387cffe7b74c5ddefeb",
+      "candidates": 69,
+      "frontier_points": 58,
+      "support": [
+        0.06492491676292722,
+        0.6615818441258409
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g1/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/sputum_g1/r0/calib_thr/metrics.json",
+      "sha256": "b23f5fe0d5d1e381428bd4068337e745be11beb055d427d391e26d3ffe90b88c",
+      "candidates": 51,
+      "frontier_points": 46,
+      "support": [
+        0.07990758986206428,
+        0.5230006115376775
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g2/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/sputum_g2/r0/main/metrics.json",
+      "sha256": "217219dde3c1280029f2e26daf54781b9c1352e38cda38090df42a4951ea8be8",
+      "candidates": 41,
+      "frontier_points": 40,
+      "support": [
+        6.672672071531044e-05,
+        0.4345577686584593
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g2/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/sputum_g2/r0/fixed_len/metrics.json",
+      "sha256": "43f8a644b837732d1bb98812d40a37ea5739677d8ef275749abcace6d4c45637",
+      "candidates": 29,
+      "frontier_points": 24,
+      "support": [
+        0.09728755880292263,
+        0.7273546191572415
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g2/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/sputum_g2/r0/const_thr/metrics.json",
+      "sha256": "28fc3410f10531ffe063d6b59eee7232fc561c2e61768bdad7928e6941023b51",
+      "candidates": 60,
+      "frontier_points": 53,
+      "support": [
+        0.09531912054182097,
+        0.7344276515530644
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g2/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/sputum_g2/r0/calib_thr/metrics.json",
+      "sha256": "2a44ca6e3429d4711122c3a7ff985a04a54dd42a90b1f7ef8e031a0a1f7a9755",
+      "candidates": 50,
+      "frontier_points": 45,
+      "support": [
+        0.09431821973109132,
+        0.5059887231841991
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g3/r0",
+      "method": "main",
+      "source": "results/final_20261014/ablation/sputum_g3/r0/main/metrics.json",
+      "sha256": "54bc2a2c3f69fc80d874fd053e23e55dd87c78314a2c85018c88cfddede429a8",
+      "candidates": 41,
+      "frontier_points": 38,
+      "support": [
+        0.0,
+        0.4635178827372421
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g3/r0",
+      "method": "fixed_len",
+      "source": "results/final_20261014/ablation/sputum_g3/r0/fixed_len/metrics.json",
+      "sha256": "b7f08c76f0e43a6d1c8af865ef664e511e4d6f0314c45fe3c4ae0dfea73be6be",
+      "candidates": 31,
+      "frontier_points": 24,
+      "support": [
+        0.07119762674577514,
+        0.7355421485950469
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g3/r0",
+      "method": "const_thr",
+      "source": "results/final_20261014/ablation/sputum_g3/r0/const_thr/metrics.json",
+      "sha256": "13ecaf361abad514f32cca3194211714d0f21021539e6b3f299216cd24d91035",
+      "candidates": 82,
+      "frontier_points": 70,
+      "support": [
+        0.07143095230158995,
+        0.7399420019332689
+      ]
+    },
+    {
+      "family": "R10 sputum",
+      "unit": "sputum_g3/r0",
+      "method": "calib_thr",
+      "source": "results/final_20261014/ablation/sputum_g3/r0/calib_thr/metrics.json",
+      "sha256": "5317e49bc5a828300292467451e71d7d475f9569c7e14a16b9063fb597c383ac",
+      "candidates": 64,
+      "frontier_points": 59,
+      "support": [
+        0.06553114896170127,
+        0.5097163427885737
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "family": "Simulated",
+      "target_rejection": 0.055,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.6978427763899828,
+      "minimum": 1.690761740194285,
+      "maximum": 1.7039100398914204
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.055,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.4034979557523193,
+      "minimum": 2.351539574575396,
+      "maximum": 2.482015825732538
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.055,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.857730523153444,
+      "minimum": 1.7279999231488472,
+      "maximum": 2.0049995871432795
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.055,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.7914610986500759,
+      "minimum": 1.761678789470607,
+      "maximum": 1.8206995525100336
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.06,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.6230951600429004,
+      "minimum": 1.618450411360213,
+      "maximum": 1.626495557388107
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.06,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.2832496333759686,
+      "minimum": 2.2312654069507305,
+      "maximum": 2.3192394813049795
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.06,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.7552009738664973,
+      "minimum": 1.7077164330641124,
+      "maximum": 1.818574597800445
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.06,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.6324083083201022,
+      "minimum": 1.620589911424873,
+      "maximum": 1.6498478745504728
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.065,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.5579652625082556,
+      "minimum": 1.554781741023716,
+      "maximum": 1.5603671778175383
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.065,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.217800325456401,
+      "minimum": 2.1559237982993866,
+      "maximum": 2.2491432519395236
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.065,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.621934647104379,
+      "minimum": 1.566004837117569,
+      "maximum": 1.7065297397063102
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.065,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.5629757635757706,
+      "minimum": 1.5436611170750796,
+      "maximum": 1.5874563932766497
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.07,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.497639716891409,
+      "minimum": 1.494883764660905,
+      "maximum": 1.4991194524721514
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.07,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.182026268527089,
+      "minimum": 2.150729503931802,
+      "maximum": 2.199042492006852
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.07,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.5534610388577446,
+      "minimum": 1.4789727757858862,
+      "maximum": 1.6624875211116952
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.07,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.4974052003515141,
+      "minimum": 1.4650861160357946,
+      "maximum": 1.5170891739984986
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.075,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.4457330678025284,
+      "minimum": 1.4392644379336228,
+      "maximum": 1.4506471472604676
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.075,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.1493335773660243,
+      "minimum": 2.1344664818798327,
+      "maximum": 2.1679990406540233
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.075,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.5136276227348635,
+      "minimum": 1.4170507622369024,
+      "maximum": 1.65759506136422
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.075,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.433032732788543,
+      "minimum": 1.4124345143342723,
+      "maximum": 1.4451193666413353
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.08,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.4023771635307292,
+      "minimum": 1.3906338917497258,
+      "maximum": 1.4106134124932828
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.08,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.082025019476075,
+      "minimum": 2.066780216469948,
+      "maximum": 2.107376536670865
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.08,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.489591562424184,
+      "minimum": 1.3762612867089374,
+      "maximum": 1.6527026016167448
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.08,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.377096003241127,
+      "minimum": 1.3565674351090558,
+      "maximum": 1.3874133575979413
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.085,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3630368608797845,
+      "minimum": 1.3471776521486578,
+      "maximum": 1.3769110039889938
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.085,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.022519239734792,
+      "minimum": 2.007284891451543,
+      "maximum": 2.0422799538873533
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.085,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4278122817753858,
+      "minimum": 1.3524220856586378,
+      "maximum": 1.5460845069083482
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.085,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3467110313308497,
+      "minimum": 1.3245655585992966,
+      "maximum": 1.3717517721832553
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.09,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3268623755323183,
+      "minimum": 1.31270549395362,
+      "maximum": 1.336764486293486
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.09,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.990770824217191,
+      "minimum": 1.9846643537842437,
+      "maximum": 2.0021523022256575
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.09,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3770017923363358,
+      "minimum": 1.3326638788414331,
+      "maximum": 1.462974040063504
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.09,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3255162579253095,
+      "minimum": 1.3018307771366955,
+      "maximum": 1.35994198306949
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.095,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2953839545420576,
+      "minimum": 1.2860944069888585,
+      "maximum": 1.3017930015017647
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.095,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.9642970419651518,
+      "minimum": 1.962796538956448,
+      "maximum": 1.9663878451072065
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.095,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3277234275983736,
+      "minimum": 1.2885700496196173,
+      "maximum": 1.4030164157259608
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.095,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2854732318500657,
+      "minimum": 1.2684329101590577,
+      "maximum": 1.2964841017808215
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.1,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2667007572178992,
+      "minimum": 1.2621678196264603,
+      "maximum": 1.271598470159692
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.1,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.947214568488356,
+      "minimum": 1.94191766702193,
+      "maximum": 1.9516147020129684
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.1,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2916437842767279,
+      "minimum": 1.259122629082613,
+      "maximum": 1.3553765903245583
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.1,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.25332580763338,
+      "minimum": 1.2418690227966953,
+      "maximum": 1.2611105154860622
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.105,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2404591694521063,
+      "minimum": 1.2385617695300162,
+      "maximum": 1.241984037399621
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.105,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.93013209501156,
+      "minimum": 1.9201285922120588,
+      "maximum": 1.9404328650694889
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.105,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2596416774103654,
+      "minimum": 1.2316694484582746,
+      "maximum": 1.3130561829016123
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.105,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2276342401342852,
+      "minimum": 1.2198185340440453,
+      "maximum": 1.2401593608026529
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.11,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2121463542682154,
+      "minimum": 1.204578510674179,
+      "maximum": 1.2169633750979119
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.11,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8987404814654578,
+      "minimum": 1.891037764618377,
+      "maximum": 1.9075476090832366
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.11,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2295986833402106,
+      "minimum": 1.2042162678339365,
+      "maximum": 1.2757318629429388
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.11,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1989744944622882,
+      "minimum": 1.1922366611103947,
+      "maximum": 1.208868337451704
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.115,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.187878668531026,
+      "minimum": 1.1782317663501898,
+      "maximum": 1.1975939225773988
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.115,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8509057700231504,
+      "minimum": 1.844553941064385,
+      "maximum": 1.8617326566459709
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.115,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2062346478704837,
+      "minimum": 1.1824511611796953,
+      "maximum": 1.2426219591854142
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.115,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1722307150841238,
+      "minimum": 1.1604775635246927,
+      "maximum": 1.180077122571308
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.12,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1676391091209242,
+      "minimum": 1.1601579127690358,
+      "maximum": 1.178224470056886
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.12,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8101052932964898,
+      "minimum": 1.8018236600998145,
+      "maximum": 1.8159177042087056
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.12,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.185003442456152,
+      "minimum": 1.1607629203899146,
+      "maximum": 1.2158336797296139
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.12,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1560107986680326,
+      "minimum": 1.1430105987300325,
+      "maximum": 1.1679414746887873
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.125,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1491172744290201,
+      "minimum": 1.141531821568099,
+      "maximum": 1.1637359425310794
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.125,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.7818393650787279,
+      "minimum": 1.7742594431447287,
+      "maximum": 1.7882688006964007
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.125,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1627444072755055,
+      "minimum": 1.139074679600134,
+      "maximum": 1.1890454002738131
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.125,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.137680652115586,
+      "minimum": 1.126105070228081,
+      "maximum": 1.1455116048938843
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.13,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1324575108179882,
+      "minimum": 1.1208609618454926,
+      "maximum": 1.1525013650017435
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.13,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.7575392561780099,
+      "minimum": 1.7528926208457136,
+      "maximum": 1.7639630858118522
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.13,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1418998315971152,
+      "minimum": 1.1199089846672308,
+      "maximum": 1.1683545189244677
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.13,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.122822072801416,
+      "minimum": 1.1109087033608436,
+      "maximum": 1.133354423963628
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.135,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1178330797090061,
+      "minimum": 1.1019257398874591,
+      "maximum": 1.1408572141832014
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.135,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.736349848864277,
+      "minimum": 1.7285342723578732,
+      "maximum": 1.7489894756882591
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.135,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1268300801804008,
+      "minimum": 1.1009234715812475,
+      "maximum": 1.1489249443032115
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.135,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1029172928506552,
+      "minimum": 1.0962529242511203,
+      "maximum": 1.1063847464523446
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.14,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1030825930430976,
+      "minimum": 1.084852905745195,
+      "maximum": 1.125234351412371
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.14,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.7175054617957692,
+      "minimum": 1.7013064828392825,
+      "maximum": 1.7405907575553397
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.14,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.116271502818497,
+      "minimum": 1.081937958495264,
+      "maximum": 1.1372532612245627
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.14,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0876314232736608,
+      "minimum": 1.0824567373064204,
+      "maximum": 1.097873711239627
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.145,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0910718355711575,
+      "minimum": 1.073269214638883,
+      "maximum": 1.1095778215713494
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.145,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.7024744263465303,
+      "minimum": 1.6839487606955528,
+      "maximum": 1.73219203942242
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.145,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0945587804360029,
+      "minimum": 1.074337138583892,
+      "maximum": 1.118520864843608
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.145,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0757942922097479,
+      "minimum": 1.06741474120989,
+      "maximum": 1.09209313883705
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.15,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0799065055177401,
+      "minimum": 1.0616855235325708,
+      "maximum": 1.0935341204231348
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.15,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6879443392159277,
+      "minimum": 1.6719458128505509,
+      "maximum": 1.7194161261071947
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.15,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0751425644960866,
+      "minimum": 1.0705989824281916,
+      "maximum": 1.0800328793719414
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.15,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0652929531432862,
+      "minimum": 1.054123155052122,
+      "maximum": 1.0796522461862352
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.155,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0677658591216743,
+      "minimum": 1.0503401240576142,
+      "maximum": 1.0774904192749202
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.155,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.66575416051629,
+      "minimum": 1.6526091467794835,
+      "maximum": 1.683659938084864
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.155,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0647151465085765,
+      "minimum": 1.0585878428147124,
+      "maximum": 1.0692474208633742
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.155,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0544182578016676,
+      "minimum": 1.0453326230225997,
+      "maximum": 1.0640221813732695
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.16,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0569148916504902,
+      "minimum": 1.0392146860885245,
+      "maximum": 1.0664341954674619
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.16,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.643563981816652,
+      "minimum": 1.633272480708416,
+      "maximum": 1.6495157146790072
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.16,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0517101933520467,
+      "minimum": 1.042379853941298,
+      "maximum": 1.0584384627956307
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.16,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.042471017472031,
+      "minimum": 1.037569483696226,
+      "maximum": 1.0518970120930402
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.165,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0486486858280242,
+      "minimum": 1.0280892481194344,
+      "maximum": 1.060455452462203
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.165,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6223716694212786,
+      "minimum": 1.6139358146373488,
+      "maximum": 1.638038032673492
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.165,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0347040609196083,
+      "minimum": 1.028386780553621,
+      "maximum": 1.0470655153076647
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.165,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0310418403582937,
+      "minimum": 1.0235809789035875,
+      "maximum": 1.0370779217106947
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.17,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0406420603444482,
+      "minimum": 1.0177110782071332,
+      "maximum": 1.0558151115289216
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.17,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6076654880036214,
+      "minimum": 1.5945991485662814,
+      "maximum": 1.6265603506679769
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.17,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0231142658148946,
+      "minimum": 1.0164382445373938,
+      "maximum": 1.0356925678196987
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.17,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0254341239042963,
+      "minimum": 1.0217337864288867,
+      "maximum": 1.0282151123871088
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.175,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0321102217477596,
+      "minimum": 1.0089208529155083,
+      "maximum": 1.0480033183956565
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.175,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5943877827775752,
+      "minimum": 1.579547911070046,
+      "maximum": 1.6150826686624618
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.175,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.014202211870315,
+      "minimum": 1.0044897085211668,
+      "maximum": 1.0243196203317328
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.175,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0191833270611574,
+      "minimum": 1.016565277648541,
+      "maximum": 1.021098109580746
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.18,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0237592752334521,
+      "minimum": 1.000851977234406,
+      "maximum": 1.0400128518990117
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.18,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5642912115671839,
+      "minimum": 1.5518923148112886,
+      "maximum": 1.5752285724238289
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.18,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0056909070250892,
+      "minimum": 0.9925411725049398,
+      "maximum": 1.014148920141829
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.18,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0063421117669356,
+      "minimum": 0.9965421320029666,
+      "maximum": 1.0168615060236699
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.185,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.015394855983757,
+      "minimum": 0.9935239470992461,
+      "maximum": 1.031488093674588
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.185,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.551298110442077,
+      "minimum": 1.5400123712159695,
+      "maximum": 1.5619243762474402
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.185,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9942433318243165,
+      "minimum": 0.9811909799586553,
+      "maximum": 1.0040459521940697
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.185,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9933559131801735,
+      "minimum": 0.9855798515974556,
+      "maximum": 1.0005484923546712
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.19,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0065664101564513,
+      "minimum": 0.9861959169640862,
+      "maximum": 1.0217553715438816
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.19,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5383050093169706,
+      "minimum": 1.5281324276206503,
+      "maximum": 1.5486201800710515
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.19,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9888799631573365,
+      "minimum": 0.975653266834672,
+      "maximum": 0.9960201309816767
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.19,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9875216728576596,
+      "minimum": 0.9765544153344439,
+      "maximum": 0.9964689588392133
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.195,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9983186136627407,
+      "minimum": 0.9788678868289264,
+      "maximum": 1.012022649413175
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.195,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5253119081918638,
+      "minimum": 1.5162524840253313,
+      "maximum": 1.5353159838946626
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.195,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9816582614452499,
+      "minimum": 0.9701155537106887,
+      "maximum": 0.9891281379135277
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.195,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9819474028758735,
+      "minimum": 0.9683088900936155,
+      "maximum": 0.9923894253237552
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.2,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.99007081716903,
+      "minimum": 0.9715398566937665,
+      "maximum": 1.0022899272824686
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.2,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5108597444256353,
+      "minimum": 1.5043725404300123,
+      "maximum": 1.5176345997949083
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.2,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9721275796082218,
+      "minimum": 0.9645778405867054,
+      "maximum": 0.9832897841713948
+    },
+    {
+      "family": "Simulated",
+      "target_rejection": 0.2,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9742577989541131,
+      "minimum": 0.964601028981853,
+      "maximum": 0.9816082648739285
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.09,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.6941215191308046,
+      "minimum": 1.6746279449227988,
+      "maximum": 1.7199101839010864
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.09,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.3742352329659293,
+      "minimum": 2.2990311593352324,
+      "maximum": 2.523936781384809
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.09,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.6794257750367325,
+      "minimum": 1.6330653226011258,
+      "maximum": 1.7494752417291286
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.09,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.6259392036500206,
+      "minimum": 1.6019797890624567,
+      "maximum": 1.6595223254019007
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.095,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.6571314897075304,
+      "minimum": 1.6455779600213711,
+      "maximum": 1.6782210506138513
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.095,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.328703285973799,
+      "minimum": 2.251828604602962,
+      "maximum": 2.4767412166280938
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.095,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.6449622812034654,
+      "minimum": 1.5957257700246283,
+      "maximum": 1.720230104247645
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.095,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.5849555985499972,
+      "minimum": 1.5530428064576256,
+      "maximum": 1.6139955790216916
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.1,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.620650031440148,
+      "minimum": 1.607364488406209,
+      "maximum": 1.6385398079039963
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.1,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.285126150813352,
+      "minimum": 2.2076412287967164,
+      "maximum": 2.4295456518713783
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.1,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.6014533266833408,
+      "minimum": 1.5633384463681843,
+      "maximum": 1.655119532118729
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.1,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.559409112201063,
+      "minimum": 1.5207215701604044,
+      "maximum": 1.59015130263864
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.105,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.5870197004005193,
+      "minimum": 1.5756869000083102,
+      "maximum": 1.5988585651941414
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.105,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.243291405031508,
+      "minimum": 2.163453852990471,
+      "maximum": 2.3825777205552745
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.105,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.5520385350116115,
+      "minimum": 1.54841561668918,
+      "maximum": 1.556618126974188
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.105,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.5193473092566847,
+      "minimum": 1.491654857170407,
+      "maximum": 1.5695807725424338
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.11,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.5563919912049597,
+      "minimum": 1.5497115660659184,
+      "maximum": 1.5624229438861033
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.11,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.203277726774552,
+      "minimum": 2.1192664771842256,
+      "maximum": 2.3410729918138364
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.11,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.5212262680857844,
+      "minimum": 1.51473590763973,
+      "maximum": 1.5246209920720555
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.11,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.4888334942957615,
+      "minimum": 1.4707155938410015,
+      "maximum": 1.5165036860435062
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.115,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.5292471289926184,
+      "minimum": 1.5237362321235266,
+      "maximum": 1.536265123683818
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.115,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.172499537692267,
+      "minimum": 2.102785568901993,
+      "maximum": 2.2995682630723984
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.115,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4911618401516307,
+      "minimum": 1.4851623228986734,
+      "maximum": 1.5002281924019554
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.115,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.4703178945779025,
+      "minimum": 1.4507324869958447,
+      "maximum": 1.4977550691174388
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.12,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.5021022667802768,
+      "minimum": 1.4977608981811348,
+      "maximum": 1.5101073034815329
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.12,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.1496595521513995,
+      "minimum": 2.091582083005287,
+      "maximum": 2.25806353433096
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.12,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4661240346616957,
+      "minimum": 1.4551843793679935,
+      "maximum": 1.4765493317904732
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.12,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.4529217318400651,
+      "minimum": 1.432980411947267,
+      "maximum": 1.478894550413238
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.125,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.4773054606399763,
+      "minimum": 1.470882604803343,
+      "maximum": 1.4839494832792477
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.125,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.1289905886565093,
+      "minimum": 2.080378597108581,
+      "maximum": 2.2165588055895213
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.125,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4413478234423658,
+      "minimum": 1.4230224623472665,
+      "maximum": 1.452906545225263
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.125,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.4351930532154593,
+      "minimum": 1.4152283368986895,
+      "maximum": 1.460009467904081
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.13,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.456004732880232,
+      "minimum": 1.4524901636705434,
+      "maximum": 1.4577916630769625
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.13,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.114380361248624,
+      "minimum": 2.0691751112118744,
+      "maximum": 2.1932302851090992
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.13,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4227104104228168,
+      "minimum": 1.4088295556995707,
+      "maximum": 1.4300379169088264
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.13,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.41126044508961,
+      "minimum": 1.401057548401991,
+      "maximum": 1.4201525435129698
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.135,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.435538528882301,
+      "minimum": 1.4340977225377434,
+      "maximum": 1.438380449949042
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.135,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.1002969804570006,
+      "minimum": 2.0579716253151683,
+      "maximum": 2.171482304477461
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.135,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4068158057174434,
+      "minimum": 1.3946366490518753,
+      "maximum": 1.4130052675911462
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.135,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3904023817235458,
+      "minimum": 1.3876728959776559,
+      "maximum": 1.3953164366559667
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.14,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.4159763922930013,
+      "minimum": 1.4131953674691666,
+      "maximum": 1.4190285280048942
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.14,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.0855570603464235,
+      "minimum": 2.044798521461601,
+      "maximum": 2.1497343238458235
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.14,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3908906585585623,
+      "minimum": 1.3789836334409014,
+      "maximum": 1.3977157239613198
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.14,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3736085153365147,
+      "minimum": 1.3686731648010846,
+      "maximum": 1.3783428955325774
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.145,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3970976108410909,
+      "minimum": 1.3922533207782153,
+      "maximum": 1.4017266714729133
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.145,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.0681909829600325,
+      "minimum": 2.023746945780592,
+      "maximum": 2.1279863432141854
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.145,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3742718288105684,
+      "minimum": 1.360948334784578,
+      "maximum": 1.382625947413331
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.145,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3575953303983752,
+      "minimum": 1.3519613894727678,
+      "maximum": 1.3621096180330903
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.15,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.379991693184862,
+      "minimum": 1.3713112740872644,
+      "maximum": 1.3887812039417866
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.15,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.0489782627737942,
+      "minimum": 2.0026953700995827,
+      "maximum": 2.1057614964265756
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.15,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.362561421412205,
+      "minimum": 1.3544637993494288,
+      "maximum": 1.3685016159876449
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.15,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3422997037686923,
+      "minimum": 1.3369858907813756,
+      "maximum": 1.3462927388220485
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.155,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.363902557043022,
+      "minimum": 1.3525313851214569,
+      "maximum": 1.3758357364106604
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.155,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 2.0217892078828483,
+      "minimum": 1.9816437944185736,
+      "maximum": 2.0601702079963493
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.155,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3506874409924727,
+      "minimum": 1.3468449147686385,
+      "maximum": 1.3550209146434935
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.155,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.331927228427507,
+      "minimum": 1.3222225078943495,
+      "maximum": 1.3409798163788582
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.16,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3498646987429852,
+      "minimum": 1.3399053296810592,
+      "maximum": 1.362890268879534
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.16,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.9946001529919022,
+      "minimum": 1.9605922187375644,
+      "maximum": 2.0145789195661234
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.16,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3365558770484658,
+      "minimum": 1.3324532796150241,
+      "maximum": 1.3415402132993421
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.16,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3192270666216945,
+      "minimum": 1.3125499043121094,
+      "maximum": 1.3229492506168194
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.165,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3358268404429485,
+      "minimum": 1.3272792742406612,
+      "maximum": 1.3499448013484074
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.165,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.9670726840242272,
+      "minimum": 1.9385254008263677,
+      "maximum": 1.993705020110416
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.165,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3236624967151875,
+      "minimum": 1.3180616444614097,
+      "maximum": 1.3280595119551908
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.165,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3077559146248223,
+      "minimum": 1.3028773007298695,
+      "maximum": 1.3133191402243258
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.17,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3217889821429116,
+      "minimum": 1.3137143938111906,
+      "maximum": 1.336999333817281
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.17,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.9469940716342902,
+      "minimum": 1.9138479600375462,
+      "maximum": 1.9787807195488134
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.17,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.31232477143088,
+      "minimum": 1.3036700093077955,
+      "maximum": 1.3196303554751727
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.17,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2962847626279503,
+      "minimum": 1.2919605609043892,
+      "maximum": 1.3036890298318324
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.175,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.3098159378413097,
+      "minimum": 1.302027163359866,
+      "maximum": 1.3240538662861545
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.175,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.9288671040173229,
+      "minimum": 1.889170519248725,
+      "maximum": 1.96347205515341
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.175,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3009773407025516,
+      "minimum": 1.2902295240152653,
+      "maximum": 1.3143943772213833
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.175,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2880991383854699,
+      "minimum": 1.2807348381042136,
+      "maximum": 1.2953929757403868
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.18,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2986390494325077,
+      "minimum": 1.2894011079194678,
+      "maximum": 1.312808595100618
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.18,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.9087329030460627,
+      "minimum": 1.8644930784599036,
+      "maximum": 1.942141690695127
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.18,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2881220629173413,
+      "minimum": 1.278215763514361,
+      "maximum": 1.3032081330053238
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.18,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.28233935475022,
+      "minimum": 1.2696709911046922,
+      "maximum": 1.2899317912886685
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.185,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2875701099980292,
+      "minimum": 1.2767750524790702,
+      "maximum": 1.301887170838051
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.185,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8920454632428954,
+      "minimum": 1.8501559211753622,
+      "maximum": 1.9208113262368434
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.185,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2750002620519993,
+      "minimum": 1.2704160902833599,
+      "maximum": 1.2818397444432978
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.185,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2765795711149701,
+      "minimum": 1.258607144105171,
+      "maximum": 1.2866609624027894
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.19,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2765011705635507,
+      "minimum": 1.2641489970386723,
+      "maximum": 1.290965746575484
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.19,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.876569047633923,
+      "minimum": 1.8394518364734052,
+      "maximum": 1.8994809617785604
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.19,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2678066226172036,
+      "minimum": 1.2645156839436495,
+      "maximum": 1.2701937875942997
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.19,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2638786298771103,
+      "minimum": 1.2516760081074678,
+      "maximum": 1.2859066429482793
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.195,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2654322311290722,
+      "minimum": 1.2515229415982745,
+      "maximum": 1.280044322312917
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.195,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8610926320249508,
+      "minimum": 1.8287477517714485,
+      "maximum": 1.8781505973202774
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.195,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2549899254623207,
+      "minimum": 1.242786055745507,
+      "maximum": 1.265221437071699
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.195,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2468956705949839,
+      "minimum": 1.2447448721097651,
+      "maximum": 1.2504745011145768
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.2,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2550734529677123,
+      "minimum": 1.2410273699772325,
+      "maximum": 1.26912289805035
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.2,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8456162164159784,
+      "minimum": 1.8180436670694917,
+      "maximum": 1.8619847493164494
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.2,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2489782222905632,
+      "minimum": 1.2379195281400226,
+      "maximum": 1.260249086549098
+    },
+    {
+      "family": "R9",
+      "target_rejection": 0.2,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.236364466721803,
+      "minimum": 1.229670992971148,
+      "maximum": 1.2416086710821987
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.055,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2266224063268385,
+      "minimum": 1.1960598826953697,
+      "maximum": 1.2566944599482268
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.055,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.8557397107643339,
+      "minimum": 1.7600706750306863,
+      "maximum": 1.9071916476726634
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.055,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2900700329908132,
+      "minimum": 1.2635527843052714,
+      "maximum": 1.3206834215198573
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.055,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2116815027414776,
+      "minimum": 1.1631567998841197,
+      "maximum": 1.268219969453883
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.06,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1817138037717265,
+      "minimum": 1.1621981418916354,
+      "maximum": 1.2167924788126823
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.06,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.7974672761120754,
+      "minimum": 1.6930292315255149,
+      "maximum": 1.855842039906865
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.06,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2191955286748106,
+      "minimum": 1.1832004944955132,
+      "maximum": 1.255906351428644
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.06,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1748258959711573,
+      "minimum": 1.1464076308890474,
+      "maximum": 1.2079852127811463
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.065,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1567660016949721,
+      "minimum": 1.1353478012703555,
+      "maximum": 1.1871206695416623
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.065,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.7462662370443456,
+      "minimum": 1.646951325455869,
+      "maximum": 1.8119779195421386
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.065,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.176109492340445,
+      "minimum": 1.1343470886829548,
+      "maximum": 1.2258388097099764
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.065,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.138324185331965,
+      "minimum": 1.1036991725945757,
+      "maximum": 1.1766874484281393
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.07,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1320142641811632,
+      "minimum": 1.111508254246606,
+      "maximum": 1.159397464435314
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.07,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.698995861245777,
+      "minimum": 1.6126654091937065,
+      "maximum": 1.7681137991774123
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.07,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1486974506989758,
+      "minimum": 1.1080769359619647,
+      "maximum": 1.1970230920419107
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.07,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1078861282227395,
+      "minimum": 1.078360559781506,
+      "maximum": 1.1599578959003503
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.075,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.106453464252846,
+      "minimum": 1.0902578016385926,
+      "maximum": 1.1375750445735477
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.075,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6538782214662877,
+      "minimum": 1.5848377009887824,
+      "maximum": 1.724249678812686
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.075,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1224718361453212,
+      "minimum": 1.083770544379372,
+      "maximum": 1.1689746213726013
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.075,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.089590463807431,
+      "minimum": 1.0593375017587103,
+      "maximum": 1.1462775268840981
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.08,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0801734179314404,
+      "minimum": 1.051747609703318,
+      "maximum": 1.1196864815415024
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.08,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6205065521593187,
+      "minimum": 1.5592790929120768,
+      "maximum": 1.6798441510352857
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.08,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.101723605724409,
+      "minimum": 1.0672975016864734,
+      "maximum": 1.139999813259485
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.08,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0707785163264616,
+      "minimum": 1.0459181176358812,
+      "maximum": 1.1194763769118814
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.085,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0615632068390528,
+      "minimum": 1.0375471527884252,
+      "maximum": 1.1021561898501617
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.085,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5845750611186338,
+      "minimum": 1.5337204848353714,
+      "maximum": 1.6110950384836755
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.085,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0807198842432464,
+      "minimum": 1.0509843232566296,
+      "maximum": 1.1100986677025617
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.085,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0512482068689346,
+      "minimum": 1.0282527903518364,
+      "maximum": 1.0946205421089907
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.09,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0420797931776589,
+      "minimum": 1.016508980573205,
+      "maximum": 1.0846408261313503
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.09,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.555884406978128,
+      "minimum": 1.508161876758666,
+      "maximum": 1.5997936644367576
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.09,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0617074187442628,
+      "minimum": 1.034671144826786,
+      "maximum": 1.0861712900921754
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.09,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0361160222109733,
+      "minimum": 1.0135757147894955,
+      "maximum": 1.0799708299830932
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.095,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.024298092992505,
+      "minimum": 0.9858727284420072,
+      "maximum": 1.0681743101159276
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.095,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5303111930821027,
+      "minimum": 1.4826032686819608,
+      "maximum": 1.5723442724748269
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.095,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0516710970629286,
+      "minimum": 1.020181885256404,
+      "maximum": 1.083423635201329
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.095,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0236028005921105,
+      "minimum": 0.998700941932742,
+      "maximum": 1.067064674812734
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.1,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0139590136907932,
+      "minimum": 0.9732645541618167,
+      "maximum": 1.056794760217187
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.1,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4984191895671595,
+      "minimum": 1.4570446606052554,
+      "maximum": 1.5259385116561415
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.1,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0462012020379359,
+      "minimum": 1.0129883011238685,
+      "maximum": 1.0806759803104826
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.1,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.007607493702618,
+      "minimum": 0.9818608345985007,
+      "maximum": 1.0523365567108631
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.105,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0020607035199323,
+      "minimum": 0.9602432055445527,
+      "maximum": 1.0471458324955718
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.105,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4665271860522162,
+      "minimum": 1.4314860525285502,
+      "maximum": 1.4885627547906424
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.105,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0413679747547109,
+      "minimum": 1.0077047202166363,
+      "maximum": 1.0779283254196361
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.105,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9932404558467371,
+      "minimum": 0.9650207272642597,
+      "maximum": 1.0347238455608747
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.11,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9894785609390346,
+      "minimum": 0.9476121018404912,
+      "maximum": 1.0353093756162846
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.11,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4364874920165849,
+      "minimum": 1.4114843728897808,
+      "maximum": 1.464851113141203
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.11,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0196712754774588,
+      "minimum": 1.0032397121202483,
+      "maximum": 1.0320876129250502
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.11,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9791334139747359,
+      "minimum": 0.948153637656342,
+      "maximum": 1.0200098441394208
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.115,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9769614719296693,
+      "minimum": 0.9394688146382594,
+      "maximum": 1.019903792216585
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.115,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4110657344486726,
+      "minimum": 1.393502584227687,
+      "maximum": 1.441139471491764
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.115,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9902799038685036,
+      "minimum": 0.9492592495404877,
+      "maximum": 1.0228057580411627
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.115,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9647951277949695,
+      "minimum": 0.9324664116199478,
+      "maximum": 1.0027670710543994
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.12,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9651601188204886,
+      "minimum": 0.931642361330424,
+      "maximum": 1.0052181259562516
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.12,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.3920775701120738,
+      "minimum": 1.3731789581305438,
+      "maximum": 1.4174278298423246
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.12,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.972432693277086,
+      "minimum": 0.948836971310988,
+      "maximum": 1.00971224874315
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.12,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9542871246364675,
+      "minimum": 0.9210580026710797,
+      "maximum": 0.9892131278126141
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.125,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9574515778423189,
+      "minimum": 0.9274594978081468,
+      "maximum": 0.997011713950211
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.125,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.3752765579173565,
+      "minimum": 1.3528553320334007,
+      "maximum": 1.4002776446185297
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.125,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.967059411801571,
+      "minimum": 0.9484146930814884,
+      "maximum": 0.9966187394451372
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.125,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9471348005484379,
+      "minimum": 0.9115115903564045,
+      "maximum": 0.9842664542050457
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.13,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9497430368641493,
+      "minimum": 0.9232766342858697,
+      "maximum": 0.9888053019441705
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.13,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.36032034819822,
+      "minimum": 1.3325317059362578,
+      "maximum": 1.39023570385585
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.13,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9616861303260558,
+      "minimum": 0.9479924148519889,
+      "maximum": 0.9835252301471243
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.13,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9416398617681853,
+      "minimum": 0.9067531693867974,
+      "maximum": 0.9793197805974772
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.135,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9419079733818091,
+      "minimum": 0.9142600285126761,
+      "maximum": 0.9799540805465733
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.135,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.3449172464816692,
+      "minimum": 1.312208079839115,
+      "maximum": 1.38019376309317
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.135,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9561489668104491,
+      "minimum": 0.9475701366224895,
+      "maximum": 0.9699400747288368
+    },
+    {
+      "family": "R10 mixed",
+      "target_rejection": 0.135,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9327688111652345,
+      "minimum": 0.9019947484171904,
+      "maximum": 0.9667158833909364
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.1,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2804361070778587,
+      "minimum": 1.2171185807629958,
+      "maximum": 1.320750114472723
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.1,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6851965269904894,
+      "minimum": 1.6422140452708496,
+      "maximum": 1.7465148834994035
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.1,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.4268383898853476,
+      "minimum": 1.3251219702502017,
+      "maximum": 1.5262687617325241
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.1,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3834382753313486,
+      "minimum": 1.3443285767697148,
+      "maximum": 1.4244081985149926
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.105,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2461365086333145,
+      "minimum": 1.1865059509904072,
+      "maximum": 1.284276648597877
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.105,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.63982460371377,
+      "minimum": 1.613704976050018,
+      "maximum": 1.6645354983443252
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.105,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.3440842032005262,
+      "minimum": 1.245648300478388,
+      "maximum": 1.40894584307684
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.105,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.3301865433637075,
+      "minimum": 1.2730402565567838,
+      "maximum": 1.3809925145886917
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.11,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.2149500025193454,
+      "minimum": 1.1560535906319789,
+      "maximum": 1.2533592551563355
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.11,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.6078514273120794,
+      "minimum": 1.5634118879702168,
+      "maximum": 1.6445363726733024
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.11,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.294112319788522,
+      "minimum": 1.2080398216075967,
+      "maximum": 1.3417858786113062
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.11,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2731374406944114,
+      "minimum": 1.1954745411096217,
+      "maximum": 1.3476178061219093
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.115,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1842756644424899,
+      "minimum": 1.1270411541892384,
+      "maximum": 1.2224418617147939
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.115,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5652328742470123,
+      "minimum": 1.48380377419289,
+      "maximum": 1.6245372470022792
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.115,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2580587563872516,
+      "minimum": 1.1969203699999518,
+      "maximum": 1.3077002348975326
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.115,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.2270991414494266,
+      "minimum": 1.1488441511509002,
+      "maximum": 1.2723822969485747
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.12,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1536013263656346,
+      "minimum": 1.098028717746498,
+      "maximum": 1.1915244682732524
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.12,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.5195076866618515,
+      "minimum": 1.4311255126132851,
+      "maximum": 1.6045381213312566
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.12,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2298640810494403,
+      "minimum": 1.1510609489339036,
+      "maximum": 1.288185532252129
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.12,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1941671941699015,
+      "minimum": 1.1143814710316182,
+      "maximum": 1.2487959451938258
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.125,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1267782513927074,
+      "minimum": 1.0705687244980409,
+      "maximum": 1.1628126648770964
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.125,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4760340320676346,
+      "minimum": 1.3806686958072596,
+      "maximum": 1.5735743914366465
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.125,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.2074049127453472,
+      "minimum": 1.1045453895108712,
+      "maximum": 1.2741302589100638
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.125,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.173297655697692,
+      "minimum": 1.1055651656577172,
+      "maximum": 1.2375209141388466
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.13,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.1019023567747586,
+      "minimum": 1.0433377544483036,
+      "maximum": 1.137438931849001
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.13,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4404485873342483,
+      "minimum": 1.352238043033588,
+      "maximum": 1.5234936106266233
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.13,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1713931467647047,
+      "minimum": 1.069682772505249,
+      "maximum": 1.2272934688382529
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.13,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.144516467061935,
+      "minimum": 1.1047272247034934,
+      "maximum": 1.1836897624662897
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.135,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0770264621568097,
+      "minimum": 1.0161067843985663,
+      "maximum": 1.1120651988209058
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.135,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.4048631426008622,
+      "minimum": 1.3238073902599168,
+      "maximum": 1.4734128298166003
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.135,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1331099976235366,
+      "minimum": 1.0432619875947715,
+      "maximum": 1.1871984994637799
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.135,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.1146738245374619,
+      "minimum": 1.0879886067647118,
+      "maximum": 1.1365217734566049
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.14,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0548100550231336,
+      "minimum": 0.9946146924386605,
+      "maximum": 1.0883061238125893
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.14,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.3750474243105988,
+      "minimum": 1.2953767374862453,
+      "maximum": 1.4374827339758942
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.14,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.1027164813899109,
+      "minimum": 1.0271647121954524,
+      "maximum": 1.1488739747835568
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.14,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.084682001767804,
+      "minimum": 1.0399914396214485,
+      "maximum": 1.109925936300186
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.145,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.03337284343979,
+      "minimum": 0.973651091700889,
+      "maximum": 1.0656445710594793
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.145,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.3461651961690027,
+      "minimum": 1.2662227893927755,
+      "maximum": 1.40320207537513
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.145,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0775643922390095,
+      "minimum": 1.0132463268030896,
+      "maximum": 1.1215368125926406
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.145,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0604280815406295,
+      "minimum": 1.002920686869782,
+      "maximum": 1.103999266984617
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.15,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 1.0132308957672895,
+      "minimum": 0.9561787498108315,
+      "maximum": 1.0433775511911842
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.15,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.3169008018018744,
+      "minimum": 1.2359223426227093,
+      "maximum": 1.3689214167743657
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.15,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0539045436204262,
+      "minimum": 0.9841864208843393,
+      "maximum": 1.1040276842749903
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.15,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0343017433847856,
+      "minimum": 0.9712469555252898,
+      "maximum": 1.0820413766862063
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.155,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9989731608767848,
+      "minimum": 0.9434890390024976,
+      "maximum": 1.027322330369116
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.155,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.291056208696066,
+      "minimum": 1.2056218958526435,
+      "maximum": 1.3449001619575602
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.155,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0354400316904826,
+      "minimum": 0.9653035033960227,
+      "maximum": 1.0904493108956397
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.155,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 1.0130859055573065,
+      "minimum": 0.9520283407786181,
+      "maximum": 1.0559489988170634
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.16,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9856982743444491,
+      "minimum": 0.9309975324428876,
+      "maximum": 1.014830181043412
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.16,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.2680490136987823,
+      "minimum": 1.1777974797011674,
+      "maximum": 1.3254297480043224
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.16,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0189902336116778,
+      "minimum": 0.9481997512835063,
+      "maximum": 1.0764284917529874
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.16,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9936577306198762,
+      "minimum": 0.9332386996126684,
+      "maximum": 1.034761614156023
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.165,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9728108290464429,
+      "minimum": 0.9196683495862662,
+      "maximum": 1.0035522488280828
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.165,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.2495707702133512,
+      "minimum": 1.1612790838440326,
+      "maximum": 1.305959334051085
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.165,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 1.0008237594253124,
+      "minimum": 0.9347729492084835,
+      "maximum": 1.0535806942501598
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.165,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9773296739254559,
+      "minimum": 0.9203125920120911,
+      "maximum": 1.0144511652516723
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.17,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9608598709013217,
+      "minimum": 0.9083391667296448,
+      "maximum": 0.9922743166127539
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.17,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.2310925267279198,
+      "minimum": 1.144760687986898,
+      "maximum": 1.2864889200978473
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.17,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9858977418364927,
+      "minimum": 0.9233290311825473,
+      "maximum": 1.0332564051914597
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.17,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9627787560696223,
+      "minimum": 0.9076600409166617,
+      "maximum": 0.9991985763579341
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.175,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9489674598915108,
+      "minimum": 0.8970099838730232,
+      "maximum": 0.9809613313083394
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.175,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.2126142832424887,
+      "minimum": 1.128242292129763,
+      "maximum": 1.26701850614461
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.175,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9722686281305675,
+      "minimum": 0.9118851131566111,
+      "maximum": 1.0166997641480195
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.175,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.949009488925859,
+      "minimum": 0.8957410310115294,
+      "maximum": 0.9839459874641958
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.18,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9376976133110134,
+      "minimum": 0.8873837353969924,
+      "maximum": 0.9696073869697255
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.18,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.1945451033358043,
+      "minimum": 1.1117238962726281,
+      "maximum": 1.2487752829276133
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.18,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9592895620487549,
+      "minimum": 0.9018332924061746,
+      "maximum": 1.0007011687014176
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.18,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9386930444879517,
+      "minimum": 0.8891027003604448,
+      "maximum": 0.970274314902167
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.185,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9269533010808023,
+      "minimum": 0.8791064382295033,
+      "maximum": 0.9582534426311113
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.185,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.177471968120257,
+      "minimum": 1.0952055004154935,
+      "maximum": 1.2305987548593251
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.185,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9490332388746928,
+      "minimum": 0.8954959286184063,
+      "maximum": 0.9879186317947546
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.185,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9294569571677386,
+      "minimum": 0.8824643697093605,
+      "maximum": 0.9598437136932205
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.19,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9167421685001488,
+      "minimum": 0.8708291410620141,
+      "maximum": 0.9471682307713667
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.19,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.1607429090281216,
+      "minimum": 1.0791401092667243,
+      "maximum": 1.2124222267910372
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.19,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9390749930258793,
+      "minimum": 0.8891585648306377,
+      "maximum": 0.9751360948880918
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.19,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9200928030348646,
+      "minimum": 0.875826039058276,
+      "maximum": 0.9494131124842743
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.195,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9083775252575205,
+      "minimum": 0.8629961163705864,
+      "maximum": 0.9391211950047628
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.195,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.1444895517217684,
+      "minimum": 1.064501823475302,
+      "maximum": 1.194245698722749
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.195,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9300318406335067,
+      "minimum": 0.8828212010428693,
+      "maximum": 0.9650988383507519
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.195,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.9084837278068912,
+      "minimum": 0.8628569038266433,
+      "maximum": 0.9389825112753281
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.2,
+      "method": "main",
+      "n_units": 3,
+      "host_pore": 0.9003223710082937,
+      "minimum": 0.8560915586593631,
+      "maximum": 0.9310741592381588
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.2,
+      "method": "fixed_len",
+      "n_units": 3,
+      "host_pore": 1.1282361944154153,
+      "minimum": 1.04986353768388,
+      "maximum": 1.176069170654461
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.2,
+      "method": "const_thr",
+      "n_units": 3,
+      "host_pore": 0.9222924633261864,
+      "minimum": 0.8741352208591323,
+      "maximum": 0.9577928062888301
+    },
+    {
+      "family": "R10 sputum",
+      "target_rejection": 0.2,
+      "method": "calib_thr",
+      "n_units": 3,
+      "host_pore": 0.899127634348814,
+      "minimum": 0.8546049916624128,
+      "maximum": 0.9297488572955108
+    }
+  ]
+}

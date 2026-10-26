@@ -1,0 +1,59 @@
+{
+  "candidate_rows": 492,
+  "units": 12,
+  "betas_per_unit": 41,
+  "selected_points": 12,
+  "verified_against_archived_metrics": true,
+  "sources": [
+    {
+      "source": "results/final_20261014/ablation/sim_g1/r0/main/metrics.json",
+      "sha256": "2b17b429815968e4612db0faffb315eb4c520f0b227ea2682321655ffdf4f094"
+    },
+    {
+      "source": "results/final_20261014/ablation/sim_g2/r0/main/metrics.json",
+      "sha256": "6b86148e0ae3d2550310c2f6485e4e8322e15fc9ee6aef9c22227337ee10e934"
+    },
+    {
+      "source": "results/final_20261014/ablation/sim_g3/r0/main/metrics.json",
+      "sha256": "874978a0b51296943436d6349b1109013c2f0ef950dd7621ab1cf0ee06c3e08a"
+    },
+    {
+      "source": "results/final_20261014/ablation/r9/r0/main/metrics.json",
+      "sha256": "d47dea5811c83a72b5e216cf125e614c91653e8d1b73248494dc8292a0c593b7"
+    },
+    {
+      "source": "results/final_20261014/ablation/r9/r1/main/metrics.json",
+      "sha256": "e04733ff02fb098736228eb82ff07f44bcc0b8b8d0f30d8235ac0f601ac6d7d8"
+    },
+    {
+      "source": "results/final_20261014/ablation/r9/r2/main/metrics.json",
+      "sha256": "71cfbbcc049bf035883dc7982de9d42f865b4390cccec64c95d2ac4f897b0710"
+    },
+    {
+      "source": "results/final_20261014/ablation/r10_run01/r0/main/metrics.json",
+      "sha256": "e8aefb2592b3269c2540be1b119a84c0c7635516fb28da8509b71ce185704dff"
+    },
+    {
+      "source": "results/final_20261014/ablation/r10_run02/r0/main/metrics.json",
+      "sha256": "eedf15759f726f5fcaba0ed5cceb4f71b8993078f3ed5786d0811d4ae28b928d"
+    },
+    {
+      "source": "results/final_20261014/ablation/r10_run03/r0/main/metrics.json",
+      "sha256": "8bbf8d17e97ffaac36785724b7088a559ea83f301f9301019a997648dd649663"
+    },
+    {
+      "source": "results/final_20261014/ablation/sputum_g1/r0/main/metrics.json",
+      "sha256": "8c290a582798e56074a019beb5e960f34d2036f2786ffc55b6952eab11513575"
+    },
+    {
+      "source": "results/final_20261014/ablation/sputum_g2/r0/main/metrics.json",
+      "sha256": "217219dde3c1280029f2e26daf54781b9c1352e38cda38090df42a4951ea8be8"
+    },
+    {
+      "source": "results/final_20261014/ablation/sputum_g3/r0/main/metrics.json",
+      "sha256": "54bc2a2c3f69fc80d874fd053e23e55dd87c78314a2c85018c88cfddede429a8"
+    }
+  ],
+  "interpretation": "Diagnostic TEST sweep of separately fitted policies with frozen encoders; original DEV-B selections retained.",
+  "aggregation": "Equal-weight mean and min-max of 3 experimental units at each common beta; bands are not confidence intervals."
+}

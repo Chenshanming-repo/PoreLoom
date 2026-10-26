@@ -1,10 +1,6 @@
-"""Copied from experiments/20261013_nanodeep_baselines/native.py (logic unchanged).
+"""Native baseline windows, fixed-window training, and single-read service timing.
 
-Native baseline windows, full-checkpoint R9 adaptation, and single-read service.
-
-This module performs no work at import time. The experiment runner owns registration,
-quality gates, DEV A/B routing, threshold locking and TEST access. Adaptation is the
-new fixed-window 20-epoch recipe, not the original full-read tiling training recipe.
+The experiment runner owns DEV-A/B routing, threshold selection and TEST access.
 """
 import hashlib
 import json
@@ -22,7 +18,7 @@ from ..prefix_data import load_prefix_cache
 
 DEFAULTS = dict(seed=20261012, epochs=20, patience=3, batch_size=128, eval_batch=128,
                 backbone_lr=1e-4, head_lr=3e-4, weight_decay=1e-4, clip=1.)
-HEADS = dict(nanodeep='liner', readcurrent='fc_layers', cafes='fc_layers', squigglenet='fc')
+HEADS = dict(nanodeep='liner', readcurrent='fc_layers', squigglenet='fc')
 
 
 def _sha(path):
@@ -59,18 +55,16 @@ def prepare(tool, prefix, rows=None):
     """Return native normalized windows [N,C,3000], keeping all requested parents.
 
     Geometry-invalid or normalization-invalid parents retain a zero window and a
-    false eligibility flag. CAFES is processed in small batches so temporary feature
-    arrays do not multiply the final [N,6,3000] allocation; callers can also chunk rows.
+    false eligibility flag. Callers can chunk rows to limit temporary allocations.
     """
     contract = _tool(tool); prefix = _prefix(prefix); rows = _rows(prefix, rows)
     lo, hi = contract['raw_start'], contract['raw_end']
     if prefix.adc.shape[1] < hi:
         raise ValueError(f'prefix cache must retain at least {hi} ADC samples')
-    channels = 6 if tool == 'cafes' else 1
-    x = np.zeros((len(rows), channels, _pp.WINDOW), np.float32)
+    x = np.zeros((len(rows), 1, _pp.WINDOW), np.float32)
     eligible = np.zeros(len(rows), bool)
     candidates = np.flatnonzero(prefix.raw_length[rows] >= hi)
-    batch = 32 if tool == 'cafes' else 256
+    batch = 256
     for start in range(0, len(candidates), batch):
         part = candidates[start:start + batch]
         raw = (prefix.pa(rows[part], lo, hi) if contract['units'] == 'pA'
@@ -78,8 +72,7 @@ def prepare(tool, prefix, rows=None):
         try:
             values, valid = prepare_windows(raw, tool)
         except FloatingPointError:
-            # CAFES upstream features can be undefined for a constant input. Isolate
-            # such reads without discarding the other valid parents in their batch.
+            # Isolate invalid inputs without discarding other parents in the batch.
             for local, destination in enumerate(part):
                 try:
                     values, valid = prepare_windows(raw[local:local + 1], tool)
@@ -107,9 +100,9 @@ def network_labels(tool, is_target):
 
 def _check_data(tool, data):
     _tool(tool)
-    n = len(data['read_id']); channels = 6 if tool == 'cafes' else 1
+    n = len(data['read_id'])
     x = data['x']
-    if x.dtype != np.float32 or x.shape != (n, channels, _pp.WINDOW):
+    if x.dtype != np.float32 or x.shape != (n, 1, _pp.WINDOW):
         raise ValueError(f'prepared inputs must be float32 [N,C,{_pp.WINDOW}]')
     for key in ('is_target', 'raw_length', 'eligible'):
         if np.shape(data[key]) != (n,):
@@ -121,7 +114,7 @@ def _check_data(tool, data):
     rows = np.flatnonzero(data['eligible'])
     if np.any(data['raw_length'][rows] < CONTRACTS[tool]['raw_end']):
         raise ValueError('eligible prepared row is too short for native window')
-    # Validate incrementally to avoid a full-size temporary boolean CAFES tensor.
+    # Validate incrementally to limit temporary allocations.
     for start in range(0, len(rows), 128):
         if not np.isfinite(x[rows[start:start + 128]]).all():
             raise ValueError('nonfinite eligible prepared inputs')
@@ -295,7 +288,7 @@ def measure_service(tool, checkpoint, prefix, rows, device, repeats=64):
             or any(int(hashlib.sha256(str(r).encode()).hexdigest()[:8], 16) % 2 for r in prefix.read_id[rows])):
         raise ValueError('service measurement accepts only DEV A rows')
     # Eligibility screening is outside timing; each measured call repeats its own
-    # native preprocessing, including the CPU CAFES feature construction.
+    # native preprocessing for each baseline.
     prepared = prepare(tool, prefix, rows)
     rows = rows[prepared['eligible']]
     del prepared

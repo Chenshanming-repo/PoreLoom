@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
-"""Leave-species-out (LSO) on sputum group g1: four held-out taxa, every model retrained from scratch per fold.
+"""Leave-taxon-out evaluation on three sputum groups.
 
-Scope: sputum g1 first, then g2 and g3 as replicate groups (same four folds); methods PoreLoom (poreloom.method) and the single-window baselines
-SquiggleNet, NanoDeep, ReadCurrent (poreloom.method.baselines); no CAFES.
-Folds fixed a priori (same design as the stopped 2026-10-14 sputum LOSO, experiments/20261013_stream_sputum/loso.py):
-Prevotella, Streptococcus, Fusobacterium (genera) and Actinomycetota (phylum: Rothia, Schaalia, Actinomyces,
-Lancefieldella). Per fold: every read of the held-out taxon is removed from TRAIN and DEV; in each split and barcode the
-same number of host reads (sha256 order) is removed to keep host = target per barcode; TEST is g1's TEST unchanged.
-Reference: the main-comparison g1 models of each method (same TEST reads, same DEV-B max-ACC rule, 0.4 s).
-Primary: held-out taxon TEST target command FRR, fold minus main, paired bootstrap (5000, seed 20261010);
-secondary: host command reject change.
+Each fold retrains PoreLoom and the three 3000-sample baselines after excluding
+Prevotella, Streptococcus, Fusobacterium, or the joint Rothia/Schaalia/Actinomyces/
+Lancefieldella subset from TRAIN and DEV. TEST retains the held-out targets and
+same hosts. Operating points maximize DEV-B accuracy. Reported differences are
+descriptive changes in target rejection and host rejection.
 
-    lso.py make   [--group g1] [--splits <groups>/gN/dataset/splits.csv] [--prefix <gN prefix root>] [--data <out root>]
-                  fold prefix caches in <data>/sputum_<group>_lso_<fold>/{train,dev} (test -> ../sputum_<group>/test)
-    lso.py report --runs <runs root holding main/ and lso/> [--group g1 ...]
+    lso.py make [--group g1] [--splits <groups>/gN/dataset/splits.csv] [--prefix <gN prefix root>] [--data <out root>]
+    lso.py report --runs <runs root holding main/ and lso/> [--group g1 g2 g3]
 """
 import argparse
 import hashlib
@@ -28,7 +23,7 @@ G1 = SE/'results/stream_sputum_20261013/groups/g1'
 DATA = SE/'results/final_20261014/data'
 FOLDS = {'Prevotella': ['Prevotella'], 'Streptococcus': ['Streptococcus'], 'Fusobacterium': ['Fusobacterium'],
          'Actinomycetota': ['Rothia', 'Schaalia', 'Actinomyces', 'Lancefieldella']}
-METHODS = ('poreloom', 'readcurrent', 'nanodeep_upstream', 'squigglenet', 'nanodeep')
+METHODS = ('poreloom', 'readcurrent', 'nanodeep_upstream', 'squigglenet')
 
 
 def log(*a):
@@ -103,30 +98,27 @@ def report(runs, groups=('g1',)):
     for group, fold in ((gr, f) for gr in groups for f in FOLDS):
         taxa = FOLDS[fold]
         splits = pd.read_csv(G1.parent/group/'dataset/splits.csv'); g = splits.set_index('read_id').origin.map(genus)
-        rng = np.random.default_rng(20261010)
         for m in METHODS:
             if not (runs/'lso'/f'sputum_{group}_lso_{fold}'/f'{m}_r0'/'JOB_DONE').exists(): log('skip', group, fold, m, '(not finished)'); continue
             a = outcomes(runs/'lso'/f'sputum_{group}_lso_{fold}'/f'{m}_r0', m); b = outcomes(runs/'main'/f'sputum_{group}'/f'{m}_r0', m)
             assert np.array_equal(a['read_id'], b['read_id'])
             y = a['is_target']; held = y & g.reindex(a['read_id']).isin(taxa).values; host = ~y
             d = a['command_reject'][held].astype(float) - b['command_reject'][held].astype(float)
-            ci = np.percentile([d[rng.integers(0, len(d), len(d))].mean() for _ in range(5000)], [2.5, 97.5])
             dh = a['command_reject'][host].astype(float) - b['command_reject'][host].astype(float)
-            cih = np.percentile([dh[rng.integers(0, len(dh), len(dh))].mean() for _ in range(2000)], [2.5, 97.5])
             rows.append(dict(group=group, fold=fold, method=m, n_held=int(held.sum()), frr_main=float(b['command_reject'][held].mean()),
-                             frr_fold=float(a['command_reject'][held].mean()), dfrr=float(d.mean()), dfrr_ci=ci.tolist(),
+                             frr_fold=float(a['command_reject'][held].mean()), dfrr=float(d.mean()),
                              host_main=float(b['command_reject'][host].mean()), host_fold=float(a['command_reject'][host].mean()),
-                             dhost=float(dh.mean()), dhost_ci=cih.tolist()))
+                             dhost=float(dh.mean())))
     (runs/'lso'/'analysis.json').write_text(json.dumps(rows, indent=2))
-    name = dict(nanodeep='NanoDeep 项目配方', nanodeep_upstream='NanoDeep 原作者配方', readcurrent='ReadCurrent', squigglenet='SquiggleNet', poreloom='PoreLoom')
+    name = dict(nanodeep_upstream='NanoDeep', readcurrent='ReadCurrent', squigglenet='SquiggleNet', poreloom='PoreLoom')
     lines = [f"# LSO：痰液 {'/'.join(groups)}，4 个留出类群，全部从零训练", '',
              'fold 模型 − 主比较（全类群）模型，同一批 TEST read 配对；各自 DEV-B 最大 ACC 工作点，0.4 s。', '',
-             '| 组 | 留出 | 方法 | n | 误拒率 主 → fold % | Δ误拒率 pp [95% CI] | host 拒绝率 主 → fold % | Δhost pp [95% CI] |',
+             '| 组 | 留出 | 方法 | n | 误拒率 主 → fold % | Δ误拒率 pp | host 拒绝率 主 → fold % | Δhost pp |',
              '|---|---|---|---:|---|---:|---|---:|']
     for r in rows:
         lines.append(f"| {r['group']} | {r['fold']} | {name[r['method']]} | {r['n_held']} | {100*r['frr_main']:.1f} → {100*r['frr_fold']:.1f} | "
-                     f"{100*r['dfrr']:+.1f} [{100*r['dfrr_ci'][0]:+.1f}, {100*r['dfrr_ci'][1]:+.1f}] | "
-                     f"{100*r['host_main']:.1f} → {100*r['host_fold']:.1f} | {100*r['dhost']:+.1f} [{100*r['dhost_ci'][0]:+.1f}, {100*r['dhost_ci'][1]:+.1f}] |")
+                     f"{100*r['dfrr']:+.1f} | "
+                     f"{100*r['host_main']:.1f} → {100*r['host_fold']:.1f} | {100*r['dhost']:+.1f} |")
     (runs/'lso'/'summary_zh.md').write_text('\n'.join(lines) + '\n'); print('\n'.join(lines))
 
 
