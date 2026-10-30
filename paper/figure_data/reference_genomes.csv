@@ -1,0 +1,59 @@
+dataset,organism,accessions,role
+Simulated,Homo sapiens (GRCh38.p14),GCF_000001405.40,host
+Simulated,Bacillus subtilis 168,AL009126.3,target
+Simulated,Enterococcus faecalis V583,AE016830.1,target
+Simulated,Escherichia coli K-12 MG1655,U00096.3,target
+Simulated,Lactobacillus fermentum IFO 3956,AP008937.1,target
+Simulated,Listeria monocytogenes EGD-e,AL591824.1,target
+Simulated,Pseudomonas aeruginosa PAO1,AE004091.2,target
+Simulated,Salmonella enterica Typhimurium LT2,AE006468.2,target
+Simulated,Staphylococcus aureus USA300_FPR3757,CP000255.1,target
+R9,"Homo sapiens (GRCh38.p14 primary assembly)",GCF_000001405.40,host
+R9,Escherichia coli,GCF_000008865.2 GCF_000005845.2 GCF_002848225.1 GCF_002899475.1 GCF_009648495.1,target
+R9,Staphylococcus epidermidis,GCF_006094375.1 GCF_019329405.1 GCF_026314335.1 GCF_045935645.1 GCF_057198175.1,target
+R9,Staphylococcus hominis,GCF_003812505.1 GCF_009730115.1 GCF_035907395.1 GCF_051144915.1 GCF_057584895.1,target
+R9,Staphylococcus aureus,GCF_000013425.1 GCF_003354865.1 GCF_025152705.1 GCF_045789615.1 GCF_057653795.1,target
+R9,Pseudomonas aeruginosa,GCF_000006765.1 GCF_013343455.1 GCF_031220265.1 GCF_050266315.1 GCF_059740565.1,target
+R9,Roseomonas mucosa,GCF_006384915.1 GCF_006384895.1 GCF_008693785.1 GCF_026222715.1 GCF_040371795.1,target
+R9,Neisseria gonorrhoeae,GCF_013030075.1 GCF_011058675.1 GCF_025642355.1 GCF_040404645.1 GCF_978047485.1,target
+R9,Escherichia phage lambda,NC_001416.1,control
+R10 sputum,Homo sapiens (GRCh38.p14),GCF_000001405.40,host
+R10 sputum,Actinomyces pacaensis,GCF_900120245.1,target
+R10 sputum,Campylobacter concisus,GCF_001298465.1,target
+R10 sputum,Capnocytophaga granulosa (chromosome-level),GCF_045038915.1,target
+R10 sputum,Fusobacterium pseudoperiodonticum,GCF_056819095.1,target
+R10 sputum,Gemella haemolysans,GCF_020097455.1,target
+R10 sputum,Gemella sanguinis,GCF_009730295.1,target
+R10 sputum,Granulicatella adiacens,GCF_019931005.1,target
+R10 sputum,Haemophilus haemolyticus,GCF_900477945.1,target
+R10 sputum,Haemophilus parainfluenzae,GCF_016127215.1,target
+R10 sputum,Lachnoanaerobaculum gingivalis,GCF_030008055.1,target
+R10 sputum,Lancefieldella parvula,GCF_000024225.1,target
+R10 sputum,Leptotrichia wadei,GCF_007990545.2,target
+R10 sputum,Mogibacterium diversum,GCF_002998925.1,target
+R10 sputum,Neisseria meningitidis,GCF_022869645.1,target
+R10 sputum,Neisseria sicca,GCF_017753665.1,target
+R10 sputum,Porphyromonas gingivalis,GCF_000010505.1,target
+R10 sputum,Prevotella intermedia,GCF_001953955.1,target
+R10 sputum,Prevotella jejuni,GCF_002849795.1,target
+R10 sputum,Prevotella melaninogenica,GCF_000144405.1,target
+R10 sputum,Prevotella nigrescens,GCF_018127825.1,target
+R10 sputum,Prevotella veroralis,GCF_018127765.1,target
+R10 sputum,Rothia mucilaginosa,GCF_049990865.1,target
+R10 sputum,Schaalia odontolytica,GCF_031191545.1,target
+R10 sputum,Schaalia sp. HMT-172,GCF_030644365.1,target
+R10 sputum,Selenomonas sp. oral taxon 478,GCF_001189555.1,target
+R10 sputum,Solobacterium moorei,GCF_036323475.1,target
+R10 sputum,Stomatobaculum sp. F0698,GCF_030644385.1,target
+R10 sputum,Streptococcus anginosus,GCF_900636475.1,target
+R10 sputum,Streptococcus infantis,GCF_988228545.1,target
+R10 sputum,Streptococcus mitis,GCF_018603625.2,target
+R10 sputum,Streptococcus parasanguinis,GCF_000164675.2,target
+R10 sputum,Streptococcus salivarius,GCF_000253315.1,target
+R10 sputum,Streptococcus sp. Marseille-Q3533,GCF_940796315.1,target
+R10 sputum,Streptococcus sp. oral taxon 061,GCF_013394695.1,target
+R10 sputum,Tannerella serpentiformis,GCF_001717525.2,target
+R10 sputum,Veillonella atypica,GCF_002082765.1,target
+R10 sputum,Veillonella nakazawae,GCF_013393365.1,target
+R10 sputum,Veillonella rogosae,GCF_988230835.1,target
+R10 sputum,Escherichia phage lambda,NC_001416.1,control

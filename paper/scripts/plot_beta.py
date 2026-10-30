@@ -10,7 +10,7 @@ import hashlib
 import json
 import math
 import os
-from statistics import mean
+from statistics import mean, stdev
 
 from result_archive import ROOT, ARCHIVE
 FAMILIES = {
@@ -70,7 +70,7 @@ def prepare():
             row = {'dataset': dataset, 'beta': beta, 'n_units': 3}
             for name in METRICS:
                 values = [p[name] for p in points]
-                row.update({name + '_mean': mean(values), name + '_min': min(values), name + '_max': max(values)})
+                row.update({name + '_mean': mean(values), name + '_min': min(values), name + '_max': max(values), name + '_sd': stdev(values)})
             summary.append(row)
     endpoints = [r for r in summary if r['beta'] in (0.03, 300.0)]
     (ROOT / 'review').mkdir(exist_ok=True)
@@ -83,7 +83,7 @@ def prepare():
         'selected_points': 12, 'verified_against_archived_metrics': True,
         'sources': provenance,
         'interpretation': 'Diagnostic TEST sweep of separately fitted policies with frozen encoders; original DEV-B selections retained.',
-        'aggregation': 'Equal-weight mean and min-max of 3 experimental units at each common beta; bands are not confidence intervals.',
+        'aggregation': 'Equal-weight mean +/- sample SD (ddof=1) across three experimental units; bands are not confidence intervals.',
     }
     (ROOT / 'provenance/beta_audit.json').write_text(json.dumps(audit, indent=2) + '\n')
     return records, summary, selected
@@ -105,17 +105,21 @@ def render(records, summary, selected):
     fig, axes = plt.subplots(2, 2, figsize=(6.9, 4.65))
     fig.subplots_adjust(left=.095, right=.985, bottom=.105, top=.88, hspace=.50, wspace=.30)
     legend = [Line2D([], [], color=c, linestyle=s, linewidth=1.5, label=f) for f, c, s in zip(FAMILIES, colors, styles)]
-    legend.append(Line2D([], [], marker='*', color='none', markerfacecolor='#777777', markeredgecolor='#222222', markersize=8, label='DEV-B selection'))
+    legend.append(Line2D([], [], marker='*', color='none', markerfacecolor='#777777', markeredgecolor='#222222', markersize=8, label='DEV-B selection (mean ± SD)'))
     fig.legend(handles=legend, loc='upper center', bbox_to_anchor=(.53, 1.005), ncol=3,
                frameon=False, fontsize=8.5, columnspacing=1.25, handlelength=2)
     for panel, (ax, (name, (_, _, _, label, ylim))) in enumerate(zip(axes.flat, METRICS.items())):
         for dataset, color, style in zip(FAMILIES, colors, styles):
             points = [p for p in summary if p['dataset'] == dataset]
             beta = [p['beta'] for p in points]
-            ax.fill_between(beta, [p[name + '_min'] for p in points], [p[name + '_max'] for p in points], color=color, alpha=.10, linewidth=0)
+            ax.fill_between(beta, [p[name + '_mean']-p[name + '_sd'] for p in points], [p[name + '_mean']+p[name + '_sd'] for p in points], color=color, alpha=.10, linewidth=0)
             ax.plot(beta, [p[name + '_mean'] for p in points], color=color, linestyle=style, linewidth=1.45)
-            for point in [p for p in selected if p['dataset'] == dataset]:
-                ax.scatter(point['beta'], point[name], marker='*', s=36, facecolor=color, edgecolor='#222222', linewidth=.45, zorder=7)
+            chosen = [p for p in selected if p['dataset'] == dataset]
+            assert len(chosen) == 3
+            ax.errorbar(mean(p['beta'] for p in chosen), mean(p[name] for p in chosen),
+                        xerr=stdev(p['beta'] for p in chosen), yerr=stdev(p[name] for p in chosen),
+                        fmt='*', markersize=7, color=color, markeredgecolor='#222222',
+                        markeredgewidth=.45, capsize=1.5, elinewidth=.65, zorder=7)
         ax.set_xscale('log')
         ax.set_xlim(.026, 345)
         ax.set_ylim(*ylim)
@@ -138,6 +142,7 @@ def render(records, summary, selected):
             if bbox.x0 < -1 or bbox.y0 < -1 or bbox.x1 > fig.bbox.x1 + 1 or bbox.y1 > fig.bbox.y1 + 1:
                 outside.append(text.get_text())
     assert not outside, outside
+    (ROOT / 'figures').mkdir(exist_ok=True)
     for extension in ['pdf', 'svg', 'png']:
         fig.savefig(ROOT / f'figures/figS_beta.{extension}', dpi=300)
     plt.close(fig)

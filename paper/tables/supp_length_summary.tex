@@ -1,0 +1,44 @@
+\textbf{A. TEST-read eligibility at 7500 raw samples}\par\smallskip
+\begin{tabular}{@{}lrrrr@{}}\toprule
+Dataset & Read groups & Eligible TEST reads & Hosts eligible (\%) & Targets eligible (\%)\\\midrule
+Simulated & 3 & 29517 $\pm$ 9 & 98.48 $\pm$ 0.08 & 98.29 $\pm$ 0.05\\
+R9 & 1 & 15339 & 80.79 & 72.60\\
+R10 mixed & 3 & 18516 $\pm$ 35 & 89.69 $\pm$ 0.18 & 95.47 $\pm$ 0.24\\
+R10 sputum & 3 & 59315 $\pm$ 836 & 99.76 $\pm$ 0.03 & 99.27 $\pm$ 0.69\\
+\bottomrule\end{tabular}
+\par\medskip
+\textbf{B. Classification on the common eligible TEST subset}\par\smallskip
+\begin{tabular}{@{}llrrrr@{}}\toprule
+Dataset & Method (samples) & Accuracy (\%) & Hosts rejected (\%) & Targets rejected (\%) & Host pore time (s)\\\midrule
+Simulated & PoreLoom (6000) & 95.99 $\pm$ 0.07 & 96.36 $\pm$ 0.27 & 4.38 $\pm$ 0.29 & 1.975 $\pm$ 0.081\\
+ & ReadCurrent (3000) & 88.31 $\pm$ 0.51 & 90.02 $\pm$ 1.38 & 13.41 $\pm$ 1.92 & 3.338 $\pm$ 0.268\\
+ & ReadCurrent (6000) & 93.18 $\pm$ 0.44 & 94.04 $\pm$ 0.68 & 7.68 $\pm$ 0.43 & 3.218 $\pm$ 0.147\\
+ & NanoDeep (3000) & 86.84 $\pm$ 1.20 & 88.29 $\pm$ 1.64 & 14.61 $\pm$ 1.01 & 3.541 $\pm$ 0.337\\
+ & NanoDeep (6000) & 93.25 $\pm$ 0.38 & 93.96 $\pm$ 2.19 & 7.47 $\pm$ 1.46 & 3.192 $\pm$ 0.387\\
+ & SquiggleNet (3000) & 85.27 $\pm$ 0.03 & 87.20 $\pm$ 1.82 & 16.66 $\pm$ 1.76 & 3.846 $\pm$ 0.390\\
+ & SquiggleNet (6000) & 90.81 $\pm$ 0.67 & 91.79 $\pm$ 0.60 & 10.18 $\pm$ 1.60 & 3.621 $\pm$ 0.097\\
+\addlinespace
+R9 & PoreLoom (6000) & 92.92 $\pm$ 0.07 & 94.05 $\pm$ 0.58 & 8.35 $\pm$ 0.54 & 1.999 $\pm$ 0.092\\
+ & ReadCurrent (3000) & 84.45 $\pm$ 0.68 & 84.77 $\pm$ 0.82 & 15.91 $\pm$ 1.60 & 3.181 $\pm$ 0.102\\
+ & ReadCurrent (6000) & 87.63 $\pm$ 0.52 & 85.98 $\pm$ 1.45 & 10.53 $\pm$ 2.46 & 3.099 $\pm$ 0.136\\
+ & NanoDeep (3000) & 86.41 $\pm$ 2.03 & 87.65 $\pm$ 0.83 & 14.96 $\pm$ 3.47 & 2.757 $\pm$ 0.117\\
+ & NanoDeep (6000) & 89.60 $\pm$ 1.71 & 87.28 $\pm$ 0.32 & 7.82 $\pm$ 3.40 & 2.982 $\pm$ 0.091\\
+ & SquiggleNet (3000) & 81.68 $\pm$ 0.38 & 81.36 $\pm$ 0.86 & 17.96 $\pm$ 0.34 & 3.574 $\pm$ 0.194\\
+ & SquiggleNet (6000) & 86.10 $\pm$ 0.96 & 82.84 $\pm$ 1.72 & 10.27 $\pm$ 1.24 & 3.453 $\pm$ 0.191\\
+\addlinespace
+R10 mixed & PoreLoom (6000) & 97.02 $\pm$ 0.34 & 97.81 $\pm$ 0.25 & 3.71 $\pm$ 0.84 & 1.501 $\pm$ 0.113\\
+ & ReadCurrent (3000) & 91.82 $\pm$ 0.87 & 92.16 $\pm$ 2.44 & 8.49 $\pm$ 2.27 & 3.072 $\pm$ 0.557\\
+ & ReadCurrent (6000) & 94.24 $\pm$ 0.20 & 93.96 $\pm$ 0.43 & 5.50 $\pm$ 0.22 & 3.130 $\pm$ 0.116\\
+ & NanoDeep (3000) & 93.81 $\pm$ 1.04 & 92.39 $\pm$ 2.01 & 4.86 $\pm$ 1.07 & 2.859 $\pm$ 0.506\\
+ & NanoDeep (6000) & 96.61 $\pm$ 0.37 & 95.49 $\pm$ 0.62 & 2.34 $\pm$ 0.29 & 2.836 $\pm$ 0.157\\
+ & SquiggleNet (3000) & 89.30 $\pm$ 2.34 & 89.08 $\pm$ 2.20 & 10.49 $\pm$ 2.49 & 3.564 $\pm$ 0.379\\
+ & SquiggleNet (6000) & 92.24 $\pm$ 1.17 & 92.37 $\pm$ 0.79 & 7.88 $\pm$ 1.95 & 3.485 $\pm$ 0.195\\
+\addlinespace
+R10 sputum & PoreLoom (6000) & 92.68 $\pm$ 0.26 & 93.93 $\pm$ 0.80 & 8.58 $\pm$ 0.76 & 1.398 $\pm$ 0.087\\
+ & ReadCurrent (3000) & 86.15 $\pm$ 1.47 & 88.17 $\pm$ 3.03 & 15.88 $\pm$ 0.95 & 1.864 $\pm$ 0.200\\
+ & ReadCurrent (6000) & 90.39 $\pm$ 1.08 & 91.66 $\pm$ 2.76 & 10.89 $\pm$ 0.93 & 2.167 $\pm$ 0.131\\
+ & NanoDeep (3000) & 78.78 $\pm$ 3.27 & 76.14 $\pm$ 4.36 & 18.55 $\pm$ 3.82 & 2.468 $\pm$ 0.303\\
+ & NanoDeep (6000) & 88.22 $\pm$ 1.26 & 87.81 $\pm$ 1.89 & 11.37 $\pm$ 0.68 & 2.327 $\pm$ 0.053\\
+ & SquiggleNet (3000) & 82.77 $\pm$ 1.88 & 84.07 $\pm$ 3.48 & 18.56 $\pm$ 0.35 & 2.085 $\pm$ 0.208\\
+ & SquiggleNet (6000) & 87.93 $\pm$ 1.28 & 88.88 $\pm$ 2.97 & 13.03 $\pm$ 0.46 & 2.295 $\pm$ 0.130\\
+\bottomrule\end{tabular}

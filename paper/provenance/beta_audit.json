@@ -55,5 +55,5 @@
     }
   ],
   "interpretation": "Diagnostic TEST sweep of separately fitted policies with frozen encoders; original DEV-B selections retained.",
-  "aggregation": "Equal-weight mean and min-max of 3 experimental units at each common beta; bands are not confidence intervals."
+  "aggregation": "Equal-weight mean +/- sample SD (ddof=1) across three experimental units; bands are not confidence intervals."
 }

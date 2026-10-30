@@ -1,744 +1,451 @@
-[
-  {
-    "macro": "SimPLAcc",
-    "value": 95.70666666666666,
-    "display": "95.71",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimPLReject",
-    "value": 95.72888888888889,
-    "display": "95.73",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimPLFrr",
-    "value": 4.315555555555556,
-    "display": "4.32",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimPLPore",
-    "value": 1.960493610636101,
-    "display": "1.960",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimRCAcc",
-    "value": 92.53111111111112,
-    "display": "92.53",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimRCReject",
-    "value": 92.61333333333333,
-    "display": "92.61",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimRCFrr",
-    "value": 7.551111111111111,
-    "display": "7.55",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimRCPore",
-    "value": 3.187769362713555,
-    "display": "3.188",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimNDAcc",
-    "value": 92.59666666666666,
-    "display": "92.60",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimNDReject",
-    "value": 92.53555555555555,
-    "display": "92.54",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimNDFrr",
-    "value": 7.342222222222222,
-    "display": "7.34",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimNDPore",
-    "value": 3.1628078547081024,
-    "display": "3.163",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimSNAcc",
-    "value": 90.19555555555556,
-    "display": "90.20",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimSNReject",
-    "value": 90.39555555555556,
-    "display": "90.40",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimSNFrr",
-    "value": 10.004444444444445,
-    "display": "10.00",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "SimSNPore",
-    "value": 3.584775926586913,
-    "display": "3.585",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 Simulated units; all TEST reads"
-  },
-  {
-    "macro": "RninePLAcc",
-    "value": 91.83833333333334,
-    "display": "91.84",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RninePLReject",
-    "value": 90.58333333333334,
-    "display": "90.58",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RninePLFrr",
-    "value": 6.906666666666666,
-    "display": "6.91",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RninePLPore",
-    "value": 1.8429368506493173,
-    "display": "1.843",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineRCAcc",
-    "value": 80.91,
-    "display": "80.91",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineRCReject",
-    "value": 69.46666666666667,
-    "display": "69.47",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineRCFrr",
-    "value": 7.6466666666666665,
-    "display": "7.65",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineRCPore",
-    "value": 2.7934307907462803,
-    "display": "2.793",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineNDAcc",
-    "value": 82.41999999999999,
-    "display": "82.42",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineNDReject",
-    "value": 70.51666666666667,
-    "display": "70.52",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineNDFrr",
-    "value": 5.676666666666667,
-    "display": "5.68",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineNDPore",
-    "value": 2.6994190924745585,
-    "display": "2.699",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineSNAcc",
-    "value": 79.73666666666666,
-    "display": "79.74",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineSNReject",
-    "value": 66.92666666666666,
-    "display": "66.93",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineSNFrr",
-    "value": 7.453333333333332,
-    "display": "7.45",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "RnineSNPore",
-    "value": 3.079661254860152,
-    "display": "3.080",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R9 units; all TEST reads"
-  },
-  {
-    "macro": "MixPLAcc",
-    "value": 95.65,
-    "display": "95.65",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixPLReject",
-    "value": 94.89999999999999,
-    "display": "94.90",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixPLFrr",
-    "value": 3.5999999999999996,
-    "display": "3.60",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixPLPore",
-    "value": 1.4389693020637038,
-    "display": "1.439",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixRCAcc",
-    "value": 89.51666666666668,
-    "display": "89.52",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixRCReject",
-    "value": 84.28,
-    "display": "84.28",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixRCFrr",
-    "value": 5.246666666666666,
-    "display": "5.25",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixRCPore",
-    "value": 2.9279795771542356,
-    "display": "2.928",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixNDAcc",
-    "value": 91.70833333333333,
-    "display": "91.71",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixNDReject",
-    "value": 85.64666666666666,
-    "display": "85.65",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixNDFrr",
-    "value": 2.23,
-    "display": "2.23",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixNDPore",
-    "value": 2.6640468572342293,
-    "display": "2.664",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixSNAcc",
-    "value": 87.66,
-    "display": "87.66",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixSNReject",
-    "value": 82.84666666666668,
-    "display": "82.85",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixSNFrr",
-    "value": 7.526666666666666,
-    "display": "7.53",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "MixSNPore",
-    "value": 3.24618852965487,
-    "display": "3.246",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 mixed units; all TEST reads"
-  },
-  {
-    "macro": "SputumPLAcc",
-    "value": 92.68464174559386,
-    "display": "92.68",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumPLReject",
-    "value": 93.89827075956042,
-    "display": "93.90",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumPLFrr",
-    "value": 8.528987268372695,
-    "display": "8.53",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumPLPore",
-    "value": 1.3968711535761544,
-    "display": "1.397",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumRCAcc",
-    "value": 90.31249009157067,
-    "display": "90.31",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumRCReject",
-    "value": 91.43500837043025,
-    "display": "91.44",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumRCFrr",
-    "value": 10.810028187288916,
-    "display": "10.81",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumRCPore",
-    "value": 2.1649164398862504,
-    "display": "2.165",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumNDAcc",
-    "value": 88.15491575091721,
-    "display": "88.15",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumNDReject",
-    "value": 87.59905164613265,
-    "display": "87.60",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumNDFrr",
-    "value": 11.289220144298245,
-    "display": "11.29",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumNDPore",
-    "value": 2.324281497844518,
-    "display": "2.324",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumSNAcc",
-    "value": 87.86565938236258,
-    "display": "87.87",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumSNReject",
-    "value": 88.66547213494597,
-    "display": "88.67",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumSNFrr",
-    "value": 12.9341533702208,
-    "display": "12.93",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "SputumSNPore",
-    "value": 2.2931780443782395,
-    "display": "2.293",
-    "source": "figure_data/main.csv",
-    "aggregation": "equal mean across 3 R10 sputum units; all TEST reads"
-  },
-  {
-    "macro": "MainPLMinReject",
-    "value": 90.58333333333334,
-    "display": "90.58",
-    "source": "figure_data/main.csv",
-    "aggregation": "minimum of four PoreLoom family means; all TEST reads"
-  },
-  {
-    "macro": "MainPLMaxReject",
-    "value": 95.72888888888889,
-    "display": "95.73",
-    "source": "figure_data/main.csv",
-    "aggregation": "maximum of four PoreLoom family means; all TEST reads"
-  },
-  {
-    "macro": "SimPrefixBaseAcc",
-    "value": 75.13888888888887,
-    "display": "75.14",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 432"
-  },
-  {
-    "macro": "SimPrefixMaxAcc",
-    "value": 96.35,
-    "display": "96.35",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 6000"
-  },
-  {
-    "macro": "SimDecisionByThree",
-    "value": 50.15024770750421,
-    "display": "50.15",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "SimNoDecision",
-    "value": 0.7766666666666633,
-    "display": "0.78",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "RninePrefixBaseAcc",
-    "value": 66.18499999999999,
-    "display": "66.18",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 432"
-  },
-  {
-    "macro": "RninePrefixMaxAcc",
-    "value": 93.79166666666666,
-    "display": "93.79",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 6000"
-  },
-  {
-    "macro": "RnineDecisionByThree",
-    "value": 36.68261821701066,
-    "display": "36.68",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "RnineNoDecision",
-    "value": 10.546666666666667,
-    "display": "10.55",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "MixPrefixBaseAcc",
-    "value": 82.72,
-    "display": "82.72",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 432"
-  },
-  {
-    "macro": "MixPrefixMaxAcc",
-    "value": 97.29833333333332,
-    "display": "97.30",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 6000"
-  },
-  {
-    "macro": "MixDecisionByThree",
-    "value": 73.9312070217538,
-    "display": "73.93",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "MixNoDecision",
-    "value": 2.7249999999999996,
-    "display": "2.72",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "SputumPrefixBaseAcc",
-    "value": 61.574851340097936,
-    "display": "61.57",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 432"
-  },
-  {
-    "macro": "SputumPrefixMaxAcc",
-    "value": 93.55107876616553,
-    "display": "93.55",
-    "source": "figure_data/fixed_prefix.csv",
-    "aggregation": "equal mean of 3 unit accuracies at fixed usable length 6000"
-  },
-  {
-    "macro": "SputumDecisionByThree",
-    "value": 56.219275773525425,
-    "display": "56.22",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "SputumNoDecision",
-    "value": 0.10105732403973666,
-    "display": "0.10",
-    "source": "figure_data/decision_position_summary.csv",
-    "aggregation": "equal mean across 3 units; completed decisions only for position fractions"
-  },
-  {
-    "macro": "TimingMixedInc",
-    "value": 141.2787614390254,
-    "display": "141.3",
-    "source": "figure_data/timing_raw.csv",
-    "aggregation": "median across 3 timed repeats; ratio of medians"
-  },
-  {
-    "macro": "TimingMixedFull",
-    "value": 571.2017146870494,
-    "display": "571.2",
-    "source": "figure_data/timing_raw.csv",
-    "aggregation": "median across 3 timed repeats; ratio of medians"
-  },
-  {
-    "macro": "TimingMixedRatio",
-    "value": 4.043082688926139,
-    "display": "4.0",
-    "source": "figure_data/timing_raw.csv",
-    "aggregation": "median across 3 timed repeats; ratio of medians"
-  },
-  {
-    "macro": "TimingAlignedInc",
-    "value": 122.18091730028391,
-    "display": "122.2",
-    "source": "figure_data/timing_raw.csv",
-    "aggregation": "median across 3 timed repeats; ratio of medians"
-  },
-  {
-    "macro": "TimingAlignedFull",
-    "value": 572.9197142645717,
-    "display": "572.9",
-    "source": "figure_data/timing_raw.csv",
-    "aggregation": "median across 3 timed repeats; ratio of medians"
-  },
-  {
-    "macro": "TimingAlignedRatio",
-    "value": 4.689109616491972,
-    "display": "4.7",
-    "source": "figure_data/timing_raw.csv",
-    "aggregation": "median across 3 timed repeats; ratio of medians"
-  },
-  {
-    "macro": "MixBudgetBaseAcc",
-    "value": 95.575,
-    "display": "95.58",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "MixBudgetBaseFrr",
-    "value": 2.716666666666667,
-    "display": "2.72",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "MixBudgetBasePore",
-    "value": 1.6095562130292447,
-    "display": "1.610",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "MixBudgetMaxAcc",
-    "value": 96.255,
-    "display": "96.25",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "MixBudgetMaxFrr",
-    "value": 2.1599999999999997,
-    "display": "2.16",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "MixBudgetMaxPore",
-    "value": 1.3686518547967823,
-    "display": "1.369",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "SputumBudgetBaseAcc",
-    "value": 93.03300038504224,
-    "display": "93.03",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "SputumBudgetBaseFrr",
-    "value": 8.496976285927838,
-    "display": "8.50",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "SputumBudgetBasePore",
-    "value": 1.3325441746075386,
-    "display": "1.333",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "SputumBudgetMaxAcc",
-    "value": 94.56524201037348,
-    "display": "94.57",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "SputumBudgetMaxFrr",
-    "value": 6.249009082466989,
-    "display": "6.25",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "SputumBudgetMaxPore",
-    "value": 1.3991998075440388,
-    "display": "1.399",
-    "source": "figure_data/budget.csv",
-    "aggregation": "mean across 3 training repeats on one fixed dataset"
-  },
-  {
-    "macro": "YieldOne",
-    "value": 7.835359840466722,
-    "display": "7.84",
-    "source": "figure_data/icarust.csv",
-    "aggregation": "mean of 3 seed-matched ratios to No-AS"
-  },
-  {
-    "macro": "YieldWsixBestOne",
-    "value": 5.815250176456491,
-    "display": "5.82",
-    "source": "figure_data/icarust_summary.csv",
-    "aggregation": "maximum W6000 baseline mean across 3 seed-matched ratios to No-AS"
-  },
-  {
-    "macro": "YieldTen",
-    "value": 4.880817953520695,
-    "display": "4.88",
-    "source": "figure_data/icarust.csv",
-    "aggregation": "mean of 3 seed-matched ratios to No-AS"
-  },
-  {
-    "macro": "YieldWsixBestTen",
-    "value": 4.071142102305252,
-    "display": "4.07",
-    "source": "figure_data/icarust_summary.csv",
-    "aggregation": "maximum W6000 baseline mean across 3 seed-matched ratios to No-AS"
-  },
-  {
-    "macro": "YieldThirty",
-    "value": 2.619650048919723,
-    "display": "2.62",
-    "source": "figure_data/icarust.csv",
-    "aggregation": "mean of 3 seed-matched ratios to No-AS"
-  },
-  {
-    "macro": "YieldWsixBestThirty",
-    "value": 2.401040343253469,
-    "display": "2.40",
-    "source": "figure_data/icarust_summary.csv",
-    "aggregation": "maximum W6000 baseline mean across 3 seed-matched ratios to No-AS"
+{
+  "aggregation": "equal-weight mean +/- sample SD; n=3; ddof=1",
+  "source": "figure_data/",
+  "macros_with_sd": {
+    "SimPLAcc": {
+      "mean": 95.70666666666669,
+      "sample_sd": 0.07999999999999674,
+      "n": 3
+    },
+    "SimPLReject": {
+      "mean": 95.72888888888886,
+      "sample_sd": 0.3200925792005513,
+      "n": 3
+    },
+    "SimPLFrr": {
+      "mean": 4.315555555555557,
+      "sample_sd": 0.2810562089557745,
+      "n": 3
+    },
+    "SimPLPore": {
+      "mean": 1.9604936106361033,
+      "sample_sd": 0.08011465865566608,
+      "n": 3
+    },
+    "SimRCAcc": {
+      "mean": 92.5311111111111,
+      "sample_sd": 0.4286585449377386,
+      "n": 3
+    },
+    "SimRCReject": {
+      "mean": 92.61333333333333,
+      "sample_sd": 0.6918895223308124,
+      "n": 3
+    },
+    "SimRCFrr": {
+      "mean": 7.551111111111114,
+      "sample_sd": 0.4197530137981071,
+      "n": 3
+    },
+    "SimRCPore": {
+      "mean": 3.1877693627135533,
+      "sample_sd": 0.1433063499466039,
+      "n": 3
+    },
+    "SimNDAcc": {
+      "mean": 92.59666666666668,
+      "sample_sd": 0.33577439515909274,
+      "n": 3
+    },
+    "SimNDReject": {
+      "mean": 92.53555555555556,
+      "sample_sd": 2.0795013647328666,
+      "n": 3
+    },
+    "SimNDFrr": {
+      "mean": 7.342222222222223,
+      "sample_sd": 1.435801492521136,
+      "n": 3
+    },
+    "SimNDPore": {
+      "mean": 3.1628078547080998,
+      "sample_sd": 0.3830564799302092,
+      "n": 3
+    },
+    "SimSNAcc": {
+      "mean": 90.19555555555553,
+      "sample_sd": 0.6659690794735406,
+      "n": 3
+    },
+    "SimSNReject": {
+      "mean": 90.39555555555557,
+      "sample_sd": 0.5158093245175681,
+      "n": 3
+    },
+    "SimSNFrr": {
+      "mean": 10.004444444444434,
+      "sample_sd": 1.5753847266737657,
+      "n": 3
+    },
+    "SimSNPore": {
+      "mean": 3.5847759265869135,
+      "sample_sd": 0.09764889946470492,
+      "n": 3
+    },
+    "RninePLAcc": {
+      "mean": 91.83833333333334,
+      "sample_sd": 0.19775826994928303,
+      "n": 3
+    },
+    "RninePLReject": {
+      "mean": 90.58333333333334,
+      "sample_sd": 0.802267619521903,
+      "n": 3
+    },
+    "RninePLFrr": {
+      "mean": 6.906666666666666,
+      "sample_sd": 0.5101307022061438,
+      "n": 3
+    },
+    "RninePLPore": {
+      "mean": 1.8429368506493167,
+      "sample_sd": 0.07855801685696003,
+      "n": 3
+    },
+    "RnineRCAcc": {
+      "mean": 80.91000000000001,
+      "sample_sd": 0.3965160778581321,
+      "n": 3
+    },
+    "RnineRCReject": {
+      "mean": 69.46666666666667,
+      "sample_sd": 1.1736410581320553,
+      "n": 3
+    },
+    "RnineRCFrr": {
+      "mean": 7.6466666666666665,
+      "sample_sd": 1.786346364323933,
+      "n": 3
+    },
+    "RnineRCPore": {
+      "mean": 2.79343079074628,
+      "sample_sd": 0.10992308221125964,
+      "n": 3
+    },
+    "RnineNDAcc": {
+      "mean": 82.42,
+      "sample_sd": 1.312049922830679,
+      "n": 3
+    },
+    "RnineNDReject": {
+      "mean": 70.51666666666667,
+      "sample_sd": 0.25716402029314245,
+      "n": 3
+    },
+    "RnineNDFrr": {
+      "mean": 5.676666666666667,
+      "sample_sd": 2.469338642902859,
+      "n": 3
+    },
+    "RnineNDPore": {
+      "mean": 2.69941909247456,
+      "sample_sd": 0.07347039127280508,
+      "n": 3
+    },
+    "RnineSNAcc": {
+      "mean": 79.73666666666666,
+      "sample_sd": 0.7395325099908299,
+      "n": 3
+    },
+    "RnineSNReject": {
+      "mean": 66.92666666666666,
+      "sample_sd": 1.3881762616228976,
+      "n": 3
+    },
+    "RnineSNFrr": {
+      "mean": 7.453333333333332,
+      "sample_sd": 0.9011844058422968,
+      "n": 3
+    },
+    "RnineSNPore": {
+      "mean": 3.079661254860153,
+      "sample_sd": 0.15391976680060263,
+      "n": 3
+    },
+    "MixPLAcc": {
+      "mean": 95.65,
+      "sample_sd": 0.17776388834631532,
+      "n": 3
+    },
+    "MixPLReject": {
+      "mean": 94.9,
+      "sample_sd": 0.7005711955254814,
+      "n": 3
+    },
+    "MixPLFrr": {
+      "mean": 3.5999999999999996,
+      "sample_sd": 0.802246844805263,
+      "n": 3
+    },
+    "MixPLPore": {
+      "mean": 1.4389693020637033,
+      "sample_sd": 0.10341020564666162,
+      "n": 3
+    },
+    "MixRCAcc": {
+      "mean": 89.51666666666667,
+      "sample_sd": 0.24669481821338368,
+      "n": 3
+    },
+    "MixRCReject": {
+      "mean": 84.28,
+      "sample_sd": 0.5521775076911388,
+      "n": 3
+    },
+    "MixRCFrr": {
+      "mean": 5.246666666666667,
+      "sample_sd": 0.2003330560175561,
+      "n": 3
+    },
+    "MixRCPore": {
+      "mean": 2.9279795771542365,
+      "sample_sd": 0.10195082588870089,
+      "n": 3
+    },
+    "MixNDAcc": {
+      "mean": 91.70833333333334,
+      "sample_sd": 0.2951412091412078,
+      "n": 3
+    },
+    "MixNDReject": {
+      "mean": 85.64666666666668,
+      "sample_sd": 0.4200396806652078,
+      "n": 3
+    },
+    "MixNDFrr": {
+      "mean": 2.23,
+      "sample_sd": 0.26851443164195105,
+      "n": 3
+    },
+    "MixNDPore": {
+      "mean": 2.66404685723423,
+      "sample_sd": 0.14258535576310277,
+      "n": 3
+    },
+    "MixSNAcc": {
+      "mean": 87.66,
+      "sample_sd": 1.110304012421823,
+      "n": 3
+    },
+    "MixSNReject": {
+      "mean": 82.84666666666666,
+      "sample_sd": 0.6102731628814557,
+      "n": 3
+    },
+    "MixSNFrr": {
+      "mean": 7.526666666666666,
+      "sample_sd": 1.8728142815915654,
+      "n": 3
+    },
+    "MixSNPore": {
+      "mean": 3.2461885296548703,
+      "sample_sd": 0.1763298804370819,
+      "n": 3
+    },
+    "SputumPLAcc": {
+      "mean": 92.68464174559384,
+      "sample_sd": 0.28045443861986563,
+      "n": 3
+    },
+    "SputumPLReject": {
+      "mean": 93.8982707595604,
+      "sample_sd": 0.8065908791683377,
+      "n": 3
+    },
+    "SputumPLFrr": {
+      "mean": 8.528987268372697,
+      "sample_sd": 0.7328456934651112,
+      "n": 3
+    },
+    "SputumPLPore": {
+      "mean": 1.3968711535761567,
+      "sample_sd": 0.08705577520127565,
+      "n": 3
+    },
+    "SputumRCAcc": {
+      "mean": 90.3124900915707,
+      "sample_sd": 1.119350507533658,
+      "n": 3
+    },
+    "SputumRCReject": {
+      "mean": 91.43500837043027,
+      "sample_sd": 2.775046138638833,
+      "n": 3
+    },
+    "SputumRCFrr": {
+      "mean": 10.810028187288903,
+      "sample_sd": 0.8872390704351968,
+      "n": 3
+    },
+    "SputumRCPore": {
+      "mean": 2.16491643988625,
+      "sample_sd": 0.13089176900580154,
+      "n": 3
+    },
+    "SputumNDAcc": {
+      "mean": 88.15491575091721,
+      "sample_sd": 1.2987315018700616,
+      "n": 3
+    },
+    "SputumNDReject": {
+      "mean": 87.59905164613266,
+      "sample_sd": 1.9064978293416996,
+      "n": 3
+    },
+    "SputumNDFrr": {
+      "mean": 11.289220144298232,
+      "sample_sd": 0.7313070998169535,
+      "n": 3
+    },
+    "SputumNDPore": {
+      "mean": 2.3242814978445168,
+      "sample_sd": 0.05283082898200465,
+      "n": 3
+    },
+    "SputumSNAcc": {
+      "mean": 87.86565938236257,
+      "sample_sd": 1.318930029183179,
+      "n": 3
+    },
+    "SputumSNReject": {
+      "mean": 88.66547213494597,
+      "sample_sd": 2.978292080936802,
+      "n": 3
+    },
+    "SputumSNFrr": {
+      "mean": 12.9341533702208,
+      "sample_sd": 0.37004089064643514,
+      "n": 3
+    },
+    "SputumSNPore": {
+      "mean": 2.293178044378237,
+      "sample_sd": 0.12918550872339,
+      "n": 3
+    },
+    "MixBudgetBaseAcc": {
+      "mean": 95.575,
+      "sample_sd": 0.3054914074078022,
+      "n": 3
+    },
+    "MixBudgetBaseFrr": {
+      "mean": 2.7166666666666663,
+      "sample_sd": 0.37313983080520013,
+      "n": 3
+    },
+    "MixBudgetBasePore": {
+      "mean": 1.6095562130292433,
+      "sample_sd": 0.14296166192436824,
+      "n": 3
+    },
+    "MixBudgetBaseHostForced": {
+      "mean": 4.463333333333333,
+      "sample_sd": 0.15947831618540925,
+      "n": 3
+    },
+    "MixBudgetMaxAcc": {
+      "mean": 96.255,
+      "sample_sd": 0.09041570660012672,
+      "n": 3
+    },
+    "MixBudgetMaxFrr": {
+      "mean": 2.16,
+      "sample_sd": 0.25119713374160946,
+      "n": 3
+    },
+    "MixBudgetMaxPore": {
+      "mean": 1.3686518547967834,
+      "sample_sd": 0.04372127999911712,
+      "n": 3
+    },
+    "MixBudgetMaxHostForced": {
+      "mean": 0.8666666666666666,
+      "sample_sd": 0.04041451884327376,
+      "n": 3
+    },
+    "SputumBudgetBaseAcc": {
+      "mean": 93.03300038504223,
+      "sample_sd": 0.15900318387028078,
+      "n": 3
+    },
+    "SputumBudgetBaseFrr": {
+      "mean": 8.49697628592784,
+      "sample_sd": 0.26482537568668857,
+      "n": 3
+    },
+    "SputumBudgetBasePore": {
+      "mean": 1.33254417460754,
+      "sample_sd": 0.022123754800882068,
+      "n": 3
+    },
+    "SputumBudgetBaseHostForced": {
+      "mean": 8.56039500804059,
+      "sample_sd": 0.1519883950062973,
+      "n": 3
+    },
+    "SputumBudgetMaxAcc": {
+      "mean": 94.5652420103735,
+      "sample_sd": 0.10015702710114789,
+      "n": 3
+    },
+    "SputumBudgetMaxFrr": {
+      "mean": 6.249009082466986,
+      "sample_sd": 0.8712165424921864,
+      "n": 3
+    },
+    "SputumBudgetMaxPore": {
+      "mean": 1.39919980754404,
+      "sample_sd": 0.0869979455044002,
+      "n": 3
+    },
+    "SputumBudgetMaxHostForced": {
+      "mean": 3.5548458698557233,
+      "sample_sd": 0.3724386710358665,
+      "n": 3
+    },
+    "YieldOne": {
+      "mean": 7.835359840466723,
+      "sample_sd": 0.4047379104448743,
+      "n": 3
+    },
+    "YieldTen": {
+      "mean": 4.880817953520697,
+      "sample_sd": 0.07205935434977985,
+      "n": 3
+    },
+    "YieldThirty": {
+      "mean": 2.6196500489197234,
+      "sample_sd": 0.013355133525279332,
+      "n": 3
+    },
+    "TimingMixedInc": {
+      "mean": 132.85028251508868,
+      "sample_sd": 16.498056220355146,
+      "n": 3
+    },
+    "TimingMixedFull": {
+      "mean": 571.368912855784,
+      "sample_sd": 1.8205412008353592,
+      "n": 3
+    },
+    "TimingMixedRatio": {
+      "mean": 4.348919405442748,
+      "sample_sd": 0.5806609567034695,
+      "n": 3
+    },
+    "TimingAlignedInc": {
+      "mean": 119.76988085856033,
+      "sample_sd": 4.879177660797826,
+      "n": 3
+    },
+    "TimingAlignedFull": {
+      "mean": 571.162430259089,
+      "sample_sd": 3.1056965502182172,
+      "n": 3
+    },
+    "TimingAlignedRatio": {
+      "mean": 4.77351881969903,
+      "sample_sd": 0.17258081532035985,
+      "n": 3
+    }
   }
-]
+}

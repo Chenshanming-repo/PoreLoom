@@ -5,7 +5,7 @@ import hashlib
 import json
 import math
 import os
-from statistics import mean
+from statistics import mean, stdev
 
 from result_archive import ROOT, ARCHIVE
 FAMILIES = {
@@ -104,7 +104,7 @@ def prepare():
                 means[method] = mean(values)
                 summary.append({'family': family, 'target_rejection': level, 'method': method,
                                 'n_units': 3, 'host_pore': means[method],
-                                'minimum': min(values), 'maximum': max(values)})
+                                'minimum': min(values), 'maximum': max(values), 'host_pore_sd': stdev(values)})
             winners[family][min(means, key=means.get)] += 1
         for method in METHODS:
             values = [r['host_pore'] for r in summary if (r['family'], r['method']) == (family, method)]
@@ -120,7 +120,7 @@ def prepare():
              'maximum_bracket_width': max(r['high_frr']-r['low_frr'] for r in rows),
              'extrapolation': False, 'original_dev_b_operating_points_changed': False,
              'candidate_scope': 'All 41 FACP penalties; archived DEV-B accuracy-time frontier candidates for each threshold rule.',
-             'method': 'Remove TEST target-rejection/time dominated candidates within each unit and method; retain exact grid hits or interpolate adjacent points; equally average three units.',
+             'method': 'Remove TEST target-rejection/time dominated candidates within each unit and method; retain exact grid hits or interpolate adjacent points; equally average three units and report sample SD (ddof=1).',
              'lowest_mean_counts_on_grid': winners, 'sources': provenance, 'summary': summary}
     (ROOT / 'provenance/stopping_matched_audit.json').write_text(json.dumps(audit, indent=2)+'\n')
     return summary, audit
@@ -152,6 +152,9 @@ def render(summary, audit):
     for panel, (ax, family) in enumerate(zip(axes.flat, FAMILIES)):
         for method, (label, color, line, marker) in style.items():
             points = [r for r in summary if (r['family'], r['method']) == (family, method)]
+            ax.fill_between([100*r['target_rejection'] for r in points],
+                            [r['host_pore']-r['host_pore_sd'] for r in points],
+                            [r['host_pore']+r['host_pore_sd'] for r in points],color=color,alpha=.10,linewidth=0)
             ax.plot([100*r['target_rejection'] for r in points], [r['host_pore'] for r in points],
                     color=color, linestyle=line, marker=marker, markersize=2.8,
                     markeredgewidth=.45, linewidth=1.55 if method == 'main' else 1.25)
@@ -176,11 +179,12 @@ def render(summary, audit):
             if box.x0 < -1 or box.y0 < -1 or box.x1 > fig.bbox.x1+1 or box.y1 > fig.bbox.y1+1:
                 outside.append(text.get_text())
     assert not outside, outside
+    (ROOT / 'figures').mkdir(exist_ok=True)
     for extension in ['pdf', 'svg', 'png']:
         fig.savefig(ROOT / f'figures/figS_stopping_matched.{extension}', dpi=300)
     plt.close(fig)
     audit['figure'] = {'panels': 4, 'curves': 16, 'mean_points': len(summary),
-                       'font_minimum_pt': 8, 'text_bounds_passed': True}
+                       'font_minimum_pt': 8, 'text_bounds_passed': True, 'bands': 'sample SD across three experimental units (ddof=1)'}
 
 
 def saved():

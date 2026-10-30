@@ -1,0 +1,184 @@
+{
+  "definition": "Fraction of all TEST host reads with a completed Accept or Reject decision at the budget-forced observation; three training repeats on the same fixed data group and TEST set.",
+  "aggregation": "mean and sample SD across three training repeats, ddof=1",
+  "sources": {
+    "results/budget_up_20261016/runs/r10_run01/b6000_r0/test/metrics.json": "abd29f283bedd3279bf46e20437020683c851e132859fcb96dd1e93c05fac714",
+    "results/budget_up_20261016/runs/r10_run01/b6000_r1/test/metrics.json": "c487c0562a83bd75f017e99347e287930c46efcc2c04ddcd530e648622eca7c1",
+    "results/budget_up_20261016/runs/r10_run01/b6000_r2/test/metrics.json": "acce3e71894c40535fdec45aca8dfe3bf9bccbd133e2c80ee703e1dffab3837f",
+    "results/budget_up_20261016/runs/r10_run01/b9000_r0/test/metrics.json": "b3c8b94ce6ff0fcbd7f0c9ddbc61168db0dd14cfedfc319dca801c92d1d2bbac",
+    "results/budget_up_20261016/runs/r10_run01/b9000_r1/test/metrics.json": "a46de700a2a68588acfcaf19b1a960f9918ea4ebf3053c2c558a9c23897312e0",
+    "results/budget_up_20261016/runs/r10_run01/b9000_r2/test/metrics.json": "15ea434a01d9a754765355e339bc95d326906a31d76dcd6001f478f7cd665f35",
+    "results/budget_up_20261016/runs/r10_run01/b12000_r0/test/metrics.json": "bcf5cdb4bf8150d74d64811fb079bdc1bc93176fcd262c2cb9c658e31b47a94e",
+    "results/budget_up_20261016/runs/r10_run01/b12000_r1/test/metrics.json": "4f998f4e5ab95df0d09833c3bc0036dde1263d20ad17f94466eefdda468fa18a",
+    "results/budget_up_20261016/runs/r10_run01/b12000_r2/test/metrics.json": "d44210867e33f61fa2cd9d4372b73834b418088bcd422b23faf283c1069b23d7",
+    "results/budget_up_20261016/runs/r10_run01/b15000_r0/test/metrics.json": "82f0e262dcefbf97b92872aef5d62893be4ba28b1e434d319ea0b6313dd30c8d",
+    "results/budget_up_20261016/runs/r10_run01/b15000_r1/test/metrics.json": "d20666385a4803fd4180662626fc75c7d454e8504b900574bcf54bd95144b615",
+    "results/budget_up_20261016/runs/r10_run01/b15000_r2/test/metrics.json": "d93281cf4a8e96932e498170e81240dc29a0377a37348a25fa832225672f3db5",
+    "results/budget_up_20261016/runs/r10_run01/b18000_r0/test/metrics.json": "5aa29ab44d85189e1f1e66fc3995b0220ca5f39c4e9b05c76a29a1e2dc16b0fb",
+    "results/budget_up_20261016/runs/r10_run01/b18000_r1/test/metrics.json": "a96d0a723dea5955ff98ce5cc910f045ae791cd78d0dfacdf838054a0b0323ec",
+    "results/budget_up_20261016/runs/r10_run01/b18000_r2/test/metrics.json": "784b0253e9a01a983de105f6da0bf30e9605b0bc9b48b68ea3251de5880845db",
+    "results/budget_up_20261016/runs/sputum_g1/b6000_r0/test/metrics.json": "b889880346d6f3108c70e67ce21326c5f999b77d04d03ef4d74bc5b8906d9c58",
+    "results/budget_up_20261016/runs/sputum_g1/b6000_r1/test/metrics.json": "a27b0ae702af43ed72a21f25e055ff159a1ee2ee52fb6c43f38e539ce46a3379",
+    "results/budget_up_20261016/runs/sputum_g1/b6000_r2/test/metrics.json": "fede55ce036f40a8bdfbf7f899dd981cf62525d84d6a30101fbfdb539ebaa942",
+    "results/budget_up_20261016/runs/sputum_g1/b9000_r0/test/metrics.json": "86f30bde9f0d3a61cb0f6e08cdd328fdd5e05719813697ec2133967f2eb30472",
+    "results/budget_up_20261016/runs/sputum_g1/b9000_r1/test/metrics.json": "e5dddf41efb312cefedd5dd43d3bd1edf10f82a8a309ef7305604fdefb2330b6",
+    "results/budget_up_20261016/runs/sputum_g1/b9000_r2/test/metrics.json": "ad3df3e9c7132e3cd531b9863e8f5d7602dbaac4897802d3c218aaf9426c3007",
+    "results/budget_up_20261016/runs/sputum_g1/b12000_r0/test/metrics.json": "37e253a49d592e1584758df7fb239615c55708f0bc7c6b40e09fa8d100184de8",
+    "results/budget_up_20261016/runs/sputum_g1/b12000_r1/test/metrics.json": "0f34ea732f3ef9e3b6489de865bdd5ba14a3fec388c2457c2c370e40366037a2",
+    "results/budget_up_20261016/runs/sputum_g1/b12000_r2/test/metrics.json": "c36021218067348a48d9c8c61005cc87be5061e72a51480c2709145fa2c8cd08"
+  },
+  "conditions": [
+    {
+      "dataset": "r10_run01",
+      "budget": 6000,
+      "host_forced_fraction": {
+        "mean": 0.04463333333333333,
+        "sd": 0.0015947831618540926,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.0457,
+          0.0454,
+          0.0428
+        ]
+      }
+    },
+    {
+      "dataset": "r10_run01",
+      "budget": 9000,
+      "host_forced_fraction": {
+        "mean": 0.021633333333333334,
+        "sd": 0.005033222956847168,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.0223,
+          0.0163,
+          0.0263
+        ]
+      }
+    },
+    {
+      "dataset": "r10_run01",
+      "budget": 12000,
+      "host_forced_fraction": {
+        "mean": 0.0128,
+        "sd": 0.0005291502622129185,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.0124,
+          0.0134,
+          0.0126
+        ]
+      }
+    },
+    {
+      "dataset": "r10_run01",
+      "budget": 15000,
+      "host_forced_fraction": {
+        "mean": 0.012033333333333333,
+        "sd": 0.0027501515109777746,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.0148,
+          0.0093,
+          0.012
+        ]
+      }
+    },
+    {
+      "dataset": "r10_run01",
+      "budget": 18000,
+      "host_forced_fraction": {
+        "mean": 0.008666666666666666,
+        "sd": 0.0004041451884327376,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.0089,
+          0.0082,
+          0.0089
+        ]
+      }
+    },
+    {
+      "dataset": "sputum_g1",
+      "budget": 6000,
+      "host_forced_fraction": {
+        "mean": 0.08560395008040587,
+        "sd": 0.001519883950062974,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.08592104369096963,
+          0.08694027315349595,
+          0.08395053339675206
+        ]
+      }
+    },
+    {
+      "dataset": "sputum_g1",
+      "budget": 9000,
+      "host_forced_fraction": {
+        "mean": 0.05996466671196575,
+        "sd": 0.012777956374713875,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.06213902289868859,
+          0.07151593395393083,
+          0.04623904328327784
+        ]
+      }
+    },
+    {
+      "dataset": "sputum_g1",
+      "budget": 12000,
+      "host_forced_fraction": {
+        "mean": 0.035548458698557224,
+        "sd": 0.003724386710358689,
+        "n": 3,
+        "units": [
+          "0",
+          "1",
+          "2"
+        ],
+        "values": [
+          0.034076238363796967,
+          0.03978392335394442,
+          0.032785214377930284
+        ]
+      }
+    }
+  ]
+}

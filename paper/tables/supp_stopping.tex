@@ -1,0 +1,24 @@
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Dataset & Method & Accuracy (\%) & Hosts rejected (\%) & Targets rejected (\%) & Host pore time (s)\\\midrule
+Simulated & FACP & 95.71 $\pm$ 0.08 & 95.73 $\pm$ 0.32 & \textbf{4.32 $\pm$ 0.28} & \textbf{1.960 $\pm$ 0.080}\\
+ & Fixed length & 95.55 $\pm$ 0.06 & 95.86 $\pm$ 0.37 & 4.75 $\pm$ 0.32 & 2.539 $\pm$ 0.124\\
+ & Constant threshold & 95.79 $\pm$ 0.17 & 96.14 $\pm$ 0.35 & 4.56 $\pm$ 0.54 & 2.167 $\pm$ 0.209\\
+ & Length-calibrated & \textbf{95.92 $\pm$ 0.05} & \textbf{96.45 $\pm$ 0.14} & 4.60 $\pm$ 0.08 & 2.016 $\pm$ 0.079\\
+\addlinespace
+R9 & FACP & \textbf{91.84 $\pm$ 0.20} & \textbf{90.58 $\pm$ 0.80} & 6.91 $\pm$ 0.51 & \textbf{1.843 $\pm$ 0.079}\\
+ & Fixed length & 88.21 $\pm$ 0.09 & 85.52 $\pm$ 1.30 & 9.09 $\pm$ 1.14 & 2.414 $\pm$ 0.106\\
+ & Constant threshold & 91.26 $\pm$ 0.46 & 89.50 $\pm$ 0.93 & 6.98 $\pm$ 0.59 & 1.861 $\pm$ 0.105\\
+ & Length-calibrated & 91.63 $\pm$ 0.04 & 89.48 $\pm$ 1.18 & \textbf{6.22 $\pm$ 1.15} & 1.922 $\pm$ 0.118\\
+\addlinespace
+R10 mixed & FACP & 95.65 $\pm$ 0.18 & 94.90 $\pm$ 0.70 & 3.60 $\pm$ 0.80 & 1.439 $\pm$ 0.103\\
+ & Fixed length & 93.34 $\pm$ 0.14 & 90.42 $\pm$ 1.29 & 3.73 $\pm$ 1.07 & 2.136 $\pm$ 0.266\\
+ & Constant threshold & 95.47 $\pm$ 0.07 & \textbf{95.08 $\pm$ 0.44} & 4.13 $\pm$ 0.48 & \textbf{1.406 $\pm$ 0.046}\\
+ & Length-calibrated & \textbf{95.75 $\pm$ 0.10} & 94.85 $\pm$ 0.53 & \textbf{3.34 $\pm$ 0.60} & 1.451 $\pm$ 0.066\\
+\addlinespace
+R10 sputum & FACP & 92.68 $\pm$ 0.28 & 93.90 $\pm$ 0.81 & 8.53 $\pm$ 0.73 & \textbf{1.397 $\pm$ 0.087}\\
+ & Fixed length & \textbf{93.26 $\pm$ 0.34} & \textbf{94.79 $\pm$ 1.31} & 8.27 $\pm$ 1.33 & 1.878 $\pm$ 0.086\\
+ & Constant threshold & 93.12 $\pm$ 0.22 & 93.96 $\pm$ 1.49 & \textbf{7.72 $\pm$ 1.60} & 1.914 $\pm$ 0.159\\
+ & Length-calibrated & \textbf{93.26 $\pm$ 0.39} & 94.52 $\pm$ 1.83 & 7.99 $\pm$ 1.44 & 1.691 $\pm$ 0.181\\
+\bottomrule
+\end{tabular}

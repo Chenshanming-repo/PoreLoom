@@ -1,9 +1,9 @@
 # PoreLoom
 
-Streaming adaptive decisions for selective nanopore sequencing from raw signals.
+Streaming raw-signal classification with adaptive stopping for selective nanopore sequencing.
 
 This repository contains the implementation and experiments reported in the Bioinformatics manuscript and its
-Supplementary Information.
+Supplementary Notes (30 October 2026 version).
 
 Fixed-window classifiers wait for the same amount of signal on every read. PoreLoom instead reads raw signal as chunks
 arrive and, at each callback, chooses Accept, Reject, or Continue for each read. Reads whose origin is already clear are
@@ -41,23 +41,29 @@ By default the usable budget is 6000 samples, so the forced decision falls at 75
 All offline numbers come from replay of recorded TEST reads with new signal every 0.4 s, averaged over three units
 per dataset. Every method is evaluated on all TEST reads, including reads too short to fill a fixed window, which are
 retained without a decision. Host and target rejection count completed Reject commands; host pore time is the mean
-time a host read occupies the pore, including 0.1 s for ejection.
+time a host read occupies the pore, including 0.1 s for effective ejection.
+
+Repeated results use equal-weight means ± sample SD (n=3, ddof=1). The units are three simulated groups, three R9
+training seeds on one fixed split, or three disjoint R10 read groups. They are not independent biological samples.
+Budget experiments use three training repeats on the same fixed group and TEST set; timing and closed-loop
+experiments use three timed repeats and three simulation seeds, respectively. Paired changes and speed ratios are
+calculated within units before summarization.
 
 | Dataset | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|---|
-| Simulated | PoreLoom | 95.71% | 95.73% | 4.32% | 1.960 s |
-| | Best baseline per metric | 92.60% (ND-6000) | 92.61% (RC-6000) | 7.34% (ND-6000) | 3.163 s (ND-6000) |
-| R9 | PoreLoom | 91.84% | 90.58% | 6.91% | 1.843 s |
-| | Best baseline per metric | 86.19% (ND-3000) | 85.80% (ND-3000) | 5.68% (ND-6000) | 2.477 s (ND-3000) |
-| R10 mixed | PoreLoom | 95.65% | 94.90% | 3.60% | 1.439 s |
-| | Best baseline per metric | 91.71% (ND-6000) | 87.20% (ND-3000) | 2.23% (ND-6000) | 2.664 s (ND-6000) |
-| R10 sputum | PoreLoom | 92.68% | 93.90% | 8.53% | 1.397 s |
-| | Best baseline per metric | 90.31% (RC-6000) | 91.44% (RC-6000) | 10.81% (RC-6000) | 1.862 s (RC-3000) |
+| Simulated | PoreLoom | 95.71 ± 0.08% | 95.73 ± 0.32% | 4.32 ± 0.28% | 1.960 ± 0.080 s |
+| | Best baseline per metric | 92.60 ± 0.34% (ND-6000) | 92.61 ± 0.69% (RC-6000) | 7.34 ± 1.44% (ND-6000) | 3.163 ± 0.383 s (ND-6000) |
+| R9 | PoreLoom | 91.84 ± 0.20% | 90.58 ± 0.80% | 6.91 ± 0.51% | 1.843 ± 0.079 s |
+| | Best baseline per metric | 86.19 ± 2.00% (ND-3000) | 85.80 ± 0.95% (ND-3000) | 5.68 ± 2.47% (ND-6000) | 2.477 ± 0.095 s (ND-3000) |
+| R10 mixed | PoreLoom | 95.65 ± 0.18% | 94.90 ± 0.70% | 3.60 ± 0.80% | 1.439 ± 0.103 s |
+| | Best baseline per metric | 91.71 ± 0.30% (ND-6000) | 87.20 ± 2.19% (ND-3000) | 2.23 ± 0.27% (ND-6000) | 2.664 ± 0.143 s (ND-6000) |
+| R10 sputum | PoreLoom | 92.68 ± 0.28% | 93.90 ± 0.81% | 8.53 ± 0.73% | 1.397 ± 0.087 s |
+| | Best baseline per metric | 90.31 ± 1.12% (RC-6000) | 91.44 ± 2.78% (RC-6000) | 10.81 ± 0.89% (RC-6000) | 1.862 ± 0.199 s (RC-3000) |
 
 Baselines are ReadCurrent (RC), NanoDeep (ND), and SquiggleNet trained with 3000- or 6000-sample windows. The second
 row of each dataset lists, for each metric, the best of the six baseline models. PoreLoom's host rejection is 2.46–7.70
 percentage points above the highest baseline rate, and its host pore time is 25–46% below the lowest baseline value.
-The complete table is Table 2 of the paper.
+The complete mean ± sample-SD comparison is Table 1 of the paper.
 
 - **Early decisions.** Among completed decisions, 50.15%, 36.68%, 73.93%, and 56.22% occur within 3000 usable samples
   on simulated, R9, R10 mixed, and sputum data, while 5.8–14.2% reach the 6000-sample budget.
@@ -65,17 +71,20 @@ The complete table is Table 2 of the paper.
   improves mean accuracy by 1.87–2.63 percentage points, lowers target rejection by 0.76–3.19 percentage points, and
   reduces host pore time in every dataset.
 - **Feature reuse.** On an RTX 2080 Ti, updating 512 reads at different prefix lengths after each 0.4 s of signal takes
-  141.3 ms with feature reuse versus 571.2 ms with full recomputation (4.0-fold). At a shared prefix length of 19200
-  samples, the times are 122.2 and 572.9 ms (4.7-fold). Reused and recomputed logits differ by at most 4.35e-6.
+  132.9 ± 16.5 ms with feature reuse versus 571.4 ± 1.8 ms with full recomputation. The mean paired speed ratio is
+  4.35 ± 0.58 across three timed repeats. These timings exclude the stopping policy, queueing, and ejection.
+  Reused and recomputed logits differ by at most 4.35e-6 (Supplementary Note 5 and Fig. S2).
 - **Stopping rules.** On the same frozen encoder, fixed-length stopping needs 30–48% more host pore time than FACP.
   Constant and length-calibrated thresholds reach host rejection within 1.1 percentage points of FACP. FACP has the
   shortest host pore time on simulated, R9, and sputum data, and a constant threshold is 0.03 s faster on R10 mixed data.
-- **FACP on existing classifiers.** Adding FACP to frozen 3000-sample baselines lowers target rejection by 1.01–5.02
-  percentage points and raises accuracy by 0.39–5.65 percentage points in all 12 baseline/dataset means. The augmented
+- **FACP on existing classifiers.** Adding FACP to frozen 3000-sample baselines lowers target rejection by 1.00–5.02
+  percentage points and raises accuracy by 0.38–5.65 percentage points in all 12 baseline/dataset means. The augmented
   baselines still reject fewer hosts, reject more targets, and use more host pore time than PoreLoom in every dataset.
 - **Larger budgets.** Retraining with an 18000-sample budget on R10 mixed group 1 raises mean accuracy from 95.58% to
   96.25% while host pore time falls from 1.610 to 1.369 s. A 12000-sample budget on sputum group 1 raises accuracy from
-  93.03% to 94.57%, with host pore time rising from 1.333 to 1.399 s.
+  93.03% to 94.57%, with host pore time rising from 1.333 to 1.399 s. The fraction of all TEST hosts decided at the
+  budget endpoint falls from 4.46 ± 0.16% to 0.87 ± 0.04% for R10 mixed and from 8.56 ± 0.15% to 3.55 ± 0.37% for
+  sputum (Table S5). Each SD describes three training repeats on the same fixed data group and TEST set.
 - **Closed-loop simulation.** In Icarust runs with 512 channels for 1200 s, PoreLoom's retained target-base yield is
   7.84, 4.88, and 2.62 times that of nonselective sequencing at 1%, 10%, and 30% targets. The best baseline,
   3000-sample NanoDeep, reaches 6.15, 4.19, and 2.43, so PoreLoom's enrichment is 27.5%, 16.4%, and 7.9% higher.
@@ -160,7 +169,7 @@ partition of its own dataset. DEV is split by read-ID hash into DEV-A (early sto
 | R10 sputum | ONT `pathogen_surveillance_2025.09`, barcodes 01–14, R10.4.1 | 5000 | ~80k / ~40k / ~60k | 3 groups from one run |
 
 The R10 mixed data are a computational mixture of two separate acquisitions, not one sequencing run. Labeling,
-deduplication, and partition details are given in Supplementary Section S1 of the paper.
+deduplication, and partition details are given in Supplementary Note 1 of the paper.
 
 ## Reproducing the paper
 
@@ -168,46 +177,57 @@ deduplication, and partition details are given in Supplementary Section S1 of th
 cluster. The `hpc/` job files use placeholders (`/path/to/poreloom_work`, `<account>`, `<gpu partition>`) for the
 working directory and cluster settings.
 
-| Paper result | Scripts |
-|---|---|
-| Main comparison with 3000- and 6000-sample baselines (Table 2) | `experiments/20261014_final/hpc/`, `summarize.py`; `experiments/20261016_window6000/win6000.py` |
-| Icarust closed-loop simulation (Table 3; Supplementary Section S5) | `experiments/20261014_final/icarust_run.py`; `experiments/20261018_icarust_w6000/icarust_w6000.py` |
-| Fixed-prefix accuracy (Fig. 2a) | `experiments/20261015_ablation/fixed_window.py` |
-| Decision positions (Fig. 2b) | `experiments/20261014_final/signal_budget.py`; `paper/scripts/signal_position_data.py` |
-| Streaming versus sliding-window encoder (Supplementary Fig. S2; `Encoder` sheet) | `experiments/20261015_ablation/ablation.py` |
-| Stopping-rule controls (Supplementary Section S2; `Stopping` sheet) | `experiments/20261015_ablation/ablation.py` |
-| Target-rejection penalty sensitivity (Supplementary Fig. S1; `Beta_sensitivity` sheet) | `experiments/20261015_ablation/ablation.py`; `paper/scripts/plot_beta.py` |
-| Fixed 0.5 versus DEV-B-selected baseline thresholds (`Threshold_comparison` sheet) | `paper/scripts/threshold_comparison.py` |
-| Host pore time at matched target rejection (Supplementary Section S7, Fig. S4) | `paper/scripts/analyze_matched_rejection.py` |
-| Feature reuse versus full recomputation time (Supplementary Fig. S2) | `experiments/20261016_stream_timing/timing.py` |
-| FACP on frozen 3000-sample baselines (`Baseline_FACP` sheet) | `experiments/20261015_window_tools/native_cp.py` |
-| Larger observation budgets (Fig. 3; Supplementary Section S4) | `experiments/20261016_budget_up/budget_up.py` |
-| Read-length eligibility (Supplementary Section S3) | `paper/scripts/length_eligibility.py` |
-| Leave-taxon-out (Supplementary Section S6, Fig. S3) | `experiments/20261014_final/lso.py` |
+| Paper result | Current manuscript location | Experimental scripts |
+|---|---|---|
+| Main comparison, 3000- and 6000-sample baselines | Table 1 | `experiments/20261014_final/hpc/`, `summarize.py`; `experiments/20261016_window6000/win6000.py` |
+| Closed-loop simulation | Table 2; Note 5, Table S7 | `experiments/20261014_final/icarust_run.py`; `experiments/20261018_icarust_w6000/icarust_w6000.py` |
+| Stopping-rule controls | Table 3; Note 2 | `experiments/20261015_ablation/ablation.py` |
+| Fixed-prefix accuracy and decision positions | Fig. 2; Note 2 | `experiments/20261015_ablation/fixed_window.py`; `experiments/20261014_final/signal_budget.py` |
+| Streaming versus sliding-window encoding | Table S6, Fig. S2a,b | `experiments/20261015_ablation/ablation.py` |
+| Target-rejection penalty sensitivity | Note 2, Fig. S1 | `experiments/20261015_ablation/ablation.py`; `paper/scripts/plot_beta.py` |
+| Fixed 0.5 versus DEV-B-selected thresholds | Table S3 | `paper/scripts/threshold_comparison.py` |
+| Matched target rejection | Note 7, Fig. S4 | `paper/scripts/analyze_matched_rejection.py` |
+| Feature-reuse timing | Note 5, Fig. S2c | `experiments/20261016_stream_timing/timing.py` |
+| FACP on frozen 3000-sample baselines | Table S2 | `experiments/20261015_window_tools/native_cp.py` |
+| Observation budgets and endpoint decisions | Fig. 3; Note 4, Table S5 | `experiments/20261016_budget_up/budget_up.py` |
+| Read-length eligibility | Note 3, Table S4 | `paper/scripts/length_eligibility.py` |
+| Leave-taxon-out evaluation | Note 6, Table S8, Fig. S3 | `experiments/20261014_final/lso.py` |
+| Partition counts | Note 1, Table S1 | `paper/figure_data/data_partitions.csv` |
 
 The closed-loop comparison combines 45 runs of nonselective sequencing, PoreLoom, and 3000-sample baselines with
 27 runs of the 6000-sample baselines. Running these scripts requires Icarust 0.6.0, the trained checkpoints, and
 the original simulation support files `closed_loop.py` and `analyze_live.py`, which are not bundled here. Set
 `PORELOOM_SIMLOOP` to their directory and configure the model paths and compute settings before running the matrix.
 
-`paper/` regenerates the figures, tables, and numbers of the manuscript. `paper/figure_data/` holds the unrounded CSV
-input of every plotted comparison, so the figures can be redrawn without the raw results:
+`paper/figure_data/` contains the saved unit-level inputs for the current manuscript. Rebuild its three main tables,
+eight supplementary tables, numeric macros, and seven figures without raw sequencing data or a GPU:
 
 ```bash
 cd paper
-python -m pip install -r requirements.txt    # Python >= 3.10; no PyTorch or GPU needed
-python scripts/plot_figures.py               # writes the three main and four supplementary figures to figures/
+python -m pip install -r requirements.txt
+python scripts/prepare_summaries.py
+python scripts/plot_figures.py
+python scripts/verify_publication.py
 ```
 
-Rebuilding `figure_data/`, `tables/`, and `numbers.tex` requires the completed experimental results, including
-read-level outcomes, selections, logs, and partition metadata. Set `PORELOOM_RESULTS_ARCHIVE` to the archive root
-containing `results/` and `provenance/`:
+The experimental figures use means with sample-SD bands or error bars. The overview figure is schematic.
+[paper/README.md](paper/README.md) maps every current table and figure to its files and explains the experimental units.
+`paper/figure_data/budget.csv` includes `host_forced_fraction`: the fraction of all TEST host reads with a completed
+Accept or Reject decision at the budget-forced observation. Its 24 rows cover eight budget conditions and three
+training repeats on each fixed data group. `budget_summary.csv` provides their means and sample SDs.
+
+Reconstructing the unit-level CSVs from recorded experimental outcomes requires a separate results archive containing
+`results/` and `provenance/`. This archive and the raw sequencing signals are not bundled in this code repository.
+When that archive is available locally, set its path before running:
 
 ```bash
 PORELOOM_RESULTS_ARCHIVE=/path/to/archive python scripts/prepare_results.py
+python scripts/verify_publication.py
 ```
 
-Without this variable, the scripts look for the archive contents under `paper/`.
+The saved partition-count CSV describes the original fixed splits; it does not contain the read-ID membership lists.
+The code-only repository supports regeneration of the publication outputs from saved results. Repeating experiments
+also requires the external preprocessing readers, checkpoints, simulation support files, and data described above.
 
 ## Repository layout
 
