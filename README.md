@@ -2,9 +2,6 @@
 
 Streaming raw-signal classification with adaptive stopping for selective nanopore sequencing.
 
-This repository contains the implementation, experiment scripts, and publication assets for the
-Bioinformatics manuscript and Supplementary Notes revised on **4 November 2026**.
-
 PoreLoom processes raw signal as chunks arrive and chooses Accept, Reject, or Continue for each read.
 It can decide early when the available evidence is sufficient and continue observing ambiguous reads
 up to a maximum budget.
