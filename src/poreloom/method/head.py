@@ -1,11 +1,12 @@
 """PoreLoom action head (C-p): a bucketed factorized controller on the streaming encoder's logit trajectory.
 
 Looks: chunk arrivals every `interval` seconds with a per-read random phase; at each arrival the frozen StreamR0 gives
-its logit margin ell(n). C-p sees (ell, n/budget, log1p(n/fs), previous ell, minimum ell, look count) — no hidden
+its logit margin ell(n). C-p sees (ell, n/S, log1p(n/F), previous ell, minimum ell, look count) — no hidden
 state. A read acts at most once per bucket (later looks in the same bucket wait, as next_look_used does live), so
-any chunk interval works. Training (poreloom.stream_controller.train_backward): FIT = DEV-A with two phase draws, SEL = DEV-B as the stop
-set. By default beta is fixed at 1.0. An explicit betas override fits one controller per candidate;
+any chunk interval works. Training (poreloom.stream_controller.train_backward): FIT = training reads with two phase draws,
+SEL = validation reads (the historical DEV-A cache) for early stopping. By default beta is fixed at 1.0. An explicit betas override fits one controller per candidate;
 selection then uses maximum SEL command ACC, ties lower SEL target FRR.
+Feature scales S and F are stored separately (7500 and 4000 in the manuscript).
 Times are samples / fs (fs = the data's sampling rate); every length is in samples.
 """
 import json
@@ -42,7 +43,7 @@ def extract(model, data, fs, interval, seed, device, budget=None):
                 budget=budget, skip=model.skip, stride=model.stride, min_samples=model.min_samples,
                 bucket_samples=DEFAULT_BUCKET_SAMPLES,
                 n_buckets=bucket_count(budget, model.skip, model.min_samples),
-                feature_fs=model.fs, feature_max_samples=budget)
+                feature_fs=model.fs, feature_max_samples=model.feature_max_samples)
 
 
 def look_config(z):
@@ -107,11 +108,15 @@ def train_heads(fit_z, sel_z, fs, output, device='cuda', log=print, **overrides)
         states[f'{beta:.6g}'] = {k: v.cpu() for k, v in c.state_dict().items()}
         row = dict(beta=float(beta), epochs=len(hist), seconds=time.time() - t0, **metrics(outcome(sel, pol, cfg['service'], cfg['eject']), sel.is_target))
         table.append(row); log(json.dumps({k: round(v, 4) if isinstance(v, float) else v for k, v in row.items()}))
-    best = select(table, cfg.get('select', 'max_acc'))
+    # A single fixed beta has no operating-point search. Explicit grids retain the historical API.
+    fixed = len(table) == 1
+    best = table[0] if fixed else select(table, cfg.get('select', 'max_acc'))
     torch.save(dict(states=states, n_buckets=cfg['n_buckets'], hidden=cfg['hidden'], host_reference=ref, betas=cfg['betas'],
                     input_dim=fit.x.shape[-1], fs=sampling_rate(fs), look_config=features), output/'controllers.pt')
     (output/'table.json').write_text(json.dumps(table, indent=2))
-    return dict(beta=best['beta'], sel=best, rule=RULES[cfg.get('select', 'max_acc').split(':')[0]], select=cfg.get('select', 'max_acc'))
+    return dict(beta=best['beta'], sel=best,
+                rule='fixed beta; validation used only for early stopping' if fixed else RULES[cfg.get('select', 'max_acc').split(':')[0]],
+                select='fixed' if fixed else cfg.get('select', 'max_acc'))
 
 
 RULES = {'max_acc': 'maximum SEL command ACC, ties lower SEL target command FRR (default)',

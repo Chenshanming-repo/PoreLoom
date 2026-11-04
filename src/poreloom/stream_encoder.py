@@ -336,12 +336,15 @@ class StreamR0(_StreamBase):
     is cached; the remaining 11 (the tail) are recomputed from the window [48F - 528, L'), 1056 samples once
     L' >= 1056, so every read's tail goes through the network in one batch.
 
-    time_features=True adds Linear(phi(n)) to the logits, phi(n) = [n/max_samples, log1p(n/fs)] at n = skip + L',
+    time_features=True adds Linear(phi(n)) to the logits, phi(n) = [n/feature_max_samples, log1p(n/fs)] at n = skip + L',
     zero-initialized so training starts from the pretrained classifier.
     """
     def __init__(self, layers, projection, head, normalizer, skip=1500, max_samples=DEFAULT_MAX_SAMPLES, fs=FS, min_samples=400,
-                 time_features=False):
+                 time_features=False, feature_max_samples=None):
         super().__init__(layers, normalizer, skip, max_samples, fs, 'delayed')
+        self.feature_max_samples = max_samples if feature_max_samples is None else float(feature_max_samples)
+        if not math.isfinite(self.feature_max_samples) or self.feature_max_samples <= 0:
+            raise ValueError('feature_max_samples must be finite and positive')
         self.projection, self.head = projection, head
         self.min_samples = -(-int(min_samples)//self.stride)*self.stride
         self.channels = self.backbone.channels
@@ -381,7 +384,7 @@ class StreamR0(_StreamBase):
         out = self.head(self.projection(pooled))
         if self.time_head is None: return out
         n = (self.skip + used).to(pooled.dtype)
-        return out + self.time_head(torch.stack([n/self.max_samples, torch.log1p(n/self.fs)], -1))
+        return out + self.time_head(torch.stack([n/self.feature_max_samples, torch.log1p(n/self.fs)], -1))
 
     def forward(self, pa, lengths, n):
         """Offline: pa [B,L] from read start, lengths [B], absolute decision sample counts n [B,P] (capped at the
@@ -447,7 +450,7 @@ class StreamR0(_StreamBase):
 
 
 def build_stream_r0(checkpoint=None, *, median, mad, prior_weight=400., skip=1500, max_samples=DEFAULT_MAX_SAMPLES, min_samples=400,
-                    time_features=False, fs=FS):
+                    time_features=False, fs=FS, feature_max_samples=None):
     """StreamR0 with the backbone, projection and temporary head of a stage A checkpoint, or random init."""
     base, head = build_model(), nn.Linear(128, 2)
     if checkpoint is not None:
@@ -455,4 +458,5 @@ def build_stream_r0(checkpoint=None, *, median, mad, prior_weight=400., skip=150
         base.load_state_dict(payload['model_state'], strict=True)
         head.load_state_dict(payload['temporary_head'])
     return StreamR0(base.encoder, base.projection, head, CausalNormalizer(median, mad, prior_weight), skip=skip,
-                    max_samples=max_samples, min_samples=min_samples, time_features=time_features, fs=fs).train(False)
+                    max_samples=max_samples, min_samples=min_samples, time_features=time_features, fs=fs,
+                    feature_max_samples=feature_max_samples).train(False)

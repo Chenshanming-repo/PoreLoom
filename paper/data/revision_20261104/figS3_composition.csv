@@ -1,0 +1,49 @@
+group,fold,partition,n_bact,pct
+g1,Prevotella,train,39997,4.58034352576443
+g1,Prevotella,"dev (old, A+B)",19981,7.08673239577599
+g1,Prevotella,dev_a (new),9916,7.08955223880597
+g1,Prevotella,test,29434,6.12556906978324
+g1,Streptococcus,train,39997,2.37267795084631
+g1,Streptococcus,"dev (old, A+B)",19981,4.52429808317902
+g1,Streptococcus,dev_a (new),9916,4.28600242033078
+g1,Streptococcus,test,29434,3.54691852959163
+g1,Fusobacterium,train,39997,0.767557566817511
+g1,Fusobacterium,"dev (old, A+B)",19981,0.750713177518643
+g1,Fusobacterium,dev_a (new),9916,0.736183945139169
+g1,Fusobacterium,test,29434,1.38275463749405
+g1,Actinomycetota,train,39997,4.16031202340175
+g1,Actinomycetota,"dev (old, A+B)",19981,0.900855813022371
+g1,Actinomycetota,dev_a (new),9916,0.766438079870916
+g1,Actinomycetota,test,29434,3.44159815179724
+g2,Prevotella,train,39961,4.58446985811166
+g2,Prevotella,"dev (old, A+B)",19981,6.51118562634503
+g2,Prevotella,dev_a (new),9964,6.33279807306303
+g2,Prevotella,test,29973,5.051212758149
+g2,Streptococcus,train,39961,2.37481544505893
+g2,Streptococcus,"dev (old, A+B)",19981,4.14393673990291
+g2,Streptococcus,dev_a (new),9964,4.16499397832196
+g2,Streptococcus,test,29973,4.00693957895439
+g2,Fusobacterium,train,39961,0.778258802332274
+g2,Fusobacterium,"dev (old, A+B)",19981,0.775736950102597
+g2,Fusobacterium,dev_a (new),9964,0.772782015254918
+g2,Fusobacterium,test,29973,1.12434524405298
+g2,Actinomycetota,train,39961,3.93133304972348
+g2,Actinomycetota,"dev (old, A+B)",19981,0.820779740753716
+g2,Actinomycetota,dev_a (new),9964,0.642312324367724
+g2,Actinomycetota,test,29973,2.68575050879125
+g3,Prevotella,train,39961,4.58697229799054
+g3,Prevotella,"dev (old, A+B)",19981,7.23687503127972
+g3,Prevotella,dev_a (new),10136,7.22178374112076
+g3,Prevotella,test,30001,5.7098096730109
+g3,Streptococcus,train,39961,2.47491304021421
+g3,Streptococcus,"dev (old, A+B)",19981,4.02382263149993
+g3,Streptococcus,dev_a (new),10136,4.03512233622731
+g3,Streptococcus,test,30001,3.36988767041099
+g3,Fusobacterium,train,39961,0.805785640999975
+g3,Fusobacterium,"dev (old, A+B)",19981,1.24618387468095
+g3,Fusobacterium,dev_a (new),10136,1.22336227308603
+g3,Fusobacterium,test,30001,1.04996500116663
+g3,Actinomycetota,train,39961,3.96636720802783
+g3,Actinomycetota,"dev (old, A+B)",19981,0.915870076572744
+g3,Actinomycetota,dev_a (new),10136,0.966850828729282
+g3,Actinomycetota,test,30001,2.49658344721843

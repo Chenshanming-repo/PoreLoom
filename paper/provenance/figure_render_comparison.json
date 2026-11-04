@@ -1,0 +1,44 @@
+[
+  {
+    "label": "Figure 1",
+    "file": "figures/fig01_overview.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "9cf88526ed399581fff800f864138c53ebea15c034ba4c640157858fc0792366"
+  },
+  {
+    "label": "Figure 2",
+    "file": "figures/fig02_overall.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "d7df946e2173e0eaf1d3873099bd1d4637ab418d4a8abc038428c97a43c334d5"
+  },
+  {
+    "label": "Figure 3",
+    "file": "figures/fig05_budget.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "9a57d8954480d9d4a71c00d25467043d816e63dae2fcd4de4363b7e46de999b8"
+  },
+  {
+    "label": "Figure S1",
+    "file": "figures/figS_encoding.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "1bfabd8d8f289e94ee0cb34895ee1eea57ba7b7355a76b47815d599abdd610a6"
+  },
+  {
+    "label": "Figure S2",
+    "file": "figures/fig03_encoder_cache.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "11c9b12147b68dd06a0f4d4cabec4b81859a6b9aa80e8310fef3dc8de7979a1e"
+  },
+  {
+    "label": "Figure S3",
+    "file": "figures/figS_taxon_holdouts.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "bb7d837d932403deec28fc50d77926660c7c0bda8f0b516463dc2c6497a21184"
+  },
+  {
+    "label": "Figure S4",
+    "file": "figures/figS_beta.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "368edc98cf2872b571d38c32e0b5a5af6cb543c787e8bc6dfe5f9d60acc3df50"
+  }
+]

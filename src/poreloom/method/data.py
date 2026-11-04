@@ -9,7 +9,8 @@ A dataset root holds one prefix cache per split (poreloom.prefix_data layout):
 adc.npy is int16 ADC [N, P] from the read start (P >= 9000, zero past the read end); metadata.npz holds read_id,
 is_target (True = keep / target, False = host), raw_length (full native length), offset, range, digitisation (per-read
 calibration), role; optionally repeat (TEST report subgroups). DEV is split by sha256(read_id) parity: half A (parity 0)
-for early stopping and head fitting, half B (parity 1) for head selection.
+as the current manuscript validation set for checkpoint selection and early stopping.
+Half B (parity 1) is retained only for historical experiments; current heads fit on TRAIN.
 """
 import hashlib
 from pathlib import Path
@@ -31,6 +32,15 @@ def subset(data, rows):
 
 def load_split(root, split, verify=False):
     return load_prefix_cache(Path(root)/split, verify=verify)
+
+
+def validation(root):
+    """Current validation reads (the parity-0 half of historical DEV caches)."""
+    dev = load_split(root, 'dev')
+    result = subset(dev, np.flatnonzero(dev_half(dev.read_id) == 0))
+    if set(result.is_target.tolist()) != {False, True}:
+        raise ValueError('validation needs both classes')
+    return result
 
 
 def dev_halves(root):

@@ -39,7 +39,8 @@ def test_cli_resolves_rate_and_endpoint(tmp_path, monkeypatch, extra, fs, budget
     assert args['fs'] == run['fs'] == fs
     assert args['max_samples'] == run['max_samples'] == budget
     assert run['max_decision_seconds'] == pytest.approx(budget/fs)
-    assert run['feature_fs'] == fs
+    assert run['feature_fs'] == 4000
+    assert run['feature_max_samples'] == 7500
 
 
 @pytest.mark.parametrize('extra', [('--fs', '0'), ('--fs', '-1'), ('--fs', 'nan'), ('--fs', 'inf'),
@@ -216,14 +217,15 @@ def test_custom_configuration_through_complete_cli_pipeline(tmp_path, monkeypatc
     pipeline.main(['all', '--data', str(tmp_path/'data'), '--out', str(run), '--device', 'cpu',
                    '--fs', str(fs), '--max-decision-seconds', str(seconds)])
     model, saved = load_stream_r0(run/'stream'/'best.pt')
-    assert model.fs == saved['config']['fs'] == fs
+    assert model.fs == saved['config']['fs'] == 4000
+    assert model.feature_max_samples == saved['config']['feature_max_samples'] == 7500
     assert model.max_samples == saved['config']['max_samples'] == budget
     assert max(saved['config']['dev_lengths']) == model.used(budget - model.skip) == used
     bundle = torch.load(run/'poreloom_sh_cp.pt')
     assert bundle['fs'] == fs and bundle['max_samples'] == budget
     assert bundle['head']['n_buckets'] == buckets
-    assert bundle['head']['look_config']['feature_fs'] == fs
-    assert bundle['head']['look_config']['feature_max_samples'] == budget
+    assert bundle['head']['look_config']['feature_fs'] == 4000
+    assert bundle['head']['look_config']['feature_max_samples'] == 7500
     metrics = json.loads((run/'test'/'metrics.json').read_text())
     assert metrics['fs'] == fs and metrics['max_samples'] == budget
     assert metrics['max_decision_seconds'] == pytest.approx(seconds)

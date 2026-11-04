@@ -121,7 +121,7 @@ def test_baseline_runner_cpu(tmp_path, tool, recipe):
     finally:
         baselines.TRAINING.update(epochs=100, batch_size=128, eval_batch=128); baselines.UPSTREAM['nanodeep'].update(epochs=30)
     m = json.loads((tmp_path/'run'/'test'/'metrics.json').read_text())
-    assert native_policy.FS == 5000. and {r['rule'] for r in m['rows']} == {'native', 'max_acc'}
+    assert native_policy.FS == 5000. and {r['rule'] for r in m['rows']} == {'native'}
     assert {(r['interval'], r['service']) for r in m['rows']} == {(.4, 'measured')}
-    o = np.load(tmp_path/'run'/'test'/'outcomes_max_acc_0.4_measured.npz')
+    o = np.load(tmp_path/'run'/'test'/'outcomes_native_0.4_measured.npz')
     assert np.all(o['pore_seconds'] <= np.load(tmp_path/'data'/'test'/'metadata.npz')['raw_length']/5000 + 1e-9)

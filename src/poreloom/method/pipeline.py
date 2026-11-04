@@ -5,14 +5,14 @@
 Stages (each skips when its output exists; run them in order or use `all`):
   stageA   window encoder (CNN + projection) from a seeded random init on 1500-sample windows   -> stageA/stage_A.pt
   stream   StreamR0 (streaming encoder, causal normalizer, time term) from stage A, S1 recipe  -> stream/best.pt
-  head     C-p action heads with beta=1.0 by default, fitted on DEV-A and validated on DEV-B -> head/selection.json
+  head     C-p action heads with beta=1.0 by default, fitted on training reads and early-stopped on validation -> head/selection.json
   test     replay on TEST at --interval with the measured encoder-update delay
                                                                                               -> test/metrics.json
 The final deployable bundle is <out>/poreloom_sh_cp.pt (encoder checkpoint path, head state, beta, fs).
 --replicate r (default 0) adds r to the stage A, S1 and head training seeds (independent training replicates);
---select max_acc (default) or frr:<limit> evaluates configured beta candidates on DEV-B; the default is only beta=1.0.
+The manuscript protocol fixes beta=1.0; it does not select an operating point.
 --interval s (default 0.4) is the chunk interval in seconds the head is trained on and the primary TEST interval.
---fs Hz (default 4000) sets the data sampling rate and new models' length features.
+--fs Hz (default 4000) sets the data sampling rate for replay. Manuscript length-feature scales stay at 4000/7500.
 --max-samples N (default 7500) or --max-decision-seconds T sets the raw decision endpoint, including prefix skipping.
 Dataset layout: poreloom.method.data. No weights trained on other data are used at any stage.
 """
@@ -54,29 +54,37 @@ def _encoder(out, device, *, fs=None, max_samples=None):
 
 def stageA(a):
     if (a.out/'stageA'/'stageA_history.json').exists(): return
-    train = D.load_split(a.data, 'train'); dev_a, _ = D.dev_halves(a.data)
+    train = D.load_split(a.data, 'train'); dev_a = D.validation(a.data)
     train_window_encoder(train, dev_a, a.out/'stageA', a.device, log=log, seed=STAGEA['seed'] + a.replicate)
 
 
 def stream(a):
     from ..stream_training import train_stream_r0
     if (a.out/'stream'/'done.json').exists(): return
-    train = D.load_split(a.data, 'train'); dev_a, _ = D.dev_halves(a.data)
+    train = D.load_split(a.data, 'train'); dev_a = D.validation(a.data)
     from ..stream_training import R0_DEFAULTS
     train_stream_r0(train, dev_a, a.out/'stageA'/'stage_A.pt', a.out/'stream', device=a.device, log=log,
-                    seed=R0_DEFAULTS['seed'] + a.replicate, fs=a.feature_fs, max_samples=a.max_samples)
+                    seed=R0_DEFAULTS['seed'] + a.replicate, fs=a.feature_fs, max_samples=a.max_samples,
+                    feature_max_samples=a.feature_max_samples)
     best = torch.load(a.out/'stream'/'best.pt', map_location='cpu')
     (a.out/'stream'/'done.json').write_text(json.dumps(dict(best_epoch=int(best['epoch'])), indent=2))
 
 
 def head(a):
     if (a.out/'head'/'selection.json').exists(): return
-    dev_a, dev_b = D.dev_halves(a.data)
+    if getattr(a, 'protocol', 'manuscript_20261104') != 'manuscript_20261104':
+        raise ValueError('use a new output directory to fit heads with the current manuscript protocol')
+    train, validation = D.load_split(a.data, 'train'), D.validation(a.data)
+    if np.intersect1d(train.read_id, validation.read_id).size:
+        raise ValueError('training and validation read IDs overlap')
     net = _encoder(a.out, a.device, fs=a.feature_fs, max_samples=a.max_samples)
-    fit = [H.extract(net, dev_a, a.fs, a.interval, s, a.device) for s in (H.HEAD['phase_seed'], H.HEAD['copy_seed'])]
-    sel = H.extract(net, dev_b, a.fs, a.interval, H.HEAD['phase_seed'], a.device)
+    fit = [H.extract(net, train, a.fs, a.interval, s, a.device) for s in (H.HEAD['phase_seed'], H.HEAD['copy_seed'])]
+    sel = H.extract(net, validation, a.fs, a.interval, H.HEAD['phase_seed'], a.device)
     choice = H.train_heads(fit, sel, a.fs, a.out/'head', a.device, log=log, train_seed=H.HEAD['train_seed'] + a.replicate,
-                           select=a.select)
+                           betas=[1.0])
+    choice['protocol'] = 'manuscript_20261104'
+    choice['fit_partition'] = 'train'
+    choice['validation_partition'] = 'dev_hash_parity_0'
     choice['written'] = time.strftime('%Y-%m-%d %H:%M:%S') + ', before any TEST input'
     (a.out/'head'/'selection.json').write_text(json.dumps(choice, indent=2))
     ctrl = H.load_controller(a.out/'head'/'controllers.pt', choice['beta'])
@@ -86,7 +94,7 @@ def head(a):
                     beta=choice['beta'], fs=a.fs, max_samples=net.max_samples, max_decision_seconds=net.max_samples/a.fs,
                     service_seconds=H.HEAD['service'], interval_trained=a.interval),
                a.out/'poreloom_sh_cp.pt')
-    log('selected beta', choice['beta'], 'SEL ACC', round(choice['sel']['acc'], 4))
+    log('fixed beta', choice['beta'], 'validation ACC', round(choice['sel']['acc'], 4))
 
 
 def test(a):
@@ -120,7 +128,7 @@ def main(argv=None):
     ap.add_argument('--data', type=Path, required=True, help='dataset root with train/, dev/, test/ prefix caches')
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--fs', type=float, default=DEFAULT_FS,
-                    help='sampling rate in Hz for timing and new model features (default: %(default)s)')
+                    help='sampling rate in Hz for replay timing; feature scales stay fixed (default: %(default)s)')
     budget = ap.add_mutually_exclusive_group()
     budget.add_argument('--max-samples', type=int,
                         help=f'raw decision endpoint in sample points, including skipped prefix (default: {DEFAULT_MAX_SAMPLES})')
@@ -128,7 +136,7 @@ def main(argv=None):
                         help='raw observation-time budget; endpoint = floor(seconds * fs), including skipped prefix')
     ap.add_argument('--device', default='cuda:0')
     ap.add_argument('--replicate', type=int, default=0, help='training replicate r: seeds of stage A, S1 and head + r')
-    ap.add_argument('--select', default='max_acc', help="DEV-B rule for configured beta candidates (default beta=1.0): max_acc (default) or frr:<limit>")
+    ap.add_argument('--select', default='max_acc', choices=('max_acc',), help=argparse.SUPPRESS)
     ap.add_argument('--interval', type=float, default=H.HEAD['interval'],
                     help='chunk interval in seconds for head training and the primary TEST replay (default 0.4)')
     a = ap.parse_args(argv)
@@ -145,10 +153,12 @@ def main(argv=None):
     except ValueError as error:
         ap.error(str(error))
     a.max_decision_seconds = a.max_samples/a.fs
-    a.feature_fs = a.fs
+    a.feature_fs = DEFAULT_FS
+    a.feature_max_samples = DEFAULT_MAX_SAMPLES
+    a.protocol = 'manuscript_20261104'
     a.out.mkdir(parents=True, exist_ok=True); _setup(a.device)
     run = dict(data=str(a.data.resolve()), fs=a.fs, max_samples=a.max_samples, max_decision_seconds=a.max_decision_seconds,
-               feature_fs=a.feature_fs, replicate=a.replicate, select=a.select, interval=a.interval,
+               feature_fs=a.feature_fs, feature_max_samples=a.feature_max_samples, protocol=a.protocol, replicate=a.replicate, select=a.select, interval=a.interval,
                started=time.strftime('%Y-%m-%d %H:%M:%S'))
     if not (a.out/'run.json').exists(): (a.out/'run.json').write_text(json.dumps(run, indent=2))
     else:
@@ -159,5 +169,7 @@ def main(argv=None):
             raise ValueError('run directory belongs to another dataset, sampling rate, decision budget, replicate, selection rule or chunk interval')
         # Historical runs used 4000 in model features even when replay used a different sampling rate.
         a.feature_fs = sampling_rate(old.get('feature_fs', DEFAULT_FS))
+        a.feature_max_samples = old.get('feature_max_samples', old['max_samples'])
+        a.protocol = old.get('protocol', 'legacy')
     for st in (STAGES if a.stage == 'all' else (a.stage,)):
         log('stage', st); globals()[st](a)

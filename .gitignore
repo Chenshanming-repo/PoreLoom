@@ -70,9 +70,7 @@ htmlcov/
 /paper/results/
 /paper/review/*
 !/paper/review/.gitkeep
-paper/figures/**/*.pdf
-paper/figures/**/*.png
-paper/figures/**/*.svg
+/paper/output/
 docs/**/*.pdf
 
 # ===== 放行：测试小样本与示例配置 =====

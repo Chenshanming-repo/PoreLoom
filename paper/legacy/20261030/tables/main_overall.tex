@@ -1,0 +1,38 @@
+\begingroup\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lllrrrr@{}}
+\toprule
+Dataset & Method & Observation & Accuracy (\%) & Hosts rejected (\%) & Targets rejected (\%) & Host pore time (s)\\\midrule
+Simulated & PoreLoom & Budget 6000 & \textbf{95.71 $\pm$ 0.08} & \textbf{95.73 $\pm$ 0.32} & \textbf{4.32 $\pm$ 0.28} & \textbf{1.960 $\pm$ 0.080}\\
+ & ReadCurrent & Window 3000 & 88.03 $\pm$ 0.45 & 89.32 $\pm$ 1.44 & 13.27 $\pm$ 1.90 & 3.305 $\pm$ 0.262\\
+ &  & Window 6000 & 92.53 $\pm$ 0.43 & 92.61 $\pm$ 0.69 & 7.55 $\pm$ 0.42 & 3.188 $\pm$ 0.143\\
+ & NanoDeep & Window 3000 & 86.62 $\pm$ 1.24 & 87.71 $\pm$ 1.71 & 14.47 $\pm$ 1.01 & 3.504 $\pm$ 0.330\\
+ &  & Window 6000 & 92.60 $\pm$ 0.34 & 92.54 $\pm$ 2.08 & 7.34 $\pm$ 1.44 & 3.163 $\pm$ 0.383\\
+ & SquiggleNet & Window 3000 & 85.00 $\pm$ 0.07 & 86.52 $\pm$ 1.81 & 16.52 $\pm$ 1.75 & 3.806 $\pm$ 0.386\\
+ &  & Window 6000 & 90.20 $\pm$ 0.67 & 90.40 $\pm$ 0.52 & 10.00 $\pm$ 1.58 & 3.585 $\pm$ 0.098\\
+\addlinespace
+R9 & PoreLoom & Budget 6000 & \textbf{91.84 $\pm$ 0.20} & \textbf{90.58 $\pm$ 0.80} & 6.91 $\pm$ 0.51 & \textbf{1.843 $\pm$ 0.079}\\
+ & ReadCurrent & Window 3000 & 83.36 $\pm$ 0.49 & 80.68 $\pm$ 0.72 & 13.95 $\pm$ 1.18 & 2.837 $\pm$ 0.082\\
+ &  & Window 6000 & 80.91 $\pm$ 0.40 & 69.47 $\pm$ 1.17 & 7.65 $\pm$ 1.79 & 2.793 $\pm$ 0.110\\
+ & NanoDeep & Window 3000 & 86.19 $\pm$ 2.00 & 85.80 $\pm$ 0.95 & 13.42 $\pm$ 3.17 & 2.477 $\pm$ 0.095\\
+ &  & Window 6000 & 82.42 $\pm$ 1.31 & 70.52 $\pm$ 0.26 & \textbf{5.68 $\pm$ 2.47} & 2.699 $\pm$ 0.073\\
+ & SquiggleNet & Window 3000 & 80.86 $\pm$ 0.35 & 77.62 $\pm$ 0.76 & 15.90 $\pm$ 0.09 & 3.155 $\pm$ 0.157\\
+ &  & Window 6000 & 79.74 $\pm$ 0.74 & 66.93 $\pm$ 1.39 & 7.45 $\pm$ 0.90 & 3.080 $\pm$ 0.154\\
+\addlinespace
+R10 mixed & PoreLoom & Budget 6000 & \textbf{95.65 $\pm$ 0.18} & \textbf{94.90 $\pm$ 0.70} & 3.60 $\pm$ 0.80 & \textbf{1.439 $\pm$ 0.103}\\
+ & ReadCurrent & Window 3000 & 88.92 $\pm$ 0.80 & 86.09 $\pm$ 2.48 & 8.25 $\pm$ 2.21 & 2.871 $\pm$ 0.502\\
+ &  & Window 6000 & 89.52 $\pm$ 0.25 & 84.28 $\pm$ 0.55 & 5.25 $\pm$ 0.20 & 2.928 $\pm$ 0.102\\
+ & NanoDeep & Window 3000 & 91.24 $\pm$ 1.16 & 87.20 $\pm$ 2.19 & 4.72 $\pm$ 1.03 & 2.675 $\pm$ 0.456\\
+ &  & Window 6000 & 91.71 $\pm$ 0.30 & 85.65 $\pm$ 0.42 & \textbf{2.23 $\pm$ 0.27} & 2.664 $\pm$ 0.143\\
+ & SquiggleNet & Window 3000 & 86.53 $\pm$ 2.28 & 83.28 $\pm$ 2.11 & 10.22 $\pm$ 2.44 & 3.312 $\pm$ 0.343\\
+ &  & Window 6000 & 87.66 $\pm$ 1.11 & 82.85 $\pm$ 0.61 & 7.53 $\pm$ 1.87 & 3.246 $\pm$ 0.176\\
+\addlinespace
+R10 sputum & PoreLoom & Budget 6000 & \textbf{92.68 $\pm$ 0.28} & \textbf{93.90 $\pm$ 0.81} & \textbf{8.53 $\pm$ 0.73} & \textbf{1.397 $\pm$ 0.087}\\
+ & ReadCurrent & Window 3000 & 86.17 $\pm$ 1.50 & 88.16 $\pm$ 3.02 & 15.81 $\pm$ 1.01 & 1.862 $\pm$ 0.199\\
+ &  & Window 6000 & 90.31 $\pm$ 1.12 & 91.44 $\pm$ 2.78 & 10.81 $\pm$ 0.89 & 2.165 $\pm$ 0.131\\
+ & NanoDeep & Window 3000 & 78.83 $\pm$ 3.33 & 76.15 $\pm$ 4.37 & 18.50 $\pm$ 3.92 & 2.465 $\pm$ 0.302\\
+ &  & Window 6000 & 88.15 $\pm$ 1.30 & 87.60 $\pm$ 1.91 & 11.29 $\pm$ 0.73 & 2.324 $\pm$ 0.053\\
+ & SquiggleNet & Window 3000 & 82.79 $\pm$ 1.92 & 84.07 $\pm$ 3.49 & 18.49 $\pm$ 0.42 & 2.083 $\pm$ 0.208\\
+ &  & Window 6000 & 87.87 $\pm$ 1.32 & 88.67 $\pm$ 2.98 & 12.93 $\pm$ 0.37 & 2.293 $\pm$ 0.129\\
+\bottomrule
+\end{tabular}
+\endgroup

@@ -2,15 +2,15 @@
 
     python -m poreloom.method.baselines --tool readcurrent --data <dataset root> --out <run dir> --fs 5000 --device cuda:0
 
-Same dataset layout, DEV halves and TEST phases as the PoreLoom pipeline (poreloom.method). The shared recipe uses
+Same dataset layout, validation split and TEST phases as the PoreLoom pipeline (poreloom.method). The shared recipe uses
 a native architecture from a seeded random init (seed 20261014 + r), every weight trained on TRAIN's native window
 (NanoDeep raw[1000:4000], others raw[1500:4500]) with AdamW lr 1e-3,
 weight decay 1e-4, batch 128, at most 100 epochs, patience 5 on DEV-A cross entropy (seed 20261012 + r). One decision
-per read when the window is complete (next chunk arrival + measured single-read service). Threshold on the host
-margin by maximum DEV-B command ACC (also native argmax), locked before TEST. NanoDeep uses its authors' recipe
+per read when the window is complete (next chunk arrival + measured single-read service).
+Use native binary argmax (probability threshold 0.5), without threshold selection. NanoDeep uses its authors' recipe
 with --recipe upstream in the paper comparisons.
 TEST: 0.4 s observations with measured service time. Outputs mirror the PoreLoom run directory:
-  fit/best.pt, selection.json (DEV-B rules, measured service), test/metrics.json, test/outcomes_<rule>_<interval>_<service>.npz
+  fit/best.pt, selection.json (fixed native decision, measured service), test/metrics.json, test/outcomes_<rule>_<interval>_<service>.npz
 """
 import argparse
 import json
@@ -89,7 +89,7 @@ def fit(a):
     init = a.out/'random_init.pt'
     torch.manual_seed(INIT_SEED + a.replicate)
     torch.save(dict(model_state=build_model(a.tool).state_dict(), init='random', seed=INIT_SEED + a.replicate), init)
-    train = D.load_split(a.data, 'train'); dev_a, _ = D.dev_halves(a.data)
+    train = D.load_split(a.data, 'train'); dev_a = D.validation(a.data)
     train.role, dev_a.role = np.full(len(train), 'train'), np.full(len(dev_a), 'dev')   # role names differ across caches
     if (a.out/'fit').exists():                                   # interrupted fit: start over
         for p in sorted((a.out/'fit').iterdir()): p.unlink()
@@ -103,18 +103,16 @@ def fit(a):
 
 def select(a):
     if (a.out/'selection.json').exists(): return
-    dev = D.load_split(a.data, 'dev'); half = D.dev_half(dev.read_id)
-    rows_a, rows_b = np.flatnonzero(half == 0), np.flatnonzero(half == 1)
+    dev = D.validation(a.data)
     dev.role = np.full(len(dev), 'dev')
-    service = native.measure_service(a.tool, a.out/'fit'/'best.pt', dev, rows_a, a.device, repeats=64)
+    service = native.measure_service(a.tool, a.out/'fit'/'best.pt', dev, np.arange(len(dev)), a.device, repeats=64)
     seconds = float(service['p50_seconds'])
-    b = D.subset(dev, rows_b); meta = _meta(b, 'dev_b')
-    scores = native.score(a.tool, a.out/'fit'/'best.pt', native.prepare(a.tool, b), a.device)
-    rules = policy.select_native(scores, meta, seconds, CONTRACTS[a.tool]['raw_end'])
+    rules = {'native': {'threshold': None, 'probability_threshold': 0.5}}
     doc = dict(tool=a.tool, service=service, service_seconds=seconds, rules=rules,
+               protocol='manuscript_20261104',
                written=time.strftime('%Y-%m-%d %H:%M:%S') + ', before any TEST input')
     (a.out/'selection.json').write_text(json.dumps(doc, indent=2))
-    log('DEV-B max_acc', rules['max_acc']['threshold'], round(rules['max_acc']['dev_metrics']['acc'], 4), 'service', round(seconds, 5))
+    log('native argmax (probability 0.5)', 'service', round(seconds, 5))
 
 
 def test(a):
@@ -128,7 +126,7 @@ def test(a):
     np.savez(a.out/'test'/'scores.npz', **scores)
     groups = {'pooled': np.ones(len(prefix), bool), **{f'repeat_{r}': repeat == r for r in np.unique(repeat)}}
     rows = []
-    for name in ('native', 'max_acc'):
+    for name in ('native',):
         rule = sel['rules'][name]
         o = policy.native_policy(scores, meta, threshold=rule['threshold'], service=sel['service_seconds'], delta=.4,
                                  raw_end=CONTRACTS[a.tool]['raw_end'])
@@ -136,9 +134,9 @@ def test(a):
                  repeat=repeat, **o)
         for g, mask in groups.items():
             rows.append(dict(rule=name, interval=.4, service='measured', group=g, **policy.metrics(o, meta, rows=mask)))
-    (a.out/'test'/'metrics.json').write_text(json.dumps(dict(threshold=sel['rules']['max_acc']['threshold'], rows=rows), indent=2))
+    (a.out/'test'/'metrics.json').write_text(json.dumps(dict(threshold=0.5, rule='native', rows=rows), indent=2))
     for r in rows:
-        if r['rule'] == 'max_acc' and r['interval'] == .4 and r['service'] == 'measured':
+        if r['rule'] == 'native' and r['interval'] == .4 and r['service'] == 'measured':
             log(r['group'], {k: round(r[k], 4) for k in ('acc', 'host_command_reject_rate', 'target_command_frr', 'host_mean_pore_seconds')})
 
 

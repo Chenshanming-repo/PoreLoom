@@ -104,7 +104,7 @@ def train_stream_r0(train, model_dev, init_checkpoint, output, device='cuda', lo
     median, mad = normalizer_prior(train, np.arange(len(train)), config['skip'], config['max_samples'])
     model = build_stream_r0(init_checkpoint, median=median, mad=mad, prior_weight=config['prior_weight'],
                             skip=config['skip'], max_samples=config['max_samples'], min_samples=config['min_samples'],
-                            time_features=True, fs=config['fs'])
+                            time_features=True, fs=config['fs'], feature_max_samples=config.get('feature_max_samples'))
     if config['max_samples'] != R0_DEFAULTS['max_samples'] and 'dev_lengths' not in overrides:
         top = model.used(config['max_samples'] - config['skip'])
         base = [n for n in R0_DEFAULTS['dev_lengths'] if model.min_samples <= n <= top]
@@ -170,7 +170,8 @@ def load_stream_r0(path, device='cpu', normalizer_factory=None):
         raise ValueError('custom normalization checkpoint requires its normalizer_factory')
     model = build_stream_r0(median=prior['median_pa'], mad=prior['mad_pa'], prior_weight=prior['weight'],
                             skip=config['skip'], max_samples=config['max_samples'], min_samples=config['min_samples'],
-                            time_features=True, fs=config.get('fs', DEFAULT_FS))
+                            time_features=True, fs=config.get('fs', DEFAULT_FS),
+                            feature_max_samples=config.get('feature_max_samples'))
     if normalizer_factory is not None:
         model.normalizer = normalizer_factory(model.normalizer)
     model.load_state_dict(payload['model_state'])
