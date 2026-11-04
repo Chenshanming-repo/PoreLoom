@@ -4,7 +4,7 @@
 R10 mixed uses usable budgets 6000, 9000, 12000, 15000 and 18000; sputum uses
 6000, 9000 and 12000. Three training repeats share a stage-A initialization
 across budgets within each repeat, then refit the streaming encoder and FACP.
-Each policy selects its beta on DEV-B and is evaluated at 0.4-s intervals with
+Each policy uses beta=1.0 by default and is evaluated at 0.4-s intervals with
 the nominal processing delay. Sputum budget 6000 repeat 0 reuses the main model.
 The long signal cache must match all metadata and the first 9000 samples of the
 main cache before use. Budgets exclude the initial 1500 skipped samples.

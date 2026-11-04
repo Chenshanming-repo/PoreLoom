@@ -5,12 +5,12 @@
 Stages (each skips when its output exists; run them in order or use `all`):
   stageA   window encoder (CNN + projection) from a seeded random init on 1500-sample windows   -> stageA/stage_A.pt
   stream   StreamR0 (streaming encoder, causal normalizer, time term) from stage A, S1 recipe  -> stream/best.pt
-  head     C-p action heads over the beta grid on DEV-A looks, beta by max DEV-B ACC (locked)  -> head/selection.json
+  head     C-p action heads with beta=1.0 by default, fitted on DEV-A and validated on DEV-B -> head/selection.json
   test     replay on TEST at --interval with the measured encoder-update delay
                                                                                               -> test/metrics.json
 The final deployable bundle is <out>/poreloom_sh_cp.pt (encoder checkpoint path, head state, beta, fs).
 --replicate r (default 0) adds r to the stage A, S1 and head training seeds (independent training replicates);
---select max_acc (default) or frr:<limit> chooses the head operating point on DEV-B.
+--select max_acc (default) or frr:<limit> evaluates configured beta candidates on DEV-B; the default is only beta=1.0.
 --interval s (default 0.4) is the chunk interval in seconds the head is trained on and the primary TEST interval.
 --fs Hz (default 4000) sets the data sampling rate and new models' length features.
 --max-samples N (default 7500) or --max-decision-seconds T sets the raw decision endpoint, including prefix skipping.
@@ -128,7 +128,7 @@ def main(argv=None):
                         help='raw observation-time budget; endpoint = floor(seconds * fs), including skipped prefix')
     ap.add_argument('--device', default='cuda:0')
     ap.add_argument('--replicate', type=int, default=0, help='training replicate r: seeds of stage A, S1 and head + r')
-    ap.add_argument('--select', default='max_acc', help="head operating point on DEV-B: max_acc (default) or frr:<limit>")
+    ap.add_argument('--select', default='max_acc', help="DEV-B rule for configured beta candidates (default beta=1.0): max_acc (default) or frr:<limit>")
     ap.add_argument('--interval', type=float, default=H.HEAD['interval'],
                     help='chunk interval in seconds for head training and the primary TEST replay (default 0.4)')
     a = ap.parse_args(argv)

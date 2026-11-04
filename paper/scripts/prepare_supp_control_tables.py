@@ -3,7 +3,6 @@
 
 The output contains equal-weight means and sample SDs across distinct units.
 Threshold differences are calculated within each unit before aggregation.
-R9 eligibility describes one shared TEST split and has no replicate SD.
 """
 from pathlib import Path
 from statistics import mean, stdev
@@ -88,23 +87,9 @@ def main():
     parts += [r'\bottomrule\end{tabular}', '']
     (ROOT / 'tables/supp_threshold_summary.tex').write_text('\n'.join(parts))
 
-    coverage_source = [r for r in load_csv('length_eligibility.csv') if r['split'] == 'test']
-    coverage_rows = []
-    parts = [r'\textbf{A. TEST-read eligibility at 7500 raw samples}\par\smallskip',
-             r'\begin{tabular}{@{}lrrrr@{}}\toprule',
-             r'Dataset & Read groups & Eligible TEST reads & Hosts eligible (\%) & Targets eligible (\%)\\\midrule']
-    for family in FAMILIES:
-        rows = [r for r in coverage_source if r['family'] == family]
-        assert len(rows) == (1 if family == 'R9' else 3)
-        record = {'family': family, 'units': [r['dataset'] for r in rows],
-                  **{k: stats(float(r[k]) for r in rows) for k in ['n_eligible', 'host_coverage', 'target_coverage']}}
-        coverage_rows.append(record)
-        parts.append(' & '.join([family, str(len(rows)), cell(record['n_eligible'], digits=0),
-                                 cell(record['host_coverage'], 100), cell(record['target_coverage'], 100)]) + r'\\')
-    parts += [r'\bottomrule\end{tabular}', r'\par\medskip',
-              r'\textbf{B. Classification on the common eligible TEST subset}\par\smallskip',
-              r'\begin{tabular}{@{}llrrrr@{}}\toprule',
-              r'Dataset & Method (samples) & Accuracy (\%) & Hosts rejected (\%) & Targets rejected (\%) & Host pore time (s)\\\midrule']
+    parts = [r'\begingroup\setlength{\tabcolsep}{3.5pt}',
+             r'\begin{tabular}{@{}lllrrrr@{}}\toprule',
+             r'Dataset & Method & Observation & Accuracy (\%) & Hosts rejected (\%) & Targets rejected (\%) & Host pore time (s)\\\midrule']
     long_rows = []
     for family in FAMILIES:
         family_rows = [r for r in source if r['family'] == family and r['scope'] == 'ge7500']
@@ -121,22 +106,23 @@ def main():
                       'units': [r['unit'] for r in rows], **{k: stats(float(r[k]) for r in rows) for k in METRICS}}
             long_rows.append(record)
             cells = [cell(record[k], 1 if k == 'host_pore' else 100, 3 if k == 'host_pore' else 2) for k in METRICS]
-            window = r'6000' if variant == 'streaming' else variant[1:]
-            parts.append(' & '.join([family if index == 0 else '', f'{label} ({window})', *cells]) + r'\\')
+            observation = 'Budget 6000' if variant == 'streaming' else 'Window ' + variant[1:]
+            method_label = '' if variant == 'w6000' else label
+            parts.append(' & '.join([family if index == 0 else '', method_label, observation, *cells]) + r'\\')
         if family != FAMILIES[-1]:
             parts.append(r'\addlinespace')
-    parts += [r'\bottomrule\end{tabular}', '']
+    parts += [r'\bottomrule\end{tabular}', r'\endgroup', '']
     (ROOT / 'tables/supp_length_summary.tex').write_text('\n'.join(parts))
 
-    report = {'aggregation': 'Equal-weight mean +/- sample SD, ddof=1; threshold changes paired within each unit. R9 coverage is a single shared split, with no SD.',
-              'threshold_pairs': len(paired), 'threshold_rows': threshold_rows, 'coverage_rows': coverage_rows,
+    report = {'aggregation': 'Equal-weight mean +/- sample SD, ddof=1; threshold changes paired within each unit.',
+              'threshold_pairs': len(paired), 'threshold_rows': threshold_rows,
               'length_rows': long_rows, 'source_sha256': HASHES,
               'checks': {'selected_metrics_reconciled': comparisons,
                          'long_read_subset_identity_across_methods': True,
                          'mean_accuracy_improved': sum(r['acc']['mean'] > 0 for r in threshold_rows)}}
     assert report['checks']['mean_accuracy_improved'] == 21
     (ROOT / 'review/supp_control_tables_audit.json').write_text(json.dumps(report, indent=2) + '\n')
-    print(json.dumps({'threshold_rows': len(threshold_rows), 'coverage_rows': len(coverage_rows), 'length_rows': len(long_rows), **report['checks']}, indent=2))
+    print(json.dumps({'threshold_rows': len(threshold_rows), 'length_rows': len(long_rows), **report['checks']}, indent=2))
 
 
 if __name__ == '__main__':

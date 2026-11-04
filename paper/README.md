@@ -25,14 +25,19 @@ PDF, SVG, and PNG. Generated figures and local checks are ignored by Git.
 | Table 1: offline comparison | `main_overall.tex` | `length_metrics.csv`, scope `all` |
 | Table 2: closed-loop enrichment | `closed_loop.tex` | `icarust_extended.csv` |
 | Table 3: stopping rules | `supp_stopping.tex` | `stopping.csv` |
-| Table S1: partition counts | `supp_partitions_summary.tex` | `data_partitions.csv` |
+| Table S1: read counts by data partition | `supp_partitions_summary.tex` | `data_partitions.csv` |
 | Table S2: frozen baselines with FACP | `supp_baseline_facp.tex` | `native_cp.csv`, state `C-p` |
 | Table S3: threshold-selection changes | `supp_threshold_summary.tex` | `threshold_comparison.csv` |
-| Table S4: length eligibility and controls | `supp_length_summary.tex` | `length_eligibility.csv`, `length_metrics.csv` |
+| Table S4: common-long-read controls | `supp_length_summary.tex` | `length_metrics.csv`, scope `ge7500` |
 | Table S5: observation budgets | `supp_budget_summary.tex` | `budget.csv` |
 | Table S6: encoder changes | `supp_encoder_summary.tex` | `encoder.csv` |
 | Table S7: effective closed-loop outcomes | `supp_simulation_summary.tex` | `icarust_extended.csv` |
 | Table S8: leave-taxon-out | `supp_lso_summary.tex` | `lso.csv` |
+
+Table S4 uses the same experimental outcomes as Table 1, restricted to the common
+TEST subset with at least 7500 raw samples; Table 1 includes all TEST reads. Both
+tables use a separate Observation column: Budget 6000 for PoreLoom, and Window
+3000/6000 for fixed-window baselines.
 
 ## Figures
 
@@ -51,8 +56,9 @@ PDF, SVG, and PNG. Generated figures and local checks are ignored by Git.
 Repeated results use equally weighted means and sample standard deviations
 (`ddof=1`, three units). The units are newly simulated groups, R9 training seeds
 on one shared split, or disjoint R10 read groups. They are not independent
-biological replicates. R9 partition counts and length coverage describe one
-fixed split and have no replicate SD. Paired changes, enrichment ratios, and
+biological replicates. Table S1 displays full read counts rounded to the nearest thousand.
+Note 1 explains count differences from the read-ID hash split and, for sputum,
+whole-locus assignment with host/target balancing within each barcode. Paired changes, enrichment ratios, and
 timing acceleration ratios are calculated within each unit before summarizing.
 
 The budget experiment uses one fixed R10 mixed group and one fixed sputum group.

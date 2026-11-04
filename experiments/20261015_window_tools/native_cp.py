@@ -9,7 +9,7 @@ SquiggleNet calibrated pA + official normalization).
          samples raw[e-3000:e], e = min(n, 7500), when the window starts at or after the tool's native start (NanoDeep
          raw 1000, others raw 1500) and lies inside the read; so the first look is the tool's own native window
          (decision possible from raw 4000 / 4500) and later looks slide it up to raw[4500:7500] (forced look).
-  head   default C-p (head.train_heads, DEV-A fit on two phase copies, beta by max DEV-B ACC, locked before TEST);
+  head   default C-p (head.train_heads, beta=1.0, DEV-A fit on two phase copies, DEV-B validation before TEST);
          768-sample buckets from the first scored stream length (raw - 1500 = 2500 NanoDeep / 3000 others: 5 / 4
          buckets + forced).
   TEST   0.4 s, nominal service 0.0158 s, eject 0.1 s.

@@ -30,12 +30,12 @@ def partitions():
         for key in ['train', 'dev_a', 'dev_b', 'test']:
             values = [int(r[key]) for r in group]
             result[key] = {'values': values, 'mean': mean(values), 'sd': stdev(values) if len(group) > 1 else None}
-            cells.append(f'{mean(values):.0f}' + (r' $\pm$ ' + f'{stdev(values):.0f}' if len(group) > 1 else ''))
+            cells.append(str(round(mean(values) / 1000) * 1000))
         lines.append(family + ' & ' + ' & '.join(cells) + r'\\')
         audit.append(result)
     lines += [r'\bottomrule\end{tabular}', '']
     (ROOT / 'tables/supp_partitions_summary.tex').write_text('\n'.join(lines))
-    (ROOT / 'review/supp_partitions_audit.json').write_text(json.dumps({'rows': audit, 'source': str(PARTITIONS.relative_to(ROOT)), 'sha256': hashlib.sha256(PARTITIONS.read_bytes()).hexdigest()}, indent=2) + '\n')
+    (ROOT / 'review/supp_partitions_audit.json').write_text(json.dumps({'display': 'Read counts per group, rounded to the nearest thousand and displayed as full counts', 'rows': audit, 'source': str(PARTITIONS.relative_to(ROOT)), 'sha256': hashlib.sha256(PARTITIONS.read_bytes()).hexdigest()}, indent=2) + '\n')
 
 
 if __name__ == '__main__':

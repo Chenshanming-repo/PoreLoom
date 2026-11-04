@@ -4,7 +4,8 @@ Looks: chunk arrivals every `interval` seconds with a per-read random phase; at 
 its logit margin ell(n). C-p sees (ell, n/budget, log1p(n/fs), previous ell, minimum ell, look count) — no hidden
 state. A read acts at most once per bucket (later looks in the same bucket wait, as next_look_used does live), so
 any chunk interval works. Training (poreloom.stream_controller.train_backward): FIT = DEV-A with two phase draws, SEL = DEV-B as the stop
-set; one controller per beta on the penalty grid. Selection: maximum SEL command ACC, ties lower SEL target FRR.
+set. By default beta is fixed at 1.0. An explicit betas override fits one controller per candidate;
+selection then uses maximum SEL command ACC, ties lower SEL target FRR.
 Times are samples / fs (fs = the data's sampling rate); every length is in samples.
 """
 import json
@@ -21,7 +22,7 @@ from ..stream_config import (DEFAULT_FS, DEFAULT_MAX_SAMPLES, DEFAULT_SKIP, DEFA
                              DEFAULT_STRIDE, DEFAULT_BUCKET_SAMPLES, bucket_count, sampling_rate)
 
 HEAD = dict(interval=.4, budget=DEFAULT_MAX_SAMPLES, phase_seed=20261012, copy_seed=20261013, train_seed=20261013, lr=3e-3, epochs=100,
-            patience=5, service=0.0158467092551291, eject=.1, betas=np.geomspace(.03, 300, 41).tolist(), n_buckets=8, hidden=64)
+            patience=5, service=0.0158467092551291, eject=.1, betas=[1.0], n_buckets=8, hidden=64)
 
 
 def extract(model, data, fs, interval, seed, device, budget=None):
@@ -88,7 +89,7 @@ def metrics(o, is_target):
 
 
 def train_heads(fit_z, sel_z, fs, output, device='cuda', log=print, **overrides):
-    """One C-p controller per beta; returns the selection (beta, SEL metrics) and writes controllers.pt / table.json."""
+    """Fit beta=1.0 by default, or explicit betas; return the selection and write controllers.pt / table.json."""
     cfg = {**HEAD, **overrides}
     features = look_config(fit_z[0])
     if any(look_config(z) != features for z in [*fit_z[1:], sel_z]):

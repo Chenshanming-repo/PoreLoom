@@ -1,9 +1,9 @@
 {
-  "revision": "2026-10-30, including budget-endpoint decisions",
-  "statistics": "equal-weight mean +/- sample SD; n=3; ddof=1; R9 partition counts are exact",
+  "revision": "2026-10-30, including budget-endpoint decisions; Table S1 uses rounded full read counts; Table S4 retains common-long-read results with a separate Observation column",
+  "statistics": "equal-weight mean +/- sample SD; n=3; ddof=1; Table S1 displays read counts rounded to the nearest thousand",
   "manuscript_pdf_sha256": {
     "main.pdf": "a3ccadd8f5f3e843bd56b160697dc73fc1e324e7092242612b36badc80fcfd01",
-    "supplementary.pdf": "962a96198fdf348321a6648be36f76cddd30da3d8ebb58fc051d0452faa694dc"
+    "supplementary.pdf": "997786d8e1d89fb8fd5265fd862a7851e4e8487873ee588ad7ee4802f7f86b3a"
   },
   "tables": [
     {
@@ -24,7 +24,7 @@
     {
       "label": "Table S1",
       "file": "tables/supp_partitions_summary.tex",
-      "sha256": "8571dc92b3dd348581eceabcae98c3bdacf99c5ea2e6bd254c72d5aedf6406e9"
+      "sha256": "2cf78d89d7b3b0c7cb1c5c3e322d4fe6f245759eaa91bbbebb71093c27df2391"
     },
     {
       "label": "Table S2",
@@ -39,7 +39,7 @@
     {
       "label": "Table S4",
       "file": "tables/supp_length_summary.tex",
-      "sha256": "e0a836538fd20f88ffc6704efb1478eebb1d1a993154c680e58ee6494bd7fde9"
+      "sha256": "e02a5b2d24e6415e5c04287b70c0947445bef46ba6feb37c8bf6ddfa6e6bf4bf"
     },
     {
       "label": "Table S5",

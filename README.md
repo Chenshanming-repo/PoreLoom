@@ -32,7 +32,7 @@ risk. The final head at the budget endpoint excludes Continue.
   sum and count, and only the frames affected by the right boundary are recomputed.
 - **Factorized action-cost policy (FACP).** For each action, a head selected by the observed length predicts the
   normalized host pore time and the target-rejection risk. The policy chooses the action with the lowest
-  `host time + beta * risk`. Heads are fitted backward from the final decision, and `beta` is selected on DEV-B.
+  `host time + beta * risk`. Heads are fitted backward from the final decision, with `beta = 1.0` by default.
 
 By default the usable budget is 6000 samples, so the forced decision falls at 7500 raw samples (1.875 s at 4 kHz).
 
@@ -115,8 +115,12 @@ from other data:
 python -m poreloom.method all --data <dataset root> --out <run dir> --fs <Hz> --device cuda:0
 ```
 
-The stages are window pretraining (`stageA`), streaming-prefix training (`stream`), FACP fitting with operating-point
-selection on DEV-B (`head`), and TEST replay (`test`). Each stage can be run on its own in place of `all`.
+The stages are window pretraining (`stageA`), streaming-prefix training (`stream`), FACP fitting at `beta = 1.0`
+with DEV-B validation (`head`), and TEST replay (`test`). Each stage can be run on its own in place of `all`.
+
+New head training uses only `beta = 1.0` by default. To fit other penalties or a sensitivity grid through the Python
+API, pass `betas=[...]` to `poreloom.method.head.train_heads`; multiple candidates are selected on DEV-B. Existing
+run directories reuse their saved heads and beta, so use a new output directory when retraining with this default.
 
 | Option | Meaning |
 |---|---|
@@ -190,9 +194,9 @@ working directory and cluster settings.
 | Feature-reuse timing | Note 5, Fig. S2c | `experiments/20261016_stream_timing/timing.py` |
 | FACP on frozen 3000-sample baselines | Table S2 | `experiments/20261015_window_tools/native_cp.py` |
 | Observation budgets and endpoint decisions | Fig. 3; Note 4, Table S5 | `experiments/20261016_budget_up/budget_up.py` |
-| Read-length eligibility | Note 3, Table S4 | `paper/scripts/length_eligibility.py` |
+| Common-long-read controls | Note 3, Table S4 | `paper/scripts/length_eligibility.py` |
 | Leave-taxon-out evaluation | Note 6, Table S8, Fig. S3 | `experiments/20261014_final/lso.py` |
-| Partition counts | Note 1, Table S1 | `paper/figure_data/data_partitions.csv` |
+| Read counts by data partition | Note 1, Table S1 | `paper/figure_data/data_partitions.csv` |
 
 The closed-loop comparison combines 45 runs of nonselective sequencing, PoreLoom, and 3000-sample baselines with
 27 runs of the 6000-sample baselines. Running these scripts requires Icarust 0.6.0, the trained checkpoints, and
