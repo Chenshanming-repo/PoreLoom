@@ -21,21 +21,23 @@ from ..stream_controller import (BucketController, Looks, encode_looks, look_gri
                                  policy_actions, train_backward)
 from ..stream_config import (DEFAULT_FS, DEFAULT_MAX_SAMPLES, DEFAULT_SKIP, DEFAULT_MIN_SAMPLES,
                              DEFAULT_STRIDE, DEFAULT_BUCKET_SAMPLES, bucket_count, sampling_rate)
+from .native_policy import stored_phases
 
 HEAD = dict(interval=.4, budget=DEFAULT_MAX_SAMPLES, phase_seed=20261012, copy_seed=20261013, train_seed=20261013, lr=3e-3, epochs=100,
             patience=5, service=0.0158467092551291, eject=.1, betas=[1.0], n_buckets=8, hidden=64)
 
 
-def extract(model, data, fs, interval, seed, device, budget=None):
+def extract(model, data, fs, interval, seed, device, budget=None, phase=None):
     """Arrival sample counts and frozen-encoder logit margins: dict(read_id, is_target, raw_length, m, ell, budget);
-    `budget` defaults to the encoder's raw endpoint. Feature metadata preserves its training convention."""
+    `budget` defaults to the encoder's raw endpoint. Feature metadata preserves its training convention.
+    `phase` (one value in [0, 1) per read) replaces the draws from `seed`, e.g. a subset's full-group phases."""
     fs = sampling_rate(fs)
     budget = model.max_samples if budget is None else int(budget)
     if budget > model.max_samples:
         raise ValueError('decision endpoint exceeds the encoder configuration')
     if data.adc.shape[1] < model.max_samples:
         raise ValueError(f'prefix cache must cover the encoder endpoint of {model.max_samples} samples')
-    u = np.random.default_rng(seed).random(len(data))
+    u = np.random.default_rng(seed).random(len(data)) if phase is None else stored_phases(phase, len(data))
     m = arrivals(u*interval*fs, interval*fs, budget)
     n = np.where(np.isfinite(m), np.minimum(np.floor(m), budget), -1).astype(np.int64)   # forced look: first `budget` samples
     _, ell = encode_looks(model, data, n, device)

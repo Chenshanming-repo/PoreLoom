@@ -125,6 +125,18 @@ cp .env.example .env   # set PORELOOM_DATA and PORELOOM_RESULTS
 
 Alternatively, copy `configs/paths.example.yaml` to `configs/paths.yaml`.
 
+## Example
+
+[example/](example/README.md) is a quick test of an installation: it runs the paper's trained PoreLoom
+model and the three 3000-sample baselines on 1,000 simulated test reads in about a minute on a CPU,
+reports the metrics, checks every read against the paper's outcome, and draws example reads. Its README
+shows the results without running anything.
+
+```bash
+pip install -e . matplotlib
+python example/run_example.py --device cpu
+```
+
 ## Running PoreLoom
 
 Train and evaluate the complete method on one dataset from random initialization:
@@ -276,6 +288,7 @@ src/poreloom/method/      data, backbone, FACP, pipeline, and main-comparison ba
 src/poreloom/baselines/   baseline models and preprocessing
 src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarust only)
 src/poreloom/             streaming, replay, controller, and evaluation modules
+example/                  1,000 simulated test reads and trained models for a quick test
 experiments/              dated experimental drivers and cluster job templates
 paper/data/revision_20261104/  frozen inputs for the current manuscript
 paper/                    current tables, figures, rebuild scripts, and provenance

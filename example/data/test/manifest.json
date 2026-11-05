@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "reads": 1000,
+  "prefix_samples": 9000,
+  "units": "int16 ADC from read start, zero past raw_length",
+  "class_counts": {
+    "target": 500,
+    "host": 500
+  },
+  "files": {
+    "adc.npy": "c8331738f491dd07d81143e64a0d08a791aa83f0149cf1d63d2f3ef48d593495",
+    "metadata.npz": "63638b482fd9fb334a7296e2764fb726fb076f25221a869ae9cef1b716157ebf"
+  },
+  "source": {
+    "dataset": "PoreLoom simulated group 1 (sim_g1) test set: Squigulator dna-r10-min, 4 kHz",
+    "reads": 30000,
+    "manifest_sha256": "c19a9324ceb15fa6bdc7cb8f793b1382db52dbfb37810063758cc344830018f0",
+    "selection": "500 target and 500 host rows, numpy default_rng(20261104).choice per class without replacement, kept in source order (source_row)",
+    "phase": "numpy default_rng(20261012).random(30000)[source_row]: each read's replay phase in the paper (poreloom.method.native_policy.phase_uniform)"
+  }
+}

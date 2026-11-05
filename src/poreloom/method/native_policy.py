@@ -26,6 +26,14 @@ def phase_uniform(n, seed=PHASE_SEED):
     return np.random.default_rng(seed).random(int(n))
 
 
+def stored_phases(phase, n):
+    """Per-read phase uniforms saved from a full-group draw, so a subset replays with its original phases."""
+    u = np.asarray(phase, np.float64)
+    if u.shape != (n,) or not np.isfinite(u).all() or (u < 0).any() or (u >= 1).any():
+        raise ValueError('phase must hold one value in [0, 1) per read')
+    return u
+
+
 def _vector(value, n, name):
     result = np.asarray(value)
     if result.shape != (n,):
@@ -74,11 +82,12 @@ def _score(score, ids):
     return margin, native, eligible
 
 
-def _timing(raw, service, delta, phase_seed, eject, raw_end):
+def _timing(raw, service, delta, phase_seed, eject, raw_end, phase=None):
     parameters = [service, delta, eject, raw_end]
     if not all(math.isfinite(float(v)) for v in parameters) or service < 0 or delta <= 0 or eject < 0 or raw_end < 0:
         raise ValueError('Timing must be finite: service/eject/raw_end >= 0 and delta > 0')
-    phase = phase_uniform(len(raw), phase_seed) * delta * FS
+    u = phase_uniform(len(raw), phase_seed) if phase is None else stored_phases(phase, len(raw))
+    phase = u * delta * FS
     chunk = delta * FS
     # Exactly available_at(raw_end, phase=phase, chunk=chunk) from chunk_replay.
     callback = (phase + np.maximum(0., np.ceil((raw_end - phase) / chunk)) * chunk) / FS
@@ -88,8 +97,11 @@ def _timing(raw, service, delta, phase_seed, eject, raw_end):
     return completion, end, alive
 
 
-def native_policy(score, data, threshold=None, service=.0, delta=.4, phase_seed=PHASE_SEED, eject=.1, raw_end=4500):
+def native_policy(score, data, threshold=None, service=.0, delta=.4, phase_seed=PHASE_SEED, eject=.1, raw_end=4500,
+                  phase=None):
     """One native prefix inference, followed by a keep/reject command if alive.
+
+    phase (one value in [0, 1) per read) replaces the draws from phase_seed, e.g. a subset's full-group phases.
 
     threshold=None uses the model's original argmax class direction. A finite
     number rejects margin >= threshold. 'all_keep' keeps every read. Commands
@@ -99,7 +111,7 @@ def native_policy(score, data, threshold=None, service=.0, delta=.4, phase_seed=
     """
     ids, raw, _ = _data(data)
     margin, native, eligible = _score(score, ids)
-    completion, end, alive = _timing(raw, service, delta, phase_seed, eject, raw_end)
+    completion, end, alive = _timing(raw, service, delta, phase_seed, eject, raw_end, phase)
     if threshold is None:
         requested = native
     elif isinstance(threshold, str) and threshold == ALL_KEEP:

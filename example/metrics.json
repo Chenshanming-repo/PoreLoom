@@ -1,0 +1,51 @@
+{
+  "reads": 1000,
+  "targets": 500,
+  "device": "cpu",
+  "metrics": {
+    "poreloom": {
+      "acc": 0.963,
+      "host_reject": 0.978,
+      "target_reject": 0.052,
+      "host_pore_seconds": 1.613372245492143
+    },
+    "readcurrent": {
+      "acc": 0.865,
+      "host_reject": 0.896,
+      "target_reject": 0.166,
+      "host_pore_seconds": 3.3249202642360216
+    },
+    "nanodeep": {
+      "acc": 0.865,
+      "host_reject": 0.876,
+      "target_reject": 0.146,
+      "host_pore_seconds": 3.572337279503039
+    },
+    "squigglenet": {
+      "acc": 0.839,
+      "host_reject": 0.89,
+      "target_reject": 0.212,
+      "host_pore_seconds": 3.3546773241870067
+    }
+  },
+  "identical_to_paper": {
+    "poreloom": 1000,
+    "readcurrent": 1000,
+    "nanodeep": 1000,
+    "squigglenet": 1000
+  },
+  "example_reads": [
+    {
+      "read_id": "TEST_20341102_00008824",
+      "why": "PoreLoom rejects this host read; no baseline does"
+    },
+    {
+      "read_id": "TEST_20341102_00004393",
+      "why": "PoreLoom keeps this target read; 3 of 3 baselines reject it"
+    },
+    {
+      "read_id": "TEST_20341102_00000294",
+      "why": "every method rejects this host read; PoreLoom is 0.79 s earlier"
+    }
+  ]
+}

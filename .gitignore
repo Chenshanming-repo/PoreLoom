@@ -76,6 +76,10 @@ docs/**/*.pdf
 # ===== 放行：测试小样本与示例配置 =====
 !tests/fixtures/**
 !configs/paths.example.yaml
+# example/：1,000 条模拟 read 与论文模型（测试用）；运行输出不上传
+!/example/**
+/example/output/
+/example/**/__pycache__/
 
 # ===== 编辑器 / 系统 =====
 .idea/

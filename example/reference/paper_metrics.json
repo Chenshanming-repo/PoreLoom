@@ -1,0 +1,30 @@
+{
+  "reads": 30000,
+  "note": "paper results on all 30,000 simulated group 1 test reads (0.4 s replay)",
+  "metrics": {
+    "poreloom": {
+      "acc": 0.9572666666666667,
+      "host_reject": 0.9683333333333334,
+      "target_reject": 0.0538,
+      "host_pore_seconds": 1.71849153734711
+    },
+    "readcurrent": {
+      "acc": 0.8774,
+      "host_reject": 0.8908,
+      "target_reject": 0.136,
+      "host_pore_seconds": 3.326487059877167
+    },
+    "nanodeep": {
+      "acc": 0.8663,
+      "host_reject": 0.8696666666666667,
+      "target_reject": 0.13706666666666667,
+      "host_pore_seconds": 3.6459870563320864
+    },
+    "squigglenet": {
+      "acc": 0.8506333333333334,
+      "host_reject": 0.8843333333333333,
+      "target_reject": 0.18306666666666666,
+      "host_pore_seconds": 3.4133001073417963
+    }
+  }
+}
