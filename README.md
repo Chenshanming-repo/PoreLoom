@@ -113,7 +113,7 @@ and its mean host pore time is 23–47% below the lowest baseline mean.
 ```bash
 conda env create -f env/poreloom.yml      # Python 3.9, PyTorch 1.12.1
 conda activate poreloom
-pip install -e .                        # add [raw] for pyslow5, [dev] for pytest
+pip install -e .                        # add [raw] for pyslow5, [dev] for pytest, [minknow] for minknow_api
 ```
 
 Raw BLOW5 preparation uses a separate environment (`env/raw-requirements.txt`, Python 3.10,
@@ -235,17 +235,45 @@ Dated experimental drivers and SLURM templates are archived in `experiments/`; s
 The closed-loop comparison has 72 runs: eight strategies (nonselective sequencing, PoreLoom,
 and three baselines at two windows), three target fractions, and three simulator seeds. The
 current snapshot uses the nine replacement PoreLoom beta=1 runs and native-0.5 baseline runs.
-Repeating the matrix requires Icarust 0.6.0, trained checkpoints, and the original simulation
-support files `closed_loop.py` and `analyze_live.py`. Set `PORELOOM_SIMLOOP`
-to their directory and configure model paths and compute settings. Raw signals, preprocessing
+Repeating the matrix requires Icarust 0.6.0, trained checkpoints, and the simulation support
+files `closed_loop.py` and `analyze_live.py`, which are in
+[experiments/20261011_simloop/](experiments/20261011_simloop/README.md) (the default
+`PORELOOM_SIMLOOP`); configure model paths and compute settings. Raw signals, preprocessing
 readers, read-ID split membership, checkpoints, and the HPC rerun environment provide the inputs
 needed to repeat the experiments.
+
+## Running on a MinKNOW device (template)
+
+`src/poreloom/minknow/` connects a trained bundle to one MinKNOW sequencing position through the
+read-until API (`minknow_api`). It finds the position through the manager service, reads each
+channel's calibration, streams raw signal with `get_live_reads`, and sends `unblock` for reject
+and `stop_further_data` for accept. The decision computation is the one used in the closed-loop
+runs; a unit test checks it against `experiments/20261014_final/icarust_live.py`.
+
+**Status: tested against the Icarust simulator only. It has not been run on a sequencing device.**
+
+```bash
+pip install -e .[minknow]
+# start a sequencing run in MinKNOW with its own adaptive sampling off, then
+python -m poreloom.minknow --bundle RUN/poreloom_sh_cp.pt --out LOGS --position MN12345 \
+    --device cuda:0 --duration 600 --dry-run
+```
+
+`--dry-run` computes and logs every decision without sending it; remove it to act on reads.
+Set `MINKNOW_TRUSTED_CA` to MinKNOW's `conf/rpc-certs/ca.crt` if the certificate is not found
+automatically, and pass `--token` when MinKNOW requires a developer API token. The device sample
+rate must equal the bundle's `fs` (checked at start). `LOGS` receives `manifest.json`,
+`decisions.jsonl`, `acks.jsonl`, and `reads.jsonl`. See `python -m poreloom.minknow --help` for
+channel ranges, unblock duration, and read-classification filters, and
+[experiments/20261104_minknow_icarust/](experiments/20261104_minknow_icarust/README.md) for the
+Icarust smoke test.
 
 ## Repository layout
 
 ```
 src/poreloom/method/      data, backbone, FACP, pipeline, and main-comparison baselines
 src/poreloom/baselines/   baseline models and preprocessing
+src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarust only)
 src/poreloom/             streaming, replay, controller, and evaluation modules
 experiments/              dated experimental drivers and cluster job templates
 paper/data/revision_20261104/  frozen inputs for the current manuscript

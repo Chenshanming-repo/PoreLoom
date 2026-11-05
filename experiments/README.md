@@ -28,3 +28,7 @@ The dated directories preserve the October experiment protocols, run layouts,
 DEV-B operating-point selection, and earlier stopping controls. Current figure
 and table builds use the frozen November snapshot described in
 [paper/README.md](../paper/README.md).
+
+`20261011_simloop/` holds the Icarust launch and client support used by the
+closed-loop drivers. `20261104_minknow_icarust/` runs the packaged MinKNOW adapter
+(`python -m poreloom.minknow`) against Icarust as a check of the deployment path.
