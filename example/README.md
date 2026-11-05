@@ -32,7 +32,11 @@ Per-read outcomes identical to the paper's: PoreLoom 1,000/1,000, ReadCurrent 1,
 ## Example reads
 
 Reads where PoreLoom does better than the baselines. Each panel shows the raw signal and, for every method,
-how long it observed the read before its command; the dashed line marks PoreLoom's decision.
+how long it observed the read before its command; the dashed line marks PoreLoom's decision. The
+shaded, numbered bands are the chunks in which the signal arrives, one every 0.4 s from a random phase
+(so the first chunk is shorter); a method can act only after a chunk has arrived. ReadCurrent and
+SquiggleNet need 4500 samples (1.125 s) and NanoDeep 4000 (1.000 s), so NanoDeep decides one chunk
+earlier when a chunk ends between those two times.
 
 ![Example reads](example_reads.png)
 
@@ -43,7 +47,7 @@ pip install -e . matplotlib
 python example/run_example.py --device cpu       # or --device cuda:0
 ```
 
-This run took 24 s on a CPU. The script downloads four upstream baseline files into
+This run took 25 s on a CPU. The script downloads four upstream baseline files into
 `third_party/` on first use (ReadCurrent `6db8921`, NanoDeep `1abba04`, SquiggleNet `fb7b206`, all MIT) and
 writes `metrics.json`, `per_read.csv`, `example_reads.png` and this `README.md` to `--out`
 (default `example/output/`). The files in this folder were written with `--out example`.

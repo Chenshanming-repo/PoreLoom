@@ -38,7 +38,8 @@ UPSTREAM = {   # third_party path: (repository, commit, sha256)
     'SquiggleNet/inference.py': ('welch-lab/SquiggleNet', 'fb7b206e05935de48895cdbd16a7c1df73515202',
                                  '279e5ef9965ef3a14d66f0ebda3ecbced3686b3218565de0d8adc13a89fa0cb5'),
 }
-INK, INK2, MUTED, GRID, SURFACE, ACCENT = '#0b0b0b', '#52514e', '#898781', '#e1e0d9', '#fcfcfb', '#2a78d6'
+INK, INK2, MUTED, SURFACE, ACCENT = '#0b0b0b', '#52514e', '#898781', '#fcfcfb', '#2a78d6'
+BAND = '#efeee9'      # every other signal chunk
 
 
 def sha256(data):
@@ -156,7 +157,7 @@ def pick_examples(data, outcomes):
     return picks
 
 
-def plot(data, outcomes, picks, path):
+def plot(data, outcomes, picks, path, phase):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -164,16 +165,27 @@ def plot(data, outcomes, picks, path):
                          'ytick.color': INK2, 'text.color': INK})
     end = data.adc.shape[1]/FS
     fig = plt.figure(figsize=(9.5, 3.4*len(picks)), facecolor=SURFACE)
-    outer = fig.add_gridspec(len(picks), 1, hspace=.45)
+    outer = fig.add_gridspec(len(picks), 1, hspace=.45, top=.93)
     for row, (i, title) in enumerate(picks):
         inner = outer[row].subgridspec(2, 1, height_ratios=[1.4, 1], hspace=.08)
         ax, lanes = fig.add_subplot(inner[0]), fig.add_subplot(inner[1])
+        # signal arrives in chunks ending at phase*0.4 s + k*0.4 s (the replay of every method); commands follow a chunk
+        ends = (phase[i] + np.arange(int(end/INTERVAL) + 2))*INTERVAL
+        edges = np.concatenate([[0.], ends[ends < end], [end]])
+        for k, (lo, hi) in enumerate(zip(edges[:-1], edges[1:])):
+            if k % 2 == 0:
+                for a in (ax, lanes):
+                    a.axvspan(lo, hi, color=BAND, lw=0, zorder=0)
+            if hi - lo > .1:
+                ax.text((lo + hi)/2, .97, str(k + 1), transform=ax.get_xaxis_transform(), ha='center', va='top',
+                        fontsize=7.5, color=MUTED)
         n = int(min(data.raw_length[i], data.adc.shape[1]))
         t = np.arange(n)/FS
         ax.plot(t, data.pa([i], 0, n)[0], color=INK2, lw=.5)
         if outcomes['poreloom']['command'][i]:          # where PoreLoom decided
             ax.axvline(float(outcomes['poreloom']['decision_seconds'][i]), color=ACCENT, lw=1.2, ls='--')
         ax.set_xlim(0, end); ax.set_ylabel('current (pA)')
+        low, high = ax.get_ylim(); ax.set_ylim(low, high + .22*(high - low))     # room for the chunk numbers
         ax.set_title(f'{"Target" if data.is_target[i] else "Host"} read {data.read_id[i]}: {title}', loc='left',
                      fontsize=9.5, color=INK)
         ax.tick_params(labelbottom=False)
@@ -195,10 +207,13 @@ def plot(data, outcomes, picks, path):
         lanes.set_ylim(-.7, len(METHODS) - .3); lanes.set_xlim(0, end)
         lanes.set_xlabel('time since read start (s)' if row == len(picks) - 1 else '')
         for a in (ax, lanes):
-            a.set_facecolor(SURFACE); a.grid(axis='x', color=GRID, lw=.6); a.set_axisbelow(True)
+            a.set_facecolor(SURFACE); a.set_axisbelow(True)
             for side in ('top', 'right'):
                 a.spines[side].set_visible(False)
         lanes.tick_params(axis='y', length=0)
+    fig.suptitle('Shaded, numbered bands: the chunks in which the signal arrives, one every 0.4 s from a random phase '
+                 '(the first is shorter).\nA method can act only after a chunk has arrived; its decision time adds '
+                 'its compute time.', x=.125, ha='left', va='top', y=.985, fontsize=8.5, color=INK2, linespacing=1.4)
     fig.savefig(path, dpi=150, bbox_inches='tight', facecolor=SURFACE)
     plt.close(fig)
 
@@ -250,7 +265,11 @@ def write_readme(path, results, paper, matches, picks, seconds, device):
         '## Example reads',
         '',
         'Reads where PoreLoom does better than the baselines. Each panel shows the raw signal and, for every method,',
-        'how long it observed the read before its command; the dashed line marks PoreLoom\'s decision.',
+        'how long it observed the read before its command; the dashed line marks PoreLoom\'s decision. The',
+        'shaded, numbered bands are the chunks in which the signal arrives, one every 0.4 s from a random phase',
+        '(so the first chunk is shorter); a method can act only after a chunk has arrived. ReadCurrent and',
+        'SquiggleNet need 4500 samples (1.125 s) and NanoDeep 4000 (1.000 s), so NanoDeep decides one chunk',
+        'earlier when a chunk ends between those two times.',
         '',
         '![Example reads](example_reads.png)',
         '',
@@ -312,7 +331,7 @@ def main(argv=None):
     with open(a.out/'per_read.csv', 'w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=list(rows[0]))
         writer.writeheader(); writer.writerows(rows)
-    plot(data, outcomes, picks, a.out/'example_reads.png')
+    plot(data, outcomes, picks, a.out/'example_reads.png', phase)
     write_readme(a.out/'README.md', results, paper, matches, picks, seconds, a.device)
     print(f'{"method":<12} {"accuracy":>9} {"hosts rej.":>11} {"targets rej.":>13} {"host pore s":>12}  same as paper')
     for m in METHODS:
