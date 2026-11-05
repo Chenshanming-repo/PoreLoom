@@ -8,7 +8,10 @@ checked in about a minute. The results below come from the command in
 ## Results
 
 1,000 test reads (500 target, 500 host) from simulated group 1, replayed with an observation
-every 0.4 s. Baselines use 3000-sample windows and their native probability threshold of 0.5.
+every 0.4 s. Each baseline classifies one 3000-sample window at the position its original code uses:
+NanoDeep skips the first 1000 samples (samples 1000-4000), ReadCurrent and SquiggleNet skip 1500
+(samples 1500-4500); each uses its native probability threshold of 0.5. PoreLoom also skips the first
+1500 samples and then decides from the growing signal.
 
 | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|
@@ -47,7 +50,7 @@ pip install -e . matplotlib
 python example/run_example.py --device cpu       # or --device cuda:0
 ```
 
-This run took 25 s on a CPU. The script downloads four upstream baseline files into
+This run took 26 s on a CPU. The script downloads four upstream baseline files into
 `third_party/` on first use (ReadCurrent `6db8921`, NanoDeep `1abba04`, SquiggleNet `fb7b206`, all MIT) and
 writes `metrics.json`, `per_read.csv`, `example_reads.png` and this `README.md` to `--out`
 (default `example/output/`). The files in this folder were written with `--out example`.
