@@ -235,10 +235,11 @@ Dated experimental drivers and SLURM templates are archived in `experiments/`; s
 The closed-loop comparison has 72 runs: eight strategies (nonselective sequencing, PoreLoom,
 and three baselines at two windows), three target fractions, and three simulator seeds. The
 current snapshot uses the nine replacement PoreLoom beta=1 runs and native-0.5 baseline runs.
-Repeating the matrix requires Icarust 0.6.0, trained checkpoints, and the simulation support
-files `closed_loop.py` and `analyze_live.py`, which are in
+Repeating the matrix requires Icarust built from upstream commit `ef05586` (v0.0.7a) with
+`icarust.patch`, trained checkpoints, and the simulation support files `closed_loop.py` and
+`analyze_live.py`. All three files are in
 [experiments/20261011_simloop/](experiments/20261011_simloop/README.md) (the default
-`PORELOOM_SIMLOOP`); configure model paths and compute settings. Raw signals, preprocessing
+`PORELOOM_SIMLOOP`), whose README gives the build steps; configure model paths and compute settings. Raw signals, preprocessing
 readers, read-ID split membership, checkpoints, and the HPC rerun environment provide the inputs
 needed to repeat the experiments.
 

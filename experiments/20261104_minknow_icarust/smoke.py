@@ -8,10 +8,14 @@ get_live_reads, TLS trusted through MINKNOW_TRUSTED_CA. Afterwards the simulator
 with the adapter's logs by analyze_live.py. A short run checks the deployment path; it is not a paper result.
 
     smoke.py --out OUT --bundle RUN/poreloom_sh_cp.pt --icarust-root ROOT --ld-library-path LD \\
-             [--device cuda:0] [--port 26900] [--seed 20331101] [--duration 300] [--target-permille 10]
+             [--icarust-src SRC --icarust-bin BIN] [--device cuda:0] [--port 26900] [--seed 20331101] \\
+             [--duration 300] [--target-permille 10]
 
-ROOT holds the simloop simulator support: icarust_writerfix/{src_tree,target/release/icarust}, tls/, vbz/ and
-references/ (the layout under $PORELOOM_RESULTS/poreloom_simloop_20261011/icarust).
+ROOT holds the simloop simulator support: tls/ (ca.crt, server.crt, server.key), vbz/ and references/ (the layout
+under $PORELOOM_RESULTS/poreloom_simloop_20261011/icarust). SRC is upstream Icarust with
+experiments/20261011_simloop/icarust.patch applied and BIN its release build; they default to the paper build in
+ROOT/icarust_writerfix. A rebuild has a different hash than the paper binary (build paths are compiled in);
+smoke.json records the hash and whether it is the paper binary.
 """
 from pathlib import Path
 import argparse
@@ -46,6 +50,8 @@ def main():
     ap.add_argument('--bundle', type=Path, required=True)
     ap.add_argument('--encoder', type=Path)
     ap.add_argument('--icarust-root', type=Path, required=True)
+    ap.add_argument('--icarust-src', type=Path, help='patched Icarust source tree (default ROOT/icarust_writerfix/src_tree)')
+    ap.add_argument('--icarust-bin', type=Path, help='its release binary (default ROOT/icarust_writerfix/target/release/icarust)')
     ap.add_argument('--ld-library-path', required=True, help='Icarust native libraries (HDF5, VBZ, zstd)')
     ap.add_argument('--device', default='cuda:0')
     ap.add_argument('--port', type=int, default=26900)
@@ -59,9 +65,13 @@ def main():
     if a.out.exists():
         raise FileExistsError(a.out)
     root = a.icarust_root.resolve()
-    binary, tls = root/'icarust_writerfix/target/release/icarust', root/'tls'
-    if cl.pin(binary)['sha256'] != cl.ICARUST_SHA:
-        raise ValueError(f'{binary} is not the simloop Icarust build')
+    src = (a.icarust_src or root/'icarust_writerfix/src_tree').resolve()
+    binary = (a.icarust_bin or root/'icarust_writerfix/target/release/icarust').resolve()
+    tls = root/'tls'
+    for path in (src/'static', src/'src/e7_audit.rs', binary):
+        if not path.exists():
+            raise FileNotFoundError(f'{path} (build Icarust with experiments/20261011_simloop/icarust.patch)')
+    sha = cl.pin(binary)['sha256']
     cl.REFS = root/'references'
     run = a.out/'run'
     run.mkdir(parents=True)
@@ -73,10 +83,11 @@ def main():
                                     f'[SEQUENCER]\nchannels = {a.channels}\n')
     env = dict(os.environ, LD_LIBRARY_PATH=a.ld_library_path, HDF5_PLUGIN_PATH=str(root/'vbz'))
     server = subprocess.Popen([str(binary), '-s', str(a.out/'profile.toml'), '-c', str(a.out/'config.ini'), '-v', '-p'],
-                              cwd=root/'icarust_writerfix/src_tree', env=env, stdout=open(a.out/'server.log', 'wb'),
+                              cwd=src, env=env, stdout=open(a.out/'server.log', 'wb'),
                               stderr=subprocess.STDOUT, start_new_session=True)
     smoke = dict(seed=a.seed, channels=a.channels, cohort_duration=a.duration, follow=a.follow,
-                 target_permille=a.target_permille, icarust=dict(binary=str(binary), sha256=cl.ICARUST_SHA),
+                 target_permille=a.target_permille,
+                 icarust=dict(binary=str(binary), source=str(src), sha256=sha, paper_build=sha == cl.ICARUST_SHA),
                  references=cl.pin(cl.REFS/'manifest.json'), driver=cl.pin(__file__), server_pid=server.pid)
     code = None
     try:
