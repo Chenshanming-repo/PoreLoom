@@ -27,7 +27,9 @@ action. The final head excludes Continue.
   frames are cached as a running sum and count; features near the growing right boundary are
   recomputed. Pooling and a length correction yield the target-minus-host logit margin.
 - **Factorized action-cost policy (FACP).** A head selected by observed length predicts normalized
-  host pore time `U` and target-rejection risk `R` for each legal action. The main policy minimizes
+  host pore time `U` and target-rejection risk `R` for each legal action. `U` is the host's pore time
+  under the action divided by `T_norm` = 13.93 s, one value for every dataset: the mean natural duration
+  of 80,000 training host reads, 20,000 drawn once from each of the four datasets. The main policy minimizes
   `U + R` (`beta = 1`), with heads fitted backward on training reads and early-stopped on validation
   reads. The six inputs are the current, previous, and minimum logit margins, two length features,
   and the number of decision steps. Each head interval is evaluated at most once per read.
@@ -53,28 +55,30 @@ three simulator seeds, respectively. Paired differences and ratios are calculate
 
 | Dataset | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|---|
-| Simulated | PoreLoom | 95.65 ± 0.07% | 97.04 ± 0.19% | 5.73 ± 0.34% | 1.664 ± 0.047 s |
+| Simulated | PoreLoom | 95.34 ± 0.18% | 97.18 ± 0.34% | 6.50 ± 0.46% | 1.593 ± 0.046 s |
 | | Best baseline per metric | 92.41 ± 0.54% (RC-6000) | 92.77 ± 1.67% (RC-6000) | 5.18 ± 1.31% (ND-6000) | 3.154 ± 0.321 s (RC-6000) |
-| R9 | PoreLoom | 91.81 ± 0.11% | 90.43 ± 0.55% | 6.81 ± 0.45% | 1.916 ± 0.052 s |
+| R9 | PoreLoom | 91.68 ± 0.22% | 88.85 ± 0.88% | 5.49 ± 0.47% | 2.056 ± 0.090 s |
 | | Best baseline per metric | 84.59 ± 4.85% (ND-3000) | 79.09 ± 14.45% (ND-3000) | 6.14 ± 1.91% (RC-6000) | 2.474 ± 0.200 s (ND-6000) |
-| R10 mixed | PoreLoom | 95.64 ± 0.18% | 94.57 ± 0.14% | 3.28 ± 0.27% | 1.492 ± 0.028 s |
+| R10 mixed | PoreLoom | 95.58 ± 0.15% | 95.20 ± 0.07% | 4.04 ± 0.29% | 1.398 ± 0.027 s |
 | | Best baseline per metric | 89.80 ± 2.71% (ND-6000) | 90.77 ± 2.39% (ND-3000) | 4.91 ± 1.73% (RC-6000) | 1.970 ± 0.346 s (ND-3000) |
-| R10 sputum | PoreLoom | 92.29 ± 0.48% | 95.41 ± 0.36% | 10.83 ± 0.65% | 1.244 ± 0.033 s |
+| R10 sputum | PoreLoom | 92.18 ± 0.52% | 92.08 ± 0.33% | 7.72 ± 0.74% | 1.495 ± 0.023 s |
 | | Best baseline per metric | 90.41 ± 1.01% (RC-6000) | 93.18 ± 1.46% (RC-6000) | 12.37 ± 0.56% (RC-6000) | 1.790 ± 0.172 s (RC-3000) |
 
 Baselines are ReadCurrent (RC), NanoDeep (ND), and SquiggleNet, each trained with 3000- and
 6000-sample windows and evaluated at the native probability threshold of 0.5. Each baseline row
 above gives the best of these six models **separately for each metric**, as in manuscript Table 1.
-PoreLoom's mean host rejection is 2.23–11.34 percentage points above the highest baseline mean,
-and its mean host pore time is 23–47% below the lowest baseline mean.
+PoreLoom's mean host pore time is 16–49% below the lowest baseline mean in each dataset. Its mean
+host rejection is 4.40–9.76 percentage points above the highest baseline mean on simulated, R9, and
+R10 mixed data; on sputum data, 6000-sample ReadCurrent rejects 1.11 percentage points more hosts,
+while PoreLoom uses 28% less host pore time than that model.
 
-- **Early decisions (Figure 2).** Among completed decisions, 51.27%, 45.25%, 82.38%, and 62.69%
+- **Early decisions (Figure 2).** Among completed decisions, 60.13%, 41.96%, 84.16%, and 55.22%
   occur within 3000 usable samples on simulated, R9, R10 mixed, and sputum data, respectively;
-  4.4–10.6% reach the 6000-sample budget. Figure 2a uses the frozen encoder's native 0.5 threshold
+  3.6–12.9% reach the 6000-sample budget. Figure 2a uses the frozen encoder's native 0.5 threshold
   without FACP.
 - **Streaming encoding (Figure S1).** Compared with sliding-window encoding, streaming-prefix
-  encoding improves mean accuracy by 1.36–2.55 percentage points, reduces target rejection by
-  0.59–3.23 percentage points, and reduces host pore time in every dataset. Each encoder has
+  encoding improves mean accuracy by 1.26–2.60 percentage points, reduces target rejection by
+  0.31–2.65 percentage points, and reduces host pore time in every dataset. Each encoder has
   a separately fitted FACP.
 - **Feature reuse (Note 4, Figure S2).** On an RTX 2080 Ti, updating 512 reads at different prefix
   lengths after each additional 0.4 s of signal takes 132.9 ± 16.5 ms with reuse versus
@@ -84,29 +88,32 @@ and its mean host pore time is 23–47% below the lowest baseline mean.
 - **Stopping rules (Table 3, Table S2).** Fixed symmetric thresholds on the same frozen encoder
   reject if target probability `p < delta`, accept if `p >= 1 - delta`, and otherwise continue;
   at the 6000-sample budget they decide at `p = 0.5`. The current comparison uses
-  `delta = 0.01, 0.05, 0.1, 0.2, 0.3`. At 0.01, target rejection is 0.48–2.15 percentage points
-  lower than FACP, but mean host pore time is 0.29–0.45 s longer (19–36%). About 23–51% of
-  all test reads are decided at the budget, versus 4–10% under FACP. At 0.05, mean host pore
-  time remains 0.15–0.25 s longer than FACP.
+  `delta = 0.01, 0.05, 0.1, 0.2, 0.3`. At 0.01, mean host pore time is 0.20–0.44 s longer than
+  FACP (12–28%); target rejection is 0.83–1.26 percentage points lower on simulated, R9, and R10
+  mixed data and 2.17 percentage points higher on sputum data. About 23–51% of all test reads are
+  decided at the budget, versus 4–13% under FACP. At 0.05, mean host pore time remains 0.30–0.32 s
+  longer than FACP on simulated and R10 mixed data and is similar on R9. On sputum, deltas of
+  0.05–0.3 shorten host pore time by 0.10–0.26 s relative to FACP and raise target rejection by
+  3.07–8.05 percentage points.
 - **FACP on frozen baselines (Table S3).** Adding FACP to the 3000-sample baselines raises mean
-  accuracy by 2.23–6.00 percentage points in all 12 dataset–classifier combinations. Target
-  rejection decreases in 11 combinations and host pore time decreases in 10. The augmented
+  accuracy by 1.74–4.73 percentage points in all 12 dataset–classifier combinations. Target
+  rejection decreases in 10 combinations and host pore time decreases in 8. The augmented
   baselines still have lower mean host rejection, higher target rejection, and longer host pore
   time than PoreLoom in every dataset.
 - **Larger budgets (Figure 3, Table S4).** On R10 mixed group 1, extending the usable budget
-  from 6000 to 18000 samples raises mean accuracy from 95.61% to 96.21% and reduces host pore
-  time from 1.501 to 1.337 s. On sputum group 1, extending to 12000 samples raises accuracy
-  from 92.82% to 94.01%, with host pore time nearly unchanged (1.209 to 1.197 s). The fraction
-  of all test hosts decided at the budget falls from 2.37 ± 0.18% to 0.55 ± 0.04% and from
-  6.51 ± 0.42% to 2.25 ± 0.48%, respectively.
+  from 6000 to 18000 samples raises mean accuracy from 95.44% to 96.15% and reduces host pore
+  time from 1.419 to 1.276 s. On sputum group 1, extending to 12000 samples raises accuracy
+  from 92.70% to 94.17% and reduces host pore time from 1.461 to 1.393 s. The fraction
+  of all test hosts decided at the budget falls from 2.18 ± 0.06% to 0.45 ± 0.03% and from
+  11.77 ± 1.12% to 3.83 ± 0.65%, respectively.
 - **Closed-loop simulation (Table 2, Table S5).** Icarust runs use 512 channels for 1200 s.
   At target-molecule fractions of 1%, 10%, and 30%, PoreLoom's target-base enrichment over
-  matched nonselective sequencing is 8.11 ± 0.48, 4.97 ± 0.12, and 2.63 ± 0.02. These means
-  exceed the best baseline, 3000-sample NanoDeep, by 31.7%, 18.4%, and 8.5%.
+  matched nonselective sequencing is 8.28 ± 0.49, 5.05 ± 0.12, and 2.65 ± 0.02. These means
+  exceed the best baseline, 3000-sample NanoDeep, by 34.4%, 20.4%, and 9.2%.
 - **Taxon holdouts (Note 5, Tables S6–S7).** PoreLoom has the highest host rejection in all
   12 sputum group–holdout comparisons and the lowest rejection of all test bacterial reads
-  in 11. Retention of reads from excluded taxa is 31.90–64.49%; its advantage for those reads
-  varies across baselines and holdouts.
+  in all 12. Retention of reads from excluded taxa is 39.05–76.37%; its rejection of those reads
+  is lower than ReadCurrent's in all 12 comparisons, SquiggleNet's in 11, and NanoDeep's in 8.
 
 ## Installation
 
@@ -222,8 +229,10 @@ separate across groups and partitions. Supplementary Note 1 gives accessions, la
 
 ## Reproducing the paper
 
-The active publication inputs are frozen in `paper/data/revision_20261104/`. Rebuild the three main
-tables, seven supplementary tables, and seven figures directly from these saved results:
+The publication inputs of the 4 November 2026 manuscript are frozen in `paper/data/revision_20261104/`.
+That manuscript normalized host pore time by each training set's own mean host-read duration; the
+results above use the fixed `T_norm` = 13.93 s. Rebuild the three main tables, seven supplementary
+tables, and seven figures of the 4 November 2026 manuscript directly from these saved results:
 
 ```bash
 python -m pip install -r paper/requirements.txt
@@ -290,7 +299,7 @@ src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarus
 src/poreloom/             streaming, replay, controller, and evaluation modules
 example/                  1,000 simulated test reads and trained models for a quick test
 experiments/              dated experimental drivers and cluster job templates
-paper/data/revision_20261104/  frozen inputs for the current manuscript
+paper/data/revision_20261104/  frozen inputs for the 4 November 2026 manuscript
 paper/                    current tables, figures, rebuild scripts, and provenance
 configs/, env/            path templates and environment specifications
 tests/                    unit tests
