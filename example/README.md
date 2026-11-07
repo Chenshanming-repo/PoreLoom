@@ -15,7 +15,7 @@ NanoDeep skips the first 1000 samples (samples 1000-4000), ReadCurrent and Squig
 
 | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|
-| PoreLoom | 96.30% | 97.80% | 5.20% | 1.613 s |
+| PoreLoom | 96.20% | 98.40% | 6.00% | 1.497 s |
 | ReadCurrent | 86.50% | 89.60% | 16.60% | 3.325 s |
 | NanoDeep | 86.50% | 87.60% | 14.60% | 3.572 s |
 | SquiggleNet | 83.90% | 89.00% | 21.20% | 3.355 s |
@@ -25,7 +25,7 @@ this group with two others):
 
 | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|
-| PoreLoom | 95.73% | 96.83% | 5.38% | 1.718 s |
+| PoreLoom | 95.52% | 97.05% | 6.01% | 1.631 s |
 | ReadCurrent | 87.74% | 89.08% | 13.60% | 3.326 s |
 | NanoDeep | 86.63% | 86.97% | 13.71% | 3.646 s |
 | SquiggleNet | 85.06% | 88.43% | 18.31% | 3.413 s |
@@ -50,7 +50,7 @@ pip install -e . matplotlib
 python example/run_example.py --device cpu       # or --device cuda:0
 ```
 
-This run took 26 s on a CPU. The script downloads four upstream baseline files into
+This run took 47 s on a CPU. The script downloads four upstream baseline files into
 `third_party/` on first use (ReadCurrent `6db8921`, NanoDeep `1abba04`, SquiggleNet `fb7b206`, all MIT) and
 writes `metrics.json`, `per_read.csv`, `example_reads.png` and this `README.md` to `--out`
 (default `example/output/`). The files in this folder were written with `--out example`.

@@ -3,8 +3,8 @@
     "nanodeep/best.pt": "cc989002b9de7e84f47f95a855cb94d93addf89161a67063685d8971a9e9a1ca",
     "nanodeep/selection.json": "817d999965fcd5c1a0ae120847501e5a9d774ec86db5fef9ac4deecdb890f6c5",
     "poreloom/encoder.pt": "0926db71854cd94830fd66a9df9ec838d48facbef4fe99b91a685399dfd41183",
-    "poreloom/head.pt": "9a082b1f907cfe1b0fee159e9172f67ddcca3e4272c36c05cbf2687bdc2860d8",
-    "poreloom/selection.json": "57891e8367035fac8c520437df0610201fdf4098eab76a1ad2c3ec290e7650e2",
+    "poreloom/head.pt": "174a232c67c40863b42747107e7ed34966cbd89c43424843b9c6122a675df164",
+    "poreloom/selection.json": "58c56e59874393f1c3fe1f76c993eb641e32083b22fafd9cbd68abdc45e479ce",
     "readcurrent/best.pt": "2e52946d91c56b2b7ede34002554a2a9c3f74eb56eaadc791ef95f8f942ddac2",
     "readcurrent/selection.json": "e20027e55d194ddc70b847c94490cbbd4be316e4cc4c889e99d35bb8f4d3497d",
     "squigglenet/best.pt": "d148f923da4723f3f97e6328032f50e7fd7a5e20d6a8aad269f06c405540c109",
@@ -12,16 +12,17 @@
   },
   "paper_sha256": {
     "poreloom/encoder.pt": "03a9b529f063f4d02a80798dc762bf0bdfd709f31346251a3ed965f9c61ffb27",
-    "poreloom/head.pt": "9a082b1f907cfe1b0fee159e9172f67ddcca3e4272c36c05cbf2687bdc2860d8",
+    "poreloom/head.pt": "f0a503281e0c966ac3fc8f5ec4053c610e286dd0770c52ddeaf07abb4ad035cf",
     "readcurrent/best.pt": "05bfe0f866f7a41bdbabca90c2e866ddb4ba9700e87fe47c50d92f963afce523",
     "nanodeep/best.pt": "cc989002b9de7e84f47f95a855cb94d93addf89161a67063685d8971a9e9a1ca",
     "squigglenet/best.pt": "79ef3f661712ae05aa30af423d82058f4f06036e2406aa6b82ab92856c49053f"
   },
-  "note": "checkpoints are the paper's files with init_checkpoint shortened to its run-relative path; every tensor is unchanged",
+  "note": "checkpoints are the paper's files with init_checkpoint shortened to its run-relative path; in poreloom/head.pt and poreloom/selection.json the key host_reference is renamed t_norm; every tensor is unchanged",
   "poreloom": {
     "encoder": "runs/main/sim_g1/poreloom_r0/stream/best.pt",
-    "head": "beta1_20261103/runs/main/sim_g1/r0/poreloom/head/controllers.pt",
+    "head": "ftref_20261106/runs/main/sim_g1/r0/poreloom/head/controllers.pt",
     "beta": 1.0,
+    "t_norm": 13.93,
     "service_seconds": 0.0158467092551291
   },
   "baselines": {

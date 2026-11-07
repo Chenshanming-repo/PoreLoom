@@ -4,10 +4,10 @@
   "device": "cpu",
   "metrics": {
     "poreloom": {
-      "acc": 0.963,
-      "host_reject": 0.978,
-      "target_reject": 0.052,
-      "host_pore_seconds": 1.613372245492143
+      "acc": 0.962,
+      "host_reject": 0.984,
+      "target_reject": 0.06,
+      "host_pore_seconds": 1.4969387581132985
     },
     "readcurrent": {
       "acc": 0.865,
@@ -40,7 +40,7 @@
       "why": "PoreLoom rejects this host read; no baseline does"
     },
     {
-      "read_id": "TEST_20341102_00004393",
+      "read_id": "TEST_20341102_00015891",
       "why": "PoreLoom keeps this target read; 3 of 3 baselines reject it"
     },
     {

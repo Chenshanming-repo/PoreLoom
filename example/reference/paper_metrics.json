@@ -3,10 +3,10 @@
   "note": "paper results on all 30,000 simulated group 1 test reads (0.4 s replay)",
   "metrics": {
     "poreloom": {
-      "acc": 0.9572666666666667,
-      "host_reject": 0.9683333333333334,
-      "target_reject": 0.0538,
-      "host_pore_seconds": 1.71849153734711
+      "acc": 0.9552333333333334,
+      "host_reject": 0.9705333333333334,
+      "target_reject": 0.060066666666666664,
+      "host_pore_seconds": 1.6310034718102315
     },
     "readcurrent": {
       "acc": 0.8774,

@@ -1,5 +1,6 @@
 {
   "beta": 1.0,
+  "t_norm": 13.93,
   "rule": "beta fixed at 1, no operating-point selection",
   "fit": "TRAIN, streaming encoder, two phase copies",
   "fit_reads": [
@@ -10,20 +11,20 @@
   "stop_reads": 9936,
   "dev_a_metrics": {
     "beta": 1.0,
-    "epochs": 239,
-    "seconds": 26.260897159576416,
-    "acc": 0.9637681159420289,
-    "host_command_reject": 0.9672963640056876,
+    "epochs": 206,
+    "seconds": 24.119337558746338,
+    "acc": 0.9610507246376812,
+    "host_command_reject": 0.9693276457444647,
     "n_reads": 9936,
     "n_host": 4923,
     "n_target": 5013,
-    "host_effective_reject_rate": 0.9664838513101767,
-    "target_command_frr": 0.039696788350289246,
-    "target_effective_frr": 0.039696788350289246,
-    "host_mean_pore_seconds": 1.7343410887272195,
-    "mean_compute_seconds": 0.04024356024906125
+    "host_effective_reject_rate": 0.9687182612228316,
+    "target_command_frr": 0.04707759824456413,
+    "target_effective_frr": 0.04707759824456413,
+    "host_mean_pore_seconds": 1.6380619888154562,
+    "mean_compute_seconds": 0.038945329438506184
   },
   "train_seed": 20261013,
-  "seconds": 26.363971948623657,
-  "written": "2026-11-03 17:45:41, before any TEST input"
+  "seconds": 24.205244541168213,
+  "written": "2026-11-06 13:31:17, before any TEST input"
 }
