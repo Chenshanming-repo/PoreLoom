@@ -7,7 +7,7 @@ Buckets split the used stream length L' into equal ranges (`bucket` samples each
 arrival holding >= max_samples, accept or reject only). With chunks of at least `bucket` + 47 samples, consecutive
 looks of a read always fall in strictly later buckets, so heads are trained from the last bucket back to the first:
 the label of DEFER at a look is the outcome of the already trained later heads. The factorized costs are
-u = host pore seconds / reference and r = target command reject; the action score is u + beta * r.
+u = host pore seconds / T_norm and r = target command reject; the action score is u + beta * r.
 """
 import copy
 from dataclasses import dataclass
@@ -169,7 +169,7 @@ def outcome(looks, actions, service, eject):
     return replay(looks.t + service, actions, looks.t, service, looks.t_end, eject)
 
 
-def node_labels(looks, policy, b, service, eject, ref, forced=False):
+def node_labels(looks, policy, b, service, eject, t_norm, forced=False):
     """Training nodes of bucket b (looks where the read is still in the pore when the decision completes) and the
     components of every legal action there: (rows, cols, u [K,A], r [K,A]). DEFER follows `policy` afterwards; the
     forced head has ACCEPT and REJECT only."""
@@ -185,7 +185,7 @@ def node_labels(looks, policy, b, service, eject, ref, forced=False):
     for a in legal:
         act = base.copy(); act[np.arange(len(rows)), cols] = a
         o = outcome(sub, act, service, eject)
-        u.append(np.where(sub.is_target, 0., o['pore_seconds']/ref)); r.append((sub.is_target & o['command_reject']).astype(float))
+        u.append(np.where(sub.is_target, 0., o['pore_seconds']/t_norm)); r.append((sub.is_target & o['command_reject']).astype(float))
     return rows, cols, np.stack(u, 1).astype(np.float32), np.stack(r, 1).astype(np.float32)
 
 
@@ -202,7 +202,7 @@ def class_weights(is_target):
     return np.where(is_target, .5/max(q, 1e-12), .5/max(1 - q, 1e-12)).astype(np.float32)
 
 
-def train_backward(fit, sel, beta, ref, service, eject, device, n_buckets=8, hidden=64, lr=1e-3, weight_decay=1e-4,
+def train_backward(fit, sel, beta, t_norm, service, eject, device, n_buckets=8, hidden=64, lr=1e-3, weight_decay=1e-4,
                    batch=512, epochs=30, patience=3, clip=1., seed=20261013, log=None):
     """One controller for a fixed beta: the forced head, then buckets from last to first, each early-stopped on the
     SEL component loss. Inputs are standardized with FIT statistics over looks that can act.
@@ -217,7 +217,7 @@ def train_backward(fit, sel, beta, ref, service, eject, device, n_buckets=8, hid
     for b in [n_buckets] + list(range(n_buckets - 1, -1, -1)):
         sets = []
         for looks, policy in zip((fit, sel), policies):
-            rows, cols, u, r = node_labels(looks, policy, b, service, eject, ref, forced=b == n_buckets)
+            rows, cols, u, r = node_labels(looks, policy, b, service, eject, t_norm, forced=b == n_buckets)
             if not len(rows): raise ValueError(f'no training nodes in bucket {b}')
             w = class_weights(looks.is_target[rows])
             sets.append([torch.as_tensor(v, device=device) for v in (looks.x[rows, cols], u, r, w)])

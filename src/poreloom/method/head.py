@@ -24,7 +24,11 @@ from ..stream_config import (DEFAULT_FS, DEFAULT_MAX_SAMPLES, DEFAULT_SKIP, DEFA
 from .native_policy import stored_phases
 
 HEAD = dict(interval=.4, budget=DEFAULT_MAX_SAMPLES, phase_seed=20261012, copy_seed=20261013, train_seed=20261013, lr=3e-3, epochs=100,
-            patience=5, service=0.0158467092551291, eject=.1, betas=[1.0], n_buckets=8, hidden=64)
+            patience=5, service=0.0158467092551291, eject=.1, betas=[1.0], n_buckets=8, hidden=64, t_norm=13.93)
+# t_norm: T_norm in seconds, the normalizer of host pore time in the U labels. 13.93 s is one value for every dataset: the
+# mean natural duration of 80000 training host reads, 20000 drawn once (numpy default_rng(20261106), without replacement) from each
+# of the four datasets (simulated 19.86, R9 10.04, R10 mixed 19.00, R10 sputum 6.85 s in the draw; R9 has exactly 20000).
+# None derives T_norm from the fitting set's host reads (manuscript of 4 November 2026).
 
 
 def extract(model, data, fs, interval, seed, device, budget=None, phase=None):
@@ -92,7 +96,8 @@ def metrics(o, is_target):
 
 
 def train_heads(fit_z, sel_z, fs, output, device='cuda', log=print, **overrides):
-    """Fit beta=1.0 by default, or explicit betas; return the selection and write controllers.pt / table.json."""
+    """Fit beta=1.0 by default, or explicit betas; return the selection and write controllers.pt / table.json.
+    U labels are host pore seconds / t_norm (HEAD default: the fixed 13.93 s; None: mean natural training host duration)."""
     cfg = {**HEAD, **overrides}
     features = look_config(fit_z[0])
     if any(look_config(z) != features for z in [*fit_z[1:], sel_z]):
@@ -100,11 +105,14 @@ def train_heads(fit_z, sel_z, fs, output, device='cuda', log=print, **overrides)
     cfg['n_buckets'] = features['n_buckets']
     output = Path(output); output.mkdir(parents=True, exist_ok=True)
     fit = stack(looks(fit_z[0], fs), looks(fit_z[1], fs)); sel = looks(sel_z, fs)
-    ref = float(np.mean(np.asarray(fit_z[0]['raw_length'])[~fit_z[0]['is_target']]/fs))
+    t_norm = cfg['t_norm']
+    if t_norm is None: t_norm = np.mean(np.asarray(fit_z[0]['raw_length'])[~fit_z[0]['is_target']]/fs)
+    t_norm = float(t_norm)
+    if not np.isfinite(t_norm) or t_norm <= 0: raise ValueError(f't_norm must be a finite positive number of seconds, got {t_norm}')
     states, table = {}, []
     for beta in cfg['betas']:
         t0 = time.time()
-        c, _, pol, hist = train_backward(fit, sel, float(beta), ref, cfg['service'], cfg['eject'], device, n_buckets=cfg['n_buckets'],
+        c, _, pol, hist = train_backward(fit, sel, float(beta), t_norm, cfg['service'], cfg['eject'], device, n_buckets=cfg['n_buckets'],
                                          hidden=cfg['hidden'], lr=cfg['lr'], epochs=cfg['epochs'], patience=cfg['patience'],
                                          seed=cfg['train_seed'])
         states[f'{beta:.6g}'] = {k: v.cpu() for k, v in c.state_dict().items()}
@@ -113,10 +121,10 @@ def train_heads(fit_z, sel_z, fs, output, device='cuda', log=print, **overrides)
     # A single fixed beta has no operating-point search. Explicit grids retain the historical API.
     fixed = len(table) == 1
     best = table[0] if fixed else select(table, cfg.get('select', 'max_acc'))
-    torch.save(dict(states=states, n_buckets=cfg['n_buckets'], hidden=cfg['hidden'], host_reference=ref, betas=cfg['betas'],
+    torch.save(dict(states=states, n_buckets=cfg['n_buckets'], hidden=cfg['hidden'], t_norm=t_norm, betas=cfg['betas'],
                     input_dim=fit.x.shape[-1], fs=sampling_rate(fs), look_config=features), output/'controllers.pt')
     (output/'table.json').write_text(json.dumps(table, indent=2))
-    return dict(beta=best['beta'], sel=best,
+    return dict(beta=best['beta'], sel=best, t_norm=t_norm,
                 rule='fixed beta; validation used only for early stopping' if fixed else RULES[cfg.get('select', 'max_acc').split(':')[0]],
                 select='fixed' if fixed else cfg.get('select', 'max_acc'))
 

@@ -70,10 +70,16 @@ def stream(a):
     (a.out/'stream'/'done.json').write_text(json.dumps(dict(best_epoch=int(best['epoch'])), indent=2))
 
 
+def protocol_for(t_norm):
+    """Protocol tag of a run: the 4 November 2026 manuscript used each training set's own T_norm (t_norm None)."""
+    return 'manuscript_20261104' if t_norm is None else 'fixed_tnorm_20261106'
+
+
 def head(a):
     if (a.out/'head'/'selection.json').exists(): return
-    if getattr(a, 'protocol', 'manuscript_20261104') != 'manuscript_20261104':
-        raise ValueError('use a new output directory to fit heads with the current manuscript protocol')
+    t_norm = getattr(a, 't_norm', H.HEAD['t_norm'])
+    if getattr(a, 'protocol', protocol_for(t_norm)) != protocol_for(t_norm):
+        raise ValueError('use a new output directory to fit heads with the current protocol')
     train, validation = D.load_split(a.data, 'train'), D.validation(a.data)
     if np.intersect1d(train.read_id, validation.read_id).size:
         raise ValueError('training and validation read IDs overlap')
@@ -81,8 +87,8 @@ def head(a):
     fit = [H.extract(net, train, a.fs, a.interval, s, a.device) for s in (H.HEAD['phase_seed'], H.HEAD['copy_seed'])]
     sel = H.extract(net, validation, a.fs, a.interval, H.HEAD['phase_seed'], a.device)
     choice = H.train_heads(fit, sel, a.fs, a.out/'head', a.device, log=log, train_seed=H.HEAD['train_seed'] + a.replicate,
-                           betas=[1.0])
-    choice['protocol'] = 'manuscript_20261104'
+                           betas=[1.0], t_norm=t_norm)
+    choice['protocol'] = protocol_for(t_norm)
     choice['fit_partition'] = 'train'
     choice['validation_partition'] = 'dev_hash_parity_0'
     choice['written'] = time.strftime('%Y-%m-%d %H:%M:%S') + ', before any TEST input'
@@ -92,7 +98,7 @@ def head(a):
                     head=dict(n_buckets=ctrl.n_buckets, hidden=H.HEAD['hidden'], input_dim=int(ctrl.state_dict()['mean'].shape[0]),
                               look_config=ctrl.look_config),
                     beta=choice['beta'], fs=a.fs, max_samples=net.max_samples, max_decision_seconds=net.max_samples/a.fs,
-                    service_seconds=H.HEAD['service'], interval_trained=a.interval),
+                    service_seconds=H.HEAD['service'], interval_trained=a.interval, t_norm=choice['t_norm']),
                a.out/'poreloom_sh_cp.pt')
     log('fixed beta', choice['beta'], 'validation ACC', round(choice['sel']['acc'], 4))
 
@@ -122,6 +128,14 @@ def test(a):
             log(r['group'], {k: round(r[k], 4) for k in ('acc', 'host_command_reject', 'target_command_frr', 'host_mean_pore_seconds')})
 
 
+def t_norm_arg(text):
+    """--t-norm: seconds (finite, > 0), or 'train' for the mean natural duration of the training host reads."""
+    if text == 'train': return None
+    value = float(text)
+    if not math.isfinite(value) or value <= 0: raise argparse.ArgumentTypeError('--t-norm must be positive seconds or train')
+    return value
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog='python -m poreloom.method', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('stage', choices=STAGES + ('all',))
@@ -139,6 +153,9 @@ def main(argv=None):
     ap.add_argument('--select', default='max_acc', choices=('max_acc',), help=argparse.SUPPRESS)
     ap.add_argument('--interval', type=float, default=H.HEAD['interval'],
                     help='chunk interval in seconds for head training and the primary TEST replay (default 0.4)')
+    ap.add_argument('--t-norm', type=t_norm_arg, default=H.HEAD['t_norm'],
+                    help='T_norm in seconds normalizing host pore time in the FACP labels, or train for the mean natural '
+                         'training host duration (default: %(default)s s, one value for all datasets)')
     a = ap.parse_args(argv)
     try:
         a.fs = sampling_rate(a.fs)
@@ -155,10 +172,11 @@ def main(argv=None):
     a.max_decision_seconds = a.max_samples/a.fs
     a.feature_fs = DEFAULT_FS
     a.feature_max_samples = DEFAULT_MAX_SAMPLES
-    a.protocol = 'manuscript_20261104'
+    a.protocol = protocol_for(a.t_norm)
     a.out.mkdir(parents=True, exist_ok=True); _setup(a.device)
     run = dict(data=str(a.data.resolve()), fs=a.fs, max_samples=a.max_samples, max_decision_seconds=a.max_decision_seconds,
-               feature_fs=a.feature_fs, feature_max_samples=a.feature_max_samples, protocol=a.protocol, replicate=a.replicate, select=a.select, interval=a.interval,
+               feature_fs=a.feature_fs, feature_max_samples=a.feature_max_samples, protocol=a.protocol, t_norm=a.t_norm,
+               replicate=a.replicate, select=a.select, interval=a.interval,
                started=time.strftime('%Y-%m-%d %H:%M:%S'))
     if not (a.out/'run.json').exists(): (a.out/'run.json').write_text(json.dumps(run, indent=2))
     else:
@@ -167,6 +185,9 @@ def main(argv=None):
         old.setdefault('max_samples', DEFAULT_MAX_SAMPLES)
         if any(old.get(k) != run[k] for k in ('data', 'fs', 'max_samples', 'replicate', 'select', 'interval')):
             raise ValueError('run directory belongs to another dataset, sampling rate, decision budget, replicate, selection rule or chunk interval')
+        if old.get('t_norm') != a.t_norm:   # runs from before --t-norm used the per-dataset mean (None)
+            raise ValueError(f"run directory was started with t_norm={old.get('t_norm')} (None: training-set mean); "
+                             f"resume it with the same --t-norm (train for None) or use a new directory")
         # Historical runs used 4000 in model features even when replay used a different sampling rate.
         a.feature_fs = sampling_rate(old.get('feature_fs', DEFAULT_FS))
         a.feature_max_samples = old.get('feature_max_samples', old['max_samples'])

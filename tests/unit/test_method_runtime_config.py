@@ -62,7 +62,8 @@ def test_old_run_keeps_legacy_feature_rate(tmp_path, monkeypatch):
     out = tmp_path/'run'; out.mkdir()
     old = dict(data=str((tmp_path/'data').resolve()), fs=5000., replicate=0, select='max_acc', interval=.4)
     (out/'run.json').write_text(json.dumps(old))
-    args, _ = cli(tmp_path, monkeypatch, ['--fs', '5000'])
+    # runs from before --t-norm used the per-dataset T_norm, so they resume with --t-norm train
+    args, _ = cli(tmp_path, monkeypatch, ['--fs', '5000', '--t-norm', 'train'])
     assert args['max_samples'] == 7500 and args['feature_fs'] == 4000
 
 

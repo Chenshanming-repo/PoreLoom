@@ -201,7 +201,8 @@ def run(a):
         dev_a, dev_b = halves()
         fit = [extract(net, dev_a, a.fs, a.interval, s, a.device, a.budget) for s in (H.HEAD['phase_seed'], H.HEAD['copy_seed'])]
         sel = extract(net, dev_b, a.fs, a.interval, H.HEAD['phase_seed'], a.device, a.budget)
-        choice = H.train_heads(fit, sel, a.fs, out/'head', a.device, log=log, **head_over)
+        # Dated driver: keep each fitting set's own T_norm (mean natural training host duration), as in its archived results.
+        choice = H.train_heads(fit, sel, a.fs, out/'head', a.device, log=log, t_norm=None, **head_over)
         choice['written'] = time.strftime('%Y-%m-%d %H:%M:%S') + ', before any TEST input'
         (out/'head'/'selection.json').write_text(json.dumps(choice, indent=2))
         log('selected beta', choice['beta'], 'SEL ACC', round(choice['sel']['acc'], 4))

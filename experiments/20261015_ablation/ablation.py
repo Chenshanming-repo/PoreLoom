@@ -132,7 +132,8 @@ def window_extract(stage_a, data, fs, interval, seed, device, window=STAGEA['win
 def cp_train(fit, sel, fs, out, device, rep):
     out = Path(out)
     if not (out/'selection.json').exists():
-        choice = H.train_heads(fit, sel, fs, out, device, log=log, train_seed=H.HEAD['train_seed'] + rep)
+        # Dated driver: keep each fitting set's own T_norm (mean natural training host duration), as in its archived results.
+        choice = H.train_heads(fit, sel, fs, out, device, log=log, train_seed=H.HEAD['train_seed'] + rep, t_norm=None)
         choice['written'] = time.strftime('%Y-%m-%d %H:%M:%S') + ', before any TEST input'
         write(out/'selection.json', choice)
     return json.loads((out/'selection.json').read_text())
