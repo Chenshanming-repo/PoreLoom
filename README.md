@@ -16,6 +16,128 @@ boundary features are recomputed and pooled to represent the prefix. (c) A lengt
 maps the current feature vector to normalized host pore time and target-rejection risk for each
 action. The final head excludes Continue.
 
+## Installation
+
+```bash
+conda env create -f env/poreloom.yml      # Python 3.9, PyTorch 1.12.1
+conda activate poreloom
+pip install -e .                        # add [raw] for pyslow5, [dev] for pytest, [minknow] for minknow_api
+```
+
+Raw BLOW5 preparation uses a separate environment (`env/raw-requirements.txt`, Python 3.10,
+pyslow5). Configure data and result roots outside the repository:
+
+```bash
+cp .env.example .env   # set PORELOOM_DATA and PORELOOM_RESULTS
+```
+
+Alternatively, copy `configs/paths.example.yaml` to `configs/paths.yaml`.
+
+## Example
+
+[example/](example/README.md) is a quick test of an installation: it runs the bundled PoreLoom
+model and the three 3000-sample baselines on 1,000 simulated test reads in about a minute on a CPU,
+reports the metrics, checks every read against its saved reference, and draws example reads.
+The bundled model and reference retain the earlier `T_norm = 13.93 s` configuration; they are
+a historical installation test. Current `T_norm = 15 s` publication results are in `paper/`.
+
+```bash
+pip install -e . matplotlib
+python example/run_example.py --device cpu
+```
+
+## Running PoreLoom
+
+Train and evaluate the complete method on one dataset from random initialization:
+
+```bash
+python -m poreloom.method all --data <dataset root> --out <run dir> --fs <Hz> --device cuda:0
+```
+
+The stages are window pretraining (`stageA`), streaming-prefix training (`stream`), FACP fitting
+at `beta = 1.0` (`head`), and test replay (`test`). Each stage can replace `all` in the command.
+Model and action-head parameters are fitted on training reads; validation reads select checkpoints
+and control early stopping. The main protocol fixes beta at 1.
+Existing output directories reuse saved models and settings, so use a new directory when retraining.
+Changing `T_norm` requires refitting the action heads; editing a checkpoint's stored value does not
+convert an existing model to the new normalization.
+
+| Option | Meaning |
+|---|---|
+| `--fs` | Acquisition rate in Hz (default 4000); replay times are samples / fs. |
+| `--max-samples N` | Raw decision endpoint including the skipped prefix (default 7500, a 6000-sample usable budget). |
+| `--max-decision-seconds T` | Endpoint as `floor(T * fs)` raw samples. For example, `--fs 5000 --max-decision-seconds 2.1` equals `--fs 5000 --max-samples 10500`. |
+| `--replicate r` | Training repeat; offsets the training seeds. |
+| `--t-norm T` | Host pore-time normalization in seconds (default 15); `train` uses the fitting set's mean host duration for historical reproduction. |
+
+The encoder's length-feature scales remain 7500 samples and 4000 Hz across acquisition rates
+and budgets. `--fs` sets the acquisition rate used for replay timing.
+
+The legacy prefix-cache layout uses `train/`, `dev/`, and `test/`, documented in
+`poreloom.method.data`. The current validation set corresponds to the legacy DEV-A subset. Caches must
+cover the requested endpoint. Later stages and inference use the saved configuration. Budget
+experiments can use prepared caches directly; rebuilding them from raw data requires the original
+preprocessing readers, configured with `PORELOOM_DATA_PREP`.
+
+Evaluate the five fixed symmetric-threshold controls on an existing trained encoder:
+
+```bash
+python -m poreloom.method.thresholds --data <dataset root> --run <trained run dir> --out <new control dir> --fs <Hz> --device cuda:0
+```
+
+This evaluates all five deltas from Table 3 and records `forced_decision_fraction_all_reads`
+for the denominator used in Table S2. Every threshold is fixed before evaluation.
+
+## Running on a MinKNOW device (template)
+
+`src/poreloom/minknow/` connects a trained bundle to one MinKNOW sequencing position through the
+read-until API (`minknow_api`). It finds the position through the manager service, reads each
+channel's calibration, streams raw signal with `get_live_reads`, and sends `unblock` for reject
+and `stop_further_data` for accept. The decision computation is the one used in the closed-loop
+runs; a unit test checks it against `experiments/20261014_final/icarust_live.py`.
+
+**Status: tested against the Icarust simulator only. It has not been run on a sequencing device.**
+
+```bash
+pip install -e .[minknow]
+# start a sequencing run in MinKNOW with its own adaptive sampling off, then
+python -m poreloom.minknow --bundle RUN/poreloom_sh_cp.pt --out LOGS --position MN12345 \
+    --device cuda:0 --duration 600 --dry-run
+```
+
+`--dry-run` computes and logs every decision without sending it; remove it to act on reads.
+Set `MINKNOW_TRUSTED_CA` to MinKNOW's `conf/rpc-certs/ca.crt` if the certificate is not found
+automatically, and pass `--token` when MinKNOW requires a developer API token. The device sample
+rate must equal the bundle's `fs` (checked at start). `LOGS` receives `manifest.json`,
+`decisions.jsonl`, `acks.jsonl`, and `reads.jsonl`. See `python -m poreloom.minknow --help` for
+channel ranges, unblock duration, and read-classification filters, and
+[experiments/20261104_minknow_icarust/](experiments/20261104_minknow_icarust/README.md) for the
+Icarust smoke test.
+
+## Baselines
+
+The main comparison uses each baseline's own normalization and native binary decision
+(probability threshold 0.5):
+
+```bash
+python -m poreloom.method.baselines --tool readcurrent --data <dataset root> --out <run dir> --fs <Hz> --device cuda:0
+```
+
+`--tool` accepts `readcurrent`, `nanodeep`, or `squigglenet`. Use `--recipe upstream` for
+NanoDeep to reproduce its paper training configuration. The dated 6000-sample workflow is
+archived in `experiments/20261016_window6000/win6000.py`.
+
+For baseline runs, install the upstream code under `third_party/`:
+
+| Directory | Upstream | Manuscript commit | License |
+|---|---|---|---|
+| `third_party/ReadCurrent` | [ReadCurrent](https://github.com/Ming-Ni-Group/ReadCurrent) | `6db8921` | MIT |
+| `third_party/NanoDeep` | [NanoDeep](https://github.com/lysovosyl/NanoDeep) | `1abba04` | MIT |
+| `third_party/SquiggleNet` | [SquiggleNet](https://github.com/welch-lab/SquiggleNet) | `fb7b206` | MIT |
+
+The PoreLoom backbone in `src/poreloom/method/backbone.py` retains the ReadCurrent architecture
+and MIT notice within this repository.
+
 ## Method
 
 - **Causal normalization.** After skipping the first 1500 raw samples, the signal is normalized in
@@ -115,102 +237,6 @@ while PoreLoom uses 26% less host pore time than that model.
   in all 12. Retention of reads from excluded taxa is 39.07–77.17%; its rejection of those reads
   is lower than ReadCurrent's in all 12 comparisons, SquiggleNet's in 11, and NanoDeep's in 8.
 
-## Installation
-
-```bash
-conda env create -f env/poreloom.yml      # Python 3.9, PyTorch 1.12.1
-conda activate poreloom
-pip install -e .                        # add [raw] for pyslow5, [dev] for pytest, [minknow] for minknow_api
-```
-
-Raw BLOW5 preparation uses a separate environment (`env/raw-requirements.txt`, Python 3.10,
-pyslow5). Configure data and result roots outside the repository:
-
-```bash
-cp .env.example .env   # set PORELOOM_DATA and PORELOOM_RESULTS
-```
-
-Alternatively, copy `configs/paths.example.yaml` to `configs/paths.yaml`.
-
-## Example
-
-[example/](example/README.md) is a quick test of an installation: it runs the bundled PoreLoom
-model and the three 3000-sample baselines on 1,000 simulated test reads in about a minute on a CPU,
-reports the metrics, checks every read against its saved reference, and draws example reads.
-The bundled model and reference retain the earlier `T_norm = 13.93 s` configuration; they are
-a historical installation test. Current `T_norm = 15 s` publication results are in `paper/`.
-
-```bash
-pip install -e . matplotlib
-python example/run_example.py --device cpu
-```
-
-## Running PoreLoom
-
-Train and evaluate the complete method on one dataset from random initialization:
-
-```bash
-python -m poreloom.method all --data <dataset root> --out <run dir> --fs <Hz> --device cuda:0
-```
-
-The stages are window pretraining (`stageA`), streaming-prefix training (`stream`), FACP fitting
-at `beta = 1.0` (`head`), and test replay (`test`). Each stage can replace `all` in the command.
-Model and action-head parameters are fitted on training reads; validation reads select checkpoints
-and control early stopping. The main protocol fixes beta at 1.
-Existing output directories reuse saved models and settings, so use a new directory when retraining.
-Changing `T_norm` requires refitting the action heads; editing a checkpoint's stored value does not
-convert an existing model to the new normalization.
-
-| Option | Meaning |
-|---|---|
-| `--fs` | Acquisition rate in Hz (default 4000); replay times are samples / fs. |
-| `--max-samples N` | Raw decision endpoint including the skipped prefix (default 7500, a 6000-sample usable budget). |
-| `--max-decision-seconds T` | Endpoint as `floor(T * fs)` raw samples. For example, `--fs 5000 --max-decision-seconds 2.1` equals `--fs 5000 --max-samples 10500`. |
-| `--replicate r` | Training repeat; offsets the training seeds. |
-| `--t-norm T` | Host pore-time normalization in seconds (default 15); `train` uses the fitting set's mean host duration for historical reproduction. |
-
-The encoder's length-feature scales remain 7500 samples and 4000 Hz across acquisition rates
-and budgets. `--fs` sets the acquisition rate used for replay timing.
-
-The legacy prefix-cache layout uses `train/`, `dev/`, and `test/`, documented in
-`poreloom.method.data`. The current validation set corresponds to the legacy DEV-A subset. Caches must
-cover the requested endpoint. Later stages and inference use the saved configuration. Budget
-experiments can use prepared caches directly; rebuilding them from raw data requires the original
-preprocessing readers, configured with `PORELOOM_DATA_PREP`.
-
-Evaluate the five fixed symmetric-threshold controls on an existing trained encoder:
-
-```bash
-python -m poreloom.method.thresholds --data <dataset root> --run <trained run dir> --out <new control dir> --fs <Hz> --device cuda:0
-```
-
-This evaluates all five deltas from Table 3 and records `forced_decision_fraction_all_reads`
-for the denominator used in Table S2. Every threshold is fixed before evaluation.
-
-## Baselines
-
-The main comparison uses each baseline's own normalization and native binary decision
-(probability threshold 0.5):
-
-```bash
-python -m poreloom.method.baselines --tool readcurrent --data <dataset root> --out <run dir> --fs <Hz> --device cuda:0
-```
-
-`--tool` accepts `readcurrent`, `nanodeep`, or `squigglenet`. Use `--recipe upstream` for
-NanoDeep to reproduce its paper training configuration. The dated 6000-sample workflow is
-archived in `experiments/20261016_window6000/win6000.py`.
-
-For baseline runs, install the upstream code under `third_party/`:
-
-| Directory | Upstream | Manuscript commit | License |
-|---|---|---|---|
-| `third_party/ReadCurrent` | [ReadCurrent](https://github.com/Ming-Ni-Group/ReadCurrent) | `6db8921` | MIT |
-| `third_party/NanoDeep` | [NanoDeep](https://github.com/lysovosyl/NanoDeep) | `1abba04` | MIT |
-| `third_party/SquiggleNet` | [SquiggleNet](https://github.com/welch-lab/SquiggleNet) | `fb7b206` | MIT |
-
-The PoreLoom backbone in `src/poreloom/method/backbone.py` retains the ReadCurrent architecture
-and MIT notice within this repository.
-
 ## Data
 
 All sequencing data are public. Models are fitted only on their own dataset's training set;
@@ -272,32 +298,6 @@ Repeating the matrix requires Icarust built from upstream commit `ef05586` (v0.0
 `PORELOOM_SIMLOOP`), whose README gives the build steps; configure model paths and compute settings. Raw signals, preprocessing
 readers, read-ID split membership, checkpoints, and the HPC rerun environment provide the inputs
 needed to repeat the experiments.
-
-## Running on a MinKNOW device (template)
-
-`src/poreloom/minknow/` connects a trained bundle to one MinKNOW sequencing position through the
-read-until API (`minknow_api`). It finds the position through the manager service, reads each
-channel's calibration, streams raw signal with `get_live_reads`, and sends `unblock` for reject
-and `stop_further_data` for accept. The decision computation is the one used in the closed-loop
-runs; a unit test checks it against `experiments/20261014_final/icarust_live.py`.
-
-**Status: tested against the Icarust simulator only. It has not been run on a sequencing device.**
-
-```bash
-pip install -e .[minknow]
-# start a sequencing run in MinKNOW with its own adaptive sampling off, then
-python -m poreloom.minknow --bundle RUN/poreloom_sh_cp.pt --out LOGS --position MN12345 \
-    --device cuda:0 --duration 600 --dry-run
-```
-
-`--dry-run` computes and logs every decision without sending it; remove it to act on reads.
-Set `MINKNOW_TRUSTED_CA` to MinKNOW's `conf/rpc-certs/ca.crt` if the certificate is not found
-automatically, and pass `--token` when MinKNOW requires a developer API token. The device sample
-rate must equal the bundle's `fs` (checked at start). `LOGS` receives `manifest.json`,
-`decisions.jsonl`, `acks.jsonl`, and `reads.jsonl`. See `python -m poreloom.minknow --help` for
-channel ranges, unblock duration, and read-classification filters, and
-[experiments/20261104_minknow_icarust/](experiments/20261104_minknow_icarust/README.md) for the
-Icarust smoke test.
 
 ## Repository layout
 
