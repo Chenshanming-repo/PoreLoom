@@ -42,9 +42,6 @@ to Supplementary Note 6 and Figure S4; all main analyses use beta 1.
 
 ## Results
 
-These are the 9 November 2026 results with action heads refitted at `T_norm = 15 s` and `beta = 1`.
-The frozen inputs are in [paper/data/revision_20261109_tnorm15/](paper/data/revision_20261109_tnorm15/).
-
 Offline evaluation replays all test reads with observations every 0.4 s. Reads without a completed
 command are retained, including reads too short to fill a baseline window. Accuracy and rejection
 rates count completed Reject commands; host pore time is shortened only when the subsequent
