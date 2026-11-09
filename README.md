@@ -28,8 +28,8 @@ action. The final head excludes Continue.
   recomputed. Pooling and a length correction yield the target-minus-host logit margin.
 - **Factorized action-cost policy (FACP).** A head selected by observed length predicts normalized
   host pore time `U` and target-rejection risk `R` for each legal action. `U` is the host's pore time
-  under the action divided by `T_norm` = 13.93 s, one value for every dataset: the mean natural duration
-  of 80,000 training host reads, 20,000 drawn once from each of the four datasets. The main policy minimizes
+  under the action divided by `T_norm` = 15 s, a fixed reference for every dataset and experiment:
+  a representative 6000-bp fragment at 400 bases/s. The main policy minimizes
   `U + R` (`beta = 1`), with heads fitted backward on training reads and early-stopped on validation
   reads. The six inputs are the current, previous, and minimum logit margins, two length features,
   and the number of decision steps. Each head interval is evaluated at most once per read.
@@ -41,6 +41,9 @@ and ordinary head intervals span 768 usable samples. The additional beta experim
 to Supplementary Note 6 and Figure S4; all main analyses use beta 1.
 
 ## Results
+
+These are the 9 November 2026 results with action heads refitted at `T_norm = 15 s` and `beta = 1`.
+The frozen inputs are in [paper/data/revision_20261109_tnorm15/](paper/data/revision_20261109_tnorm15/).
 
 Offline evaluation replays all test reads with observations every 0.4 s. Reads without a completed
 command are retained, including reads too short to fill a baseline window. Accuracy and rejection
@@ -55,30 +58,30 @@ three simulator seeds, respectively. Paired differences and ratios are calculate
 
 | Dataset | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|---|
-| Simulated | PoreLoom | 95.34 ± 0.18% | 97.18 ± 0.34% | 6.50 ± 0.46% | 1.593 ± 0.046 s |
+| Simulated | PoreLoom | 95.40 ± 0.14% | 97.12 ± 0.29% | 6.31 ± 0.44% | 1.609 ± 0.041 s |
 | | Best baseline per metric | 92.41 ± 0.54% (RC-6000) | 92.77 ± 1.67% (RC-6000) | 5.18 ± 1.31% (ND-6000) | 3.154 ± 0.321 s (RC-6000) |
-| R9 | PoreLoom | 91.68 ± 0.22% | 88.85 ± 0.88% | 5.49 ± 0.47% | 2.056 ± 0.090 s |
+| R9 | PoreLoom | 91.67 ± 0.21% | 88.46 ± 0.94% | 5.11 ± 0.53% | 2.090 ± 0.101 s |
 | | Best baseline per metric | 84.59 ± 4.85% (ND-3000) | 79.09 ± 14.45% (ND-3000) | 6.14 ± 1.91% (RC-6000) | 2.474 ± 0.200 s (ND-6000) |
-| R10 mixed | PoreLoom | 95.58 ± 0.15% | 95.20 ± 0.07% | 4.04 ± 0.29% | 1.398 ± 0.027 s |
+| R10 mixed | PoreLoom | 95.68 ± 0.17% | 94.97 ± 0.11% | 3.60 ± 0.31% | 1.437 ± 0.020 s |
 | | Best baseline per metric | 89.80 ± 2.71% (ND-6000) | 90.77 ± 2.39% (ND-3000) | 4.91 ± 1.73% (RC-6000) | 1.970 ± 0.346 s (ND-3000) |
-| R10 sputum | PoreLoom | 92.18 ± 0.52% | 92.08 ± 0.33% | 7.72 ± 0.74% | 1.495 ± 0.023 s |
+| R10 sputum | PoreLoom | 92.09 ± 0.50% | 91.62 ± 0.36% | 7.44 ± 0.68% | 1.526 ± 0.025 s |
 | | Best baseline per metric | 90.41 ± 1.01% (RC-6000) | 93.18 ± 1.46% (RC-6000) | 12.37 ± 0.56% (RC-6000) | 1.790 ± 0.172 s (RC-3000) |
 
 Baselines are ReadCurrent (RC), NanoDeep (ND), and SquiggleNet, each trained with 3000- and
 6000-sample windows and evaluated at the native probability threshold of 0.5. Each baseline row
 above gives the best of these six models **separately for each metric**, as in manuscript Table 1.
-PoreLoom's mean host pore time is 16–49% below the lowest baseline mean in each dataset. Its mean
-host rejection is 4.40–9.76 percentage points above the highest baseline mean on simulated, R9, and
-R10 mixed data; on sputum data, 6000-sample ReadCurrent rejects 1.11 percentage points more hosts,
-while PoreLoom uses 28% less host pore time than that model.
+PoreLoom's mean host pore time is 15–49% below the lowest baseline mean in each dataset. Its mean
+host rejection is 4.20–9.37 percentage points above the highest baseline mean on simulated, R9, and
+R10 mixed data; on sputum data, 6000-sample ReadCurrent rejects 1.56 percentage points more hosts,
+while PoreLoom uses 26% less host pore time than that model.
 
-- **Early decisions (Figure 2).** Among completed decisions, 60.13%, 41.96%, 84.16%, and 55.22%
+- **Early decisions (Figure 2).** Among completed decisions, 59.14%, 41.09%, 82.53%, and 54.34%
   occur within 3000 usable samples on simulated, R9, R10 mixed, and sputum data, respectively;
-  3.6–12.9% reach the 6000-sample budget. Figure 2a uses the frozen encoder's native 0.5 threshold
+  3.9–13.3% reach the 6000-sample budget. Figure 2a uses the frozen encoder's native 0.5 threshold
   without FACP.
 - **Streaming encoding (Figure S1).** Compared with sliding-window encoding, streaming-prefix
-  encoding improves mean accuracy by 1.26–2.60 percentage points, reduces target rejection by
-  0.31–2.65 percentage points, and reduces host pore time in every dataset. Each encoder has
+  encoding improves mean accuracy by 1.28–2.73 percentage points, reduces target rejection by
+  0.52–2.48 percentage points, and reduces host pore time in every dataset. Each encoder has
   a separately fitted FACP.
 - **Feature reuse (Note 4, Figure S2).** On an RTX 2080 Ti, updating 512 reads at different prefix
   lengths after each additional 0.4 s of signal takes 132.9 ± 16.5 ms with reuse versus
@@ -88,31 +91,31 @@ while PoreLoom uses 28% less host pore time than that model.
 - **Stopping rules (Table 3, Table S2).** Fixed symmetric thresholds on the same frozen encoder
   reject if target probability `p < delta`, accept if `p >= 1 - delta`, and otherwise continue;
   at the 6000-sample budget they decide at `p = 0.5`. The current comparison uses
-  `delta = 0.01, 0.05, 0.1, 0.2, 0.3`. At 0.01, mean host pore time is 0.20–0.44 s longer than
-  FACP (12–28%); target rejection is 0.83–1.26 percentage points lower on simulated, R9, and R10
-  mixed data and 2.17 percentage points higher on sputum data. About 23–51% of all test reads are
-  decided at the budget, versus 4–13% under FACP. At 0.05, mean host pore time remains 0.30–0.32 s
-  longer than FACP on simulated and R10 mixed data and is similar on R9. On sputum, deltas of
-  0.05–0.3 shorten host pore time by 0.10–0.26 s relative to FACP and raise target rejection by
-  3.07–8.05 percentage points.
+  `delta = 0.01, 0.05, 0.1, 0.2, 0.3`. At 0.01, mean host pore time is 0.17–0.42 s longer than
+  FACP (11–26%); target rejection is 0.45–1.06 percentage points lower on simulated, R9, and R10
+  mixed data and 2.46 percentage points higher on sputum data. About 23–51% of all test reads are
+  decided at the budget, versus 4–13% under FACP. At 0.05, mean host pore time remains 0.26–0.30 s
+  longer than FACP on simulated and R10 mixed data and is similar on R9 (0.02 s shorter). On sputum, deltas of
+  0.05–0.3 shorten host pore time by 0.13–0.29 s relative to FACP and raise target rejection by
+  3.35–8.33 percentage points.
 - **FACP on frozen baselines (Table S3).** Adding FACP to the 3000-sample baselines raises mean
-  accuracy by 1.74–4.73 percentage points in all 12 dataset–classifier combinations. Target
-  rejection decreases in 10 combinations and host pore time decreases in 8. The augmented
+  accuracy by 1.42–4.46 percentage points in all 12 dataset–classifier combinations. Target
+  rejection decreases in 11 combinations and host pore time decreases in 8. The augmented
   baselines still have lower mean host rejection, higher target rejection, and longer host pore
   time than PoreLoom in every dataset.
 - **Larger budgets (Figure 3, Table S4).** On R10 mixed group 1, extending the usable budget
-  from 6000 to 18000 samples raises mean accuracy from 95.44% to 96.15% and reduces host pore
-  time from 1.419 to 1.276 s. On sputum group 1, extending to 12000 samples raises accuracy
-  from 92.70% to 94.17% and reduces host pore time from 1.461 to 1.393 s. The fraction
-  of all test hosts decided at the budget falls from 2.18 ± 0.06% to 0.45 ± 0.03% and from
-  11.77 ± 1.12% to 3.83 ± 0.65%, respectively.
+  from 6000 to 18000 samples raises mean accuracy from 95.52% to 96.16% and reduces host pore
+  time from 1.438 to 1.289 s. On sputum group 1, extending to 12000 samples raises accuracy
+  from 92.65% to 94.21% and reduces host pore time from 1.495 to 1.406 s. The fraction
+  of all test hosts decided at the budget falls from 2.27 ± 0.13% to 0.44 ± 0.03% and from
+  12.37 ± 1.19% to 4.04 ± 0.42%, respectively.
 - **Closed-loop simulation (Table 2, Table S5).** Icarust runs use 512 channels for 1200 s.
   At target-molecule fractions of 1%, 10%, and 30%, PoreLoom's target-base enrichment over
-  matched nonselective sequencing is 8.28 ± 0.49, 5.05 ± 0.12, and 2.65 ± 0.02. These means
-  exceed the best baseline, 3000-sample NanoDeep, by 34.4%, 20.4%, and 9.2%.
-- **Taxon holdouts (Note 5, Tables S6–S7).** PoreLoom has the highest host rejection in all
-  12 sputum group–holdout comparisons and the lowest rejection of all test bacterial reads
-  in all 12. Retention of reads from excluded taxa is 39.05–76.37%; its rejection of those reads
+  matched nonselective sequencing is 8.19 ± 0.44, 5.02 ± 0.06, and 2.65 ± 0.01. These means
+  exceed the best baseline, 3000-sample NanoDeep, by approximately 33%, 20%, and 9%.
+- **Taxon holdouts (Note 5, Tables S6–S7).** PoreLoom has the highest host rejection in
+  11 of 12 sputum group–holdout comparisons and the lowest rejection of all test bacterial reads
+  in all 12. Retention of reads from excluded taxa is 39.07–77.17%; its rejection of those reads
   is lower than ReadCurrent's in all 12 comparisons, SquiggleNet's in 11, and NanoDeep's in 8.
 
 ## Installation
@@ -134,10 +137,11 @@ Alternatively, copy `configs/paths.example.yaml` to `configs/paths.yaml`.
 
 ## Example
 
-[example/](example/README.md) is a quick test of an installation: it runs the paper's trained PoreLoom
+[example/](example/README.md) is a quick test of an installation: it runs the bundled PoreLoom
 model and the three 3000-sample baselines on 1,000 simulated test reads in about a minute on a CPU,
-reports the metrics, checks every read against the paper's outcome, and draws example reads. Its README
-shows the results without running anything.
+reports the metrics, checks every read against its saved reference, and draws example reads.
+The bundled model and reference retain the earlier `T_norm = 13.93 s` configuration; they are
+a historical installation test. Current `T_norm = 15 s` publication results are in `paper/`.
 
 ```bash
 pip install -e . matplotlib
@@ -157,6 +161,8 @@ at `beta = 1.0` (`head`), and test replay (`test`). Each stage can replace `all`
 Model and action-head parameters are fitted on training reads; validation reads select checkpoints
 and control early stopping. The main protocol fixes beta at 1.
 Existing output directories reuse saved models and settings, so use a new directory when retraining.
+Changing `T_norm` requires refitting the action heads; editing a checkpoint's stored value does not
+convert an existing model to the new normalization.
 
 | Option | Meaning |
 |---|---|
@@ -164,6 +170,7 @@ Existing output directories reuse saved models and settings, so use a new direct
 | `--max-samples N` | Raw decision endpoint including the skipped prefix (default 7500, a 6000-sample usable budget). |
 | `--max-decision-seconds T` | Endpoint as `floor(T * fs)` raw samples. For example, `--fs 5000 --max-decision-seconds 2.1` equals `--fs 5000 --max-samples 10500`. |
 | `--replicate r` | Training repeat; offsets the training seeds. |
+| `--t-norm T` | Host pore-time normalization in seconds (default 15); `train` uses the fitting set's mean host duration for historical reproduction. |
 
 The encoder's length-feature scales remain 7500 samples and 4000 Hz across acquisition rates
 and budgets. `--fs` sets the acquisition rate used for replay timing.
@@ -229,10 +236,9 @@ separate across groups and partitions. Supplementary Note 1 gives accessions, la
 
 ## Reproducing the paper
 
-The publication inputs of the 4 November 2026 manuscript are frozen in `paper/data/revision_20261104/`.
-That manuscript normalized host pore time by each training set's own mean host-read duration; the
-results above use the fixed `T_norm` = 13.93 s. Rebuild the three main tables, seven supplementary
-tables, and seven figures of the 4 November 2026 manuscript directly from these saved results:
+The current publication inputs are frozen in `paper/data/revision_20261109_tnorm15/`.
+They use the fixed `T_norm = 15 s` reference. Rebuild the current main and supplementary
+tables and figures directly from these saved results:
 
 ```bash
 python -m pip install -r paper/requirements.txt
@@ -243,19 +249,25 @@ python paper/scripts/verify_publication.py
 [paper/README.md](paper/README.md) maps every current figure and table to its source data and
 explains precision, experimental units, and denominators. Figure 2a's fixed-0.5 means and SDs use
 the supplied precision of 0.01 percentage points. Earlier publication scripts, figure data, and
-provenance are archived under `paper/legacy/20261030/`.
+provenance are archived under `paper/legacy/20261030/`. The earlier
+`paper/data/revision_20261104/` snapshot remains as provenance and as the source of unchanged
+baseline, timing, and dataset-composition results.
 
 Current training and evaluation use `python -m poreloom.method all`, and the fixed-threshold
 comparison uses `python -m poreloom.method.thresholds`. For larger budgets, set the raw endpoint
 with `--max-samples` to the usable budget plus 1500. The frozen publication snapshot contains
-the November beta=1 results, extended fixed-threshold comparison, and replacement closed-loop runs.
+the 9 November beta=1 results, extended fixed-threshold comparison, budget and taxon-holdout
+experiments, beta sensitivity results, and exported closed-loop summaries.
 
 Dated experimental drivers and SLURM templates are archived in `experiments/`; see
 [experiments/README.md](experiments/README.md) for their original protocols and current entrypoints.
 
 The closed-loop comparison has 72 runs: eight strategies (nonselective sequencing, PoreLoom,
 and three baselines at two windows), three target fractions, and three simulator seeds. The
-current snapshot uses the nine replacement PoreLoom beta=1 runs and native-0.5 baseline runs.
+current PoreLoom entries use the 15-s revision's exported means and SDs from
+`paper/data/revision_20261109_tnorm15/offline/paper_numbers.json`; baseline entries are unchanged.
+The new per-seed Icarust aggregate was not included in the delivery, so these entries retain
+the supplied rounded precision and are not reconstructed from the older raw aggregate.
 Repeating the matrix requires Icarust built from upstream commit `ef05586` (v0.0.7a) with
 `icarust.patch`, trained checkpoints, and the simulation support files `closed_loop.py` and
 `analyze_live.py`. All three files are in
@@ -299,7 +311,8 @@ src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarus
 src/poreloom/             streaming, replay, controller, and evaluation modules
 example/                  1,000 simulated test reads and trained models for a quick test
 experiments/              dated experimental drivers and cluster job templates
-paper/data/revision_20261104/  frozen inputs for the 4 November 2026 manuscript
+paper/data/revision_20261109_tnorm15/  current frozen publication results (T_norm = 15 s)
+paper/data/revision_20261104/  historical inputs and unchanged baseline/timing sources
 paper/                    current tables, figures, rebuild scripts, and provenance
 configs/, env/            path templates and environment specifications
 tests/                    unit tests

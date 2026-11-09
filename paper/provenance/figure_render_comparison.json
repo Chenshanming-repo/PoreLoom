@@ -3,25 +3,25 @@
     "label": "Figure 1",
     "file": "figures/fig01_overview.pdf",
     "identical_render_to_manuscript": true,
-    "render_sha256": "9cf88526ed399581fff800f864138c53ebea15c034ba4c640157858fc0792366"
+    "render_sha256": "f02c9cb0717c2666eb8f4f24f23a22a581a8eb142fc46b6ec1d08166799e7574"
   },
   {
     "label": "Figure 2",
     "file": "figures/fig02_overall.pdf",
     "identical_render_to_manuscript": true,
-    "render_sha256": "d7df946e2173e0eaf1d3873099bd1d4637ab418d4a8abc038428c97a43c334d5"
+    "render_sha256": "46fd994e799b7b33b5d8e7fa8200d9a31ab46bc8b25d073e6c55137888dc676d"
   },
   {
     "label": "Figure 3",
     "file": "figures/fig05_budget.pdf",
     "identical_render_to_manuscript": true,
-    "render_sha256": "9a57d8954480d9d4a71c00d25467043d816e63dae2fcd4de4363b7e46de999b8"
+    "render_sha256": "242467ca008283c08ad6364ada7df309d0d0b6fe31c626c7350933121d98b18a"
   },
   {
     "label": "Figure S1",
     "file": "figures/figS_encoding.pdf",
     "identical_render_to_manuscript": true,
-    "render_sha256": "1bfabd8d8f289e94ee0cb34895ee1eea57ba7b7355a76b47815d599abdd610a6"
+    "render_sha256": "5e5f3d203e7b05bd707c7798e46f180261ff7899a15fb35a246f210a0fa8911a"
   },
   {
     "label": "Figure S2",
@@ -39,6 +39,12 @@
     "label": "Figure S4",
     "file": "figures/figS_beta.pdf",
     "identical_render_to_manuscript": true,
-    "render_sha256": "368edc98cf2872b571d38c32e0b5a5af6cb543c787e8bc6dfe5f9d60acc3df50"
+    "render_sha256": "4076be9b3a5458466af2cad1712f87d28d2622eb2208b73b185ebf4027b8e582"
+  },
+  {
+    "label": "Figure S5",
+    "file": "figures/figS_example_reads.pdf",
+    "identical_render_to_manuscript": true,
+    "render_sha256": "5b05ddaced8fc0de517bd56bd099e0136b758d7e1f7c985c03e1cb094cbaeffc"
   }
 ]

@@ -1,7 +1,7 @@
 """Draw the editable PoreLoom Figure 1 from the current method implementation.
 
 Run with a Python environment containing matplotlib and numpy:
-    python paper/draw_overview.py
+    python paper/scripts/draw_overview.py
 
 Outputs are independent vector artwork, not a tracing or embedding of the
 imagegen visual draft. Signals and evidence points are explicitly schematic.
@@ -293,24 +293,33 @@ def draw(out):
             contained_text.append((t, (x, 655, 120, height)))
         options = [("accept", "teal", -18), ("reject", "coral", 18)] if forced else [
             ("accept", "teal", -28), ("reject", "coral", 0), ("continue", "blue", 28)]
+        # Dots denote legal actions; the six cost components are expanded below.
         for action, hue, dx in options:
             dot = circle(center + dx, 772 if forced else 728, 8, C[hue])
             dot.set_gid("panel_c_head_" + key + "_" + action)
     text(1223, 704, "…", size=38, ha="center", color=C["muted"])
 
-    # The selected head estimates both components for each legal action.
-    arrow([(1105, 768), (1105, 815), (1058, 815), (1058, 828)], color=C["purple"], ms=4.7)
-    arrow([(1105, 768), (1105, 815), (1395, 815), (1395, 828)], color=C["purple"], ms=4.7)
-    box(915, 836, 285, 120, r"$\hat U(a\mid x)$" + "\nHost time", color="purple", size=28, gid="panel_c_host_cost")
-    box(1230, 836, 330, 120, r"$\hat R(a\mid x)$" + "\nTarget risk", color="purple", size=28, gid="panel_c_target_cost")
-    line([(1058, 964), (1058, 982), (1395, 982), (1395, 964)], C["purple"], lw=0.8)
-    arrow([(1265, 982), (1265, 1005)], color=C["purple"], ms=4.5)
-    objective = text(1265, 1035, r"$a^*(x) = \mathrm{arg\,min}_{a}\,[\hat U(a\mid x)+\hat R(a\mid x)]$", size=30, ha="center")
+    # Six separate outputs, paired by action. Their meanings are in the caption.
+    line([(1105, 768), (1105, 815)], C["purple"], lw=0.8)
+    cost_centers = []
+    for action, hue, left in [("A", "teal", 915), ("R", "coral", 1135), ("C", "blue", 1355)]:
+        for component in (1, 2):
+            x = left + (component - 1) * 104
+            center = x + 48
+            cost_centers.append(center)
+            arrow([(center, 815), (center, 832)], color=C[hue], ms=4.7)
+            box(x, 840, 96, 94, rf"$\hat c_{{{action},{component}}}$", color=hue,
+                size=28, gid=f"panel_c_cost_{action}_{component}")
+            line([(center, 942), (center, 978)], C[hue], lw=0.8)
+    line([(cost_centers[0], 815), (cost_centers[-1], 815)], C["purple"], lw=0.8)
+    line([(cost_centers[0], 978), (cost_centers[-1], 978)], C["purple"], lw=0.8)
+    arrow([(1250, 978), (1250, 1005)], color=C["purple"], ms=4.5)
+    objective = text(1250, 1035, r"$d^* = \mathrm{arg\,min}_{a}\,[\hat c_{a,1}+\hat c_{a,2}]$", size=30, ha="center")
     objective.set_gid("panel_c_objective")
 
     # Blue denotes a Continue result, followed by new signal and updated features.
     circle(900, 1035, 8, C["blue"]).set_gid("panel_c_continue_result")
-    arrow([(932, 1035), (915, 1035)], color=C["blue"], ms=4.5)
+    arrow([(1015, 1035), (915, 1035)], color=C["blue"], ms=4.5)
     arrow([(885, 1035), (868, 1035), (868, 500), (892, 500)], color=C["blue"], lw=1)
     text(848, 768, "Wait for next chunk", size=26, color=C["blue"], ha="center", rotation=90)
 

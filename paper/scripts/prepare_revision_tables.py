@@ -1,24 +1,38 @@
 #!/usr/bin/env python3
-"""Rebuild all current tables from the frozen 2026-11-04 data snapshot."""
+"""Rebuild all current tables from the frozen November 2026 data snapshots."""
 from pathlib import Path
 import json
+from decimal import Decimal, ROUND_HALF_UP
 import numpy as np
 import pandas as pd
 ROOT=Path(__file__).resolve().parents[1]
-DATA=ROOT/'data/revision_20261104'
+LEGACY_DATA=ROOT/'data/revision_20261104'
+DATA=ROOT/'data/revision_20261109_tnorm15/offline'
+# New delivery omits its advertised Icarust aggregate and run files.
+# Preserve historical comparators and insert only the supplied rounded PoreLoom cells.
+ICARUST_BASE=LEGACY_DATA
 FAMILIES=['Simulated','R9','R10 mixed','R10 sputum']
 METHODS={'poreloom':'PoreLoom','readcurrent':'ReadCurrent','nanodeep_upstream':'NanoDeep','squigglenet':'SquiggleNet'}
 METRICS=['acc','host_reject','frr','host_pore']
 HEADERS=[r'Accuracy (\%)',r'Hosts rejected (\%)',r'Targets rejected (\%)','Host pore time (s)']
-def read(name):return pd.read_csv(DATA/(name+'.csv'))
+def read(name):
+    # Table S1 retains the author's corrected validation counts.
+    source=LEGACY_DATA if name=='tableS1_counts' else DATA
+    return pd.read_csv(source/(name+'.csv'))
 def row(values):return ' & '.join(values)+r'\\'
 def write(name,spec,headers,rows,sep=None,upper=None):
     lines=[r'\begin{tabular}{@{}'+spec+r'@{}}',r'\toprule']+(upper or [])+[row(headers)+r'\midrule',*rows,r'\bottomrule',r'\end{tabular}']
     if sep:lines=[r'\begingroup\setlength{\tabcolsep}{'+sep+'}',*lines,r'\endgroup']
-    (ROOT/'tables'/name).write_text('\n'.join(lines)+'\n')
-def cell(avg,sd,metric,bold=False):
+    path=ROOT/'tables'/name
+    text='\n'.join(lines)+'\n'
+    if not path.exists() or path.read_text()!=text:
+        path.write_text(text)
+def cell(avg,sd,metric,bold=False,half_up=False):
     scale,digits=(1,3) if metric=='host_pore' else (100,2)
-    value=f'{avg*scale:.{digits}f} \\pm {sd*scale:.{digits}f}'
+    mean=f'{avg*scale:.{digits}f}'
+    if half_up:
+        mean=str((Decimal(str(avg))*scale).quantize(Decimal('1').scaleb(-digits),rounding=ROUND_HALF_UP))
+    value=f'{mean} \\pm {sd*scale:.{digits}f}'
     return '$'+(r'\mathbf{'+value+'}' if bold else value)+'$'
 def cells(r,best=None,metrics=METRICS):
     return [cell(r[m+'_mean'],r[m+'_sd'],m,best is not None and np.isclose(r[m+'_mean'],best[m],atol=1e-12,rtol=0)) for m in metrics]
@@ -64,7 +78,12 @@ def build():
     d=read('tableS2_summary');body=[]
     for family in FAMILIES:
         q=d[d.family==family].set_index('method')
-        for i,m in enumerate(list(METHODS)[1:]):body.append(row([family if i==0 else '',METHODS[m]]+cells(q.loc[m])))
+        for i,m in enumerate(list(METHODS)[1:]):
+            vals=cells(q.loc[m])
+            if family=='R10 mixed' and m=='nanodeep_upstream':
+                # Preserve the established decimal half-up display convention.
+                vals[0]=cell(q.loc[m,'acc_mean'],q.loc[m,'acc_sd'],'acc',half_up=True)
+            body.append(row([family if i==0 else '',METHODS[m]]+vals))
         if family!=FAMILIES[-1]:body.append(r'\addlinespace')
     write('supp_baseline_facp.tex','llrrrr',['Dataset','Method']+HEADERS,body)
     d=read('budget_summary');body=[]
@@ -74,22 +93,29 @@ def build():
         if ds=='r10_run01':body.append(r'\addlinespace')
     hdr=[r'\shortstack{'+h.replace(' (',r'\\(')+'}' for h in HEADERS]
     write('supp_budget_summary.tex','llrrrrr',['Data group','Budget']+hdr+[r'\shortstack{Hosts decided\\at budget (\%)}'],body)
-    aggregate=json.loads((DATA/'icarust_aggregate.json').read_text())['table']
-    sim_methods=[('No-AS','Nonselective','---'),('PoreLoom_beta1','PoreLoom','Budget 6000')]
+    aggregate=json.loads((ICARUST_BASE/'icarust_aggregate.json').read_text())['table']
+    supplied=json.loads((DATA/'paper_numbers.json').read_text())
+    sim_methods=[('No-AS','Nonselective','---'),('PoreLoom_ftref','PoreLoom','Budget 6000')]
     for m,lab in [('readcurrent','ReadCurrent'),('nanodeep','NanoDeep'),('squigglenet','SquiggleNet')]:
         sim_methods.extend([(m+'_native',lab,'Window 3000'),(m+'_w6000_native',lab,'Window 6000')])
     body=[]
     for strategy,lab,obs in sim_methods[1:]:
         vals=[]
-        for fraction in [10,100,300]:
-            avg,sd=aggregate[f'{fraction}/{strategy}']['enrichment'];value=f'{avg:.2f} $\\pm$ {sd:.2f}'
-            vals.append(r'\textbf{'+value+'}' if strategy=='PoreLoom_beta1' else value)
+        for fi,fraction in enumerate([10,100,300]):
+            if strategy=='PoreLoom_ftref':
+                value=supplied['table2_poreloom'][fi].replace(' ± ',r' $\pm$ ')
+            else:
+                avg,sd=aggregate[f'{fraction}/{strategy}']['enrichment'];value=f'{avg:.2f} $\\pm$ {sd:.2f}'
+            vals.append(r'\textbf{'+value+'}' if strategy=='PoreLoom_ftref' else value)
         body.append(row([lab if not 'w6000' in strategy else '',obs]+vals))
     write('closed_loop.tex','llrrr',['Method','Observation',r'1\%',r'10\%',r'30\%'],body,'3.5pt')
     body=[]
     for fraction in [10,100,300]:
         for i,(strategy,lab,obs) in enumerate(sim_methods):
-            r=aggregate[f'{fraction}/{strategy}'];vals=[cell(*r[key],metric) for key,metric in zip(['acc','host_eject','target_eject','host_pore'],METRICS)]
+            if strategy=='PoreLoom_ftref':
+                vals=['$'+v.replace(' ± ',r' \pm ')+'$' for v in supplied['tableS5_poreloom'][str(fraction//10)+'%']]
+            else:
+                r=aggregate[f'{fraction}/{strategy}'];vals=[cell(*r[key],metric) for key,metric in zip(['acc','host_eject','target_eject','host_pore'],METRICS)]
             body.append(row([str(fraction//10)+r'\%' if i==0 else '',lab,obs]+vals))
         if fraction!=300:body.append(r'\addlinespace')
     hdr=[r'\shortstack{'+h.replace(' (',r'\\(').replace('rejected','ejected')+'}' for h in HEADERS]

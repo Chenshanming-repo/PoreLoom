@@ -25,10 +25,12 @@ RENDER=[]
 BAR_SUMMARIES=[]
 BAR_CHECKS=[]
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':10,'axes.labelsize':10,'xtick.labelsize':10,'ytick.labelsize':10,'legend.fontsize':10,'axes.spines.top':False,'axes.spines.right':False,'axes.linewidth':.6,'lines.linewidth':1.2,'pdf.fonttype':42,'svg.fonttype':'none','svg.hashsalt':'poreloom-recomb2027','savefig.facecolor':'white'})
-OFFLINE = ROOT / 'data/revision_20261104'
+LEGACY_OFFLINE = ROOT / 'data/revision_20261104'
+OFFLINE = ROOT / 'data/revision_20261109_tnorm15/offline'
 
 def data(n):
-    return pd.read_csv(OFFLINE/f'{n}.csv')
+    source = LEGACY_OFFLINE if n == 'timing_raw' else OFFLINE
+    return pd.read_csv(source/f'{n}.csv')
 def panel(ax,c):
     ax.text(0,1.04,c,transform=ax.transAxes,fontweight='bold',fontsize=12,va='bottom')
     ax.grid(axis='y',color='#E5E9EA',linewidth=.55,zorder=0)
@@ -102,7 +104,7 @@ def shape_preserving_curve(x, y, query):
 def main_figure():
     # Fixed-window outcomes and enrichment are reported in Tables 1 and 2.
     fig, axes = plt.subplots(1, 2, figsize=(6.5, 2.75))
-    prefix = pd.read_csv(OFFLINE / 'fig2a_p05_summary.csv').rename(columns={'length': 'usable_samples', 'acc_p05_mean': 'mean', 'acc_p05_sd': 'std'})
+    prefix = pd.read_csv(LEGACY_OFFLINE / 'fig2a_p05_summary.csv').rename(columns={'length': 'usable_samples', 'acc_p05_mean': 'mean', 'acc_p05_sd': 'std'})
     positions = pd.read_csv(OFFLINE / 'fig2b_cdf_units.csv').rename(columns={'used': 'usable_samples', 'frac': 'cdf'})
     decision_summary = pd.read_csv(OFFLINE / 'fig2b_decisions_summary.csv').set_index('family')
     positions['unit'] = positions.dataset + '/r' + positions.rep.astype(str)
@@ -209,7 +211,7 @@ def main():
     timing['paired_speed_ratio']={'mean':float(ratios.mean()),'sd':float(ratios.std(ddof=1)),'n':len(ratios)}
     timing['ratio_of_means']=timing['scratch']['mean_ms']/timing['incremental']['mean_ms']
     report={'figures':RENDER,'mixed_prefix_timing':timing,
-            'source_directories':{'timing':str(OFFLINE), 'offline':str(OFFLINE)},
+            'source_directories':{'timing':str(LEGACY_OFFLINE), 'fixed_threshold_prefix':str(LEGACY_OFFLINE), 'offline':str(OFFLINE)},
             'sample_sd_ddof':1,'experimental_units_per_condition':3,'individual_repeat_traces':False}
     (ROOT/'review/figure_mean_sd_audit.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({key: report[key] for key in ['figures', 'mixed_prefix_timing']},indent=2))

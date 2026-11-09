@@ -1,0 +1,7 @@
+Fig. S5 example reads: simulated group 1, repeat 0, test set, 0.4-s observations, nominal processing delay
+old = manuscript head (per-dataset T_ref): /home/user/PoreLoom_beta1_20261103/hpc_beta1/runs/main/sim_g1/r0/poreloom/test_outcomes_0.4_nominal.npz
+new = fixed T_ref 15.0 s head: /home/user/PoreLoom_ftref_20261109_tnorm15/hpc/runs/main/sim_g1/r0/poreloom/test_outcomes_0.4_nominal.npz
+panel,read_id,class,old_command,old_time_s,new_command,new_time_s
+a,TEST_20341102_00008824,host,Reject,0.545,Reject,0.545
+b,TEST_20341102_00004393,target,Accept,1.052,Accept,1.452
+c,TEST_20341102_00000294,host,Reject,0.577,Reject,0.577

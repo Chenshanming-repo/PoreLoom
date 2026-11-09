@@ -1,9 +1,10 @@
 # Example: PoreLoom and baselines on 1,000 simulated reads
 
-This example is for testing. It runs the paper's trained PoreLoom model and three baselines on a small
-subset of the simulated test set and reports the metrics used in the paper, so an installation can be
-checked in about a minute. The results below come from the command in
-[Running the example](#running-the-example).
+This example tests an installation using the bundled PoreLoom model and three baselines on a small
+subset of the simulated test set. It retains the earlier `T_norm = 13.93 s` checkpoint and saved
+reference outcomes. Current `T_norm = 15 s` publication results are in
+[`paper/`](../paper/README.md); the new action-head checkpoints were not supplied with those results.
+The results below come from the command in [Running the example](#running-the-example).
 
 ## Results
 
@@ -20,8 +21,7 @@ NanoDeep skips the first 1000 samples (samples 1000-4000), ReadCurrent and Squig
 | NanoDeep | 86.50% | 87.60% | 14.60% | 3.572 s |
 | SquiggleNet | 83.90% | 89.00% | 21.20% | 3.355 s |
 
-The same models on all 30,000 test reads of simulated group 1 in the paper (Table 1 averages
-this group with two others):
+The same bundled models on all 30,000 test reads of simulated group 1 in the historical reference:
 
 | Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@ this group with two others):
 | NanoDeep | 86.63% | 86.97% | 13.71% | 3.646 s |
 | SquiggleNet | 85.06% | 88.43% | 18.31% | 3.413 s |
 
-Per-read outcomes identical to the paper's: PoreLoom 1,000/1,000, ReadCurrent 1,000/1,000, NanoDeep 1,000/1,000, SquiggleNet 1,000/1,000.
+Per-read outcomes identical to the saved historical reference: PoreLoom 1,000/1,000, ReadCurrent 1,000/1,000, NanoDeep 1,000/1,000, SquiggleNet 1,000/1,000.
 
 ## Example reads
 
@@ -62,7 +62,7 @@ writes `metrics.json`, `per_read.csv`, `example_reads.png` and this `README.md` 
 | `data/test/` | 1,000 reads in the prefix-cache layout of `poreloom.method.data`: int16 ADC of the first 9000 samples, calibration, class, and each read's replay phase in the paper (`phase`) |
 | `models/poreloom/` | streaming encoder (`encoder.pt`) and FACP head (`head.pt`, beta = 1) |
 | `models/readcurrent/`, `models/nanodeep/`, `models/squigglenet/` | 3000-sample baselines (`best.pt`) and their selection files with the service time used in replay |
-| `reference/` | the paper's per-read outcomes for these reads and its metrics on all group-1 test reads |
+| `reference/` | historical per-read outcomes for these reads and metrics on all group-1 test reads |
 | `run_example.py` | the script that produced this page |
 
 The simulated reads were generated with Squigulator (`dna-r10-min`, 4 kHz) from GRCh38.p14 (host) and eight

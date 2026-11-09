@@ -1,6 +1,5 @@
-"""FACP host pore-time normalization: one fixed T_norm for every dataset (13.93 s = mean natural duration of
-80000 training host reads, 20000 drawn once from each of the four datasets); t_norm=None restores the per-dataset
-training mean."""
+"""FACP host pore-time normalization: one fixed T_norm for every dataset (15 s = 6000 bp / 400 bases/s);
+t_norm=None restores the per-dataset training mean."""
 import argparse
 from types import SimpleNamespace
 
@@ -15,14 +14,14 @@ NATURAL = 24000/5000          # trajectories(): every read is 24000 samples at 5
 
 
 def test_default_t_norm_is_fixed():
-    assert H.HEAD['t_norm'] == 13.93
+    assert H.HEAD['t_norm'] == 15.0
 
 
 def test_train_heads_default_uses_fixed_t_norm(tmp_path):
     z = trajectories()
     choice = H.train_heads([z, z], z, 5000, tmp_path, 'cpu', log=lambda *a: None, epochs=1, hidden=4)
-    assert torch.load(tmp_path/'controllers.pt')['t_norm'] == 13.93
-    assert choice['t_norm'] == 13.93
+    assert torch.load(tmp_path/'controllers.pt')['t_norm'] == 15.0
+    assert choice['t_norm'] == 15.0
 
 
 def test_train_heads_none_derives_t_norm_from_training_hosts(tmp_path):
@@ -49,7 +48,7 @@ def test_invalid_t_norm_is_rejected(tmp_path, bad):
         H.train_heads([z, z], z, 5000, tmp_path, 'cpu', log=lambda *a: None, epochs=1, hidden=4, t_norm=bad)
 
 
-@pytest.mark.parametrize('text, value', [('13.93', 13.93), ('train', None), ('7', 7.)])
+@pytest.mark.parametrize('text, value', [('15', 15.), ('13.93', 13.93), ('train', None), ('7', 7.)])
 def test_cli_t_norm_argument(text, value):
     assert pipeline.t_norm_arg(text) == value
 
@@ -60,7 +59,7 @@ def test_cli_t_norm_argument_rejects(text):
         pipeline.t_norm_arg(text)
 
 
-@pytest.mark.parametrize('given, expected', [('absent', 13.93), (None, None), (5., 5.)])
+@pytest.mark.parametrize('given, expected', [('absent', 15.), (None, None), (5., 5.)])
 def test_pipeline_head_passes_t_norm(tmp_path, monkeypatch, given, expected):
     monkeypatch.setattr(D, 'load_split', lambda root, split: SimpleNamespace(read_id=np.array(['a'])))
     monkeypatch.setattr(D, 'validation', lambda root: SimpleNamespace(read_id=np.array(['b'])))
@@ -79,7 +78,8 @@ def test_pipeline_head_passes_t_norm(tmp_path, monkeypatch, given, expected):
     assert captured['t_norm'] == expected
 
 
-@pytest.mark.parametrize('t_norm, protocol', [(None, 'manuscript_20261104'), (13.93, 'fixed_tnorm_20261106'), (5., 'fixed_tnorm_20261106')])
+@pytest.mark.parametrize('t_norm, protocol', [(None, 'manuscript_20261104'), (15., 'fixed_tnorm_20261106'),
+                                            (13.93, 'fixed_tnorm_20261106'), (5., 'fixed_tnorm_20261106')])
 def test_protocol_label_follows_t_norm(t_norm, protocol):
     assert pipeline.protocol_for(t_norm) == protocol
 
@@ -90,13 +90,13 @@ def test_run_json_records_t_norm_and_refuses_a_different_one(tmp_path, monkeypat
     pipeline.main(['test', '--data', str(tmp_path), '--out', str(out), '--device', 'cpu'])
     import json
     run = json.loads((out/'run.json').read_text())
-    assert run['t_norm'] == 13.93 and run['protocol'] == 'fixed_tnorm_20261106'
+    assert run['t_norm'] == 15.0 and run['protocol'] == 'fixed_tnorm_20261106'
     with pytest.raises(ValueError, match='t_norm'):
         pipeline.main(['test', '--data', str(tmp_path), '--out', str(out), '--device', 'cpu', '--t-norm', 'train'])
 
 
 def test_run_directory_from_the_manuscript_refuses_the_fixed_t_norm(tmp_path, monkeypatch):
-    """A run started before t_norm existed used the per-dataset mean; resuming it must not switch to 13.93 s."""
+    """A run started before t_norm existed used the per-dataset mean; resuming it must not switch to 15 s."""
     monkeypatch.setattr(pipeline, 'test', lambda a: None)
     out = tmp_path/'run'
     pipeline.main(['test', '--data', str(tmp_path), '--out', str(out), '--device', 'cpu', '--t-norm', 'train'])
@@ -104,6 +104,19 @@ def test_run_directory_from_the_manuscript_refuses_the_fixed_t_norm(tmp_path, mo
     run = json.loads((out/'run.json').read_text()); run.pop('t_norm'); (out/'run.json').write_text(json.dumps(run))
     with pytest.raises(ValueError, match='t_norm'):
         pipeline.main(['test', '--data', str(tmp_path), '--out', str(out), '--device', 'cpu'])
+
+
+def test_previous_fixed_t_norm_requires_explicit_resume(tmp_path, monkeypatch):
+    """Existing 13.93 s runs keep their fitted cost scale when the default changes."""
+    monkeypatch.setattr(pipeline, 'test', lambda a: None)
+    out = tmp_path/'run'
+    args = ['test', '--data', str(tmp_path), '--out', str(out), '--device', 'cpu']
+    pipeline.main([*args, '--t-norm', '13.93'])
+    original = (out/'run.json').read_text()
+    with pytest.raises(ValueError, match='t_norm'):
+        pipeline.main(args)
+    pipeline.main([*args, '--t-norm', '13.93'])
+    assert (out/'run.json').read_text() == original
 
 
 @pytest.mark.parametrize('path', ['experiments/20261015_ablation/ablation.py', 'experiments/20261016_budget_up/budget_up.py'])

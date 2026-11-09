@@ -24,10 +24,9 @@ from ..stream_config import (DEFAULT_FS, DEFAULT_MAX_SAMPLES, DEFAULT_SKIP, DEFA
 from .native_policy import stored_phases
 
 HEAD = dict(interval=.4, budget=DEFAULT_MAX_SAMPLES, phase_seed=20261012, copy_seed=20261013, train_seed=20261013, lr=3e-3, epochs=100,
-            patience=5, service=0.0158467092551291, eject=.1, betas=[1.0], n_buckets=8, hidden=64, t_norm=13.93)
-# t_norm: T_norm in seconds, the normalizer of host pore time in the U labels. 13.93 s is one value for every dataset: the
-# mean natural duration of 80000 training host reads, 20000 drawn once (numpy default_rng(20261106), without replacement) from each
-# of the four datasets (simulated 19.86, R9 10.04, R10 mixed 19.00, R10 sputum 6.85 s in the draw; R9 has exactly 20000).
+            patience=5, service=0.0158467092551291, eject=.1, betas=[1.0], n_buckets=8, hidden=64, t_norm=15.0)
+# t_norm: T_norm in seconds, the normalizer of host pore time in the U labels. The fixed 15 s reference applies to every
+# dataset: a representative 6000 bp fragment / 400 bases per second. It is a cost scale, not a decision-time budget.
 # None derives T_norm from the fitting set's host reads (manuscript of 4 November 2026).
 
 
@@ -97,7 +96,7 @@ def metrics(o, is_target):
 
 def train_heads(fit_z, sel_z, fs, output, device='cuda', log=print, **overrides):
     """Fit beta=1.0 by default, or explicit betas; return the selection and write controllers.pt / table.json.
-    U labels are host pore seconds / t_norm (HEAD default: the fixed 13.93 s; None: mean natural training host duration)."""
+    U labels are host pore seconds / t_norm (HEAD default: the fixed 15 s; None: mean natural training host duration)."""
     cfg = {**HEAD, **overrides}
     features = look_config(fit_z[0])
     if any(look_config(z) != features for z in [*fit_z[1:], sel_z]):

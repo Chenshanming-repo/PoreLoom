@@ -18,6 +18,7 @@ def main():
     scripts = [
         'prepare_revision_tables.py', 'draw_overview.py', 'plot_mean_sd.py',
         'plot_encoding.py', 'plot_sputum_taxon_holdouts.py', 'plot_beta.py',
+        'export_example_reads.py',
     ]
     with (ROOT / 'review/rebuild.log').open('w') as log:
         for script in scripts:
@@ -28,7 +29,7 @@ def main():
                     ROOT.parent / 'docs/poreloom_overview.png')
     subprocess.run([sys.executable, str(ROOT / 'scripts/verify_publication.py')],
                    cwd=ROOT, check=True)
-    print('Rebuilt 7 figures (PDF/PNG/SVG), 10 tables, and the README overview.')
+    print('Rebuilt 8 figures (PDF/PNG/SVG), 10 tables, and the README overview.')
 
 
 if __name__ == '__main__':

@@ -2,14 +2,18 @@
 """Verify current publication assets and frozen data without manuscript or TeX files."""
 from pathlib import Path
 import hashlib,json,re
+import fitz
 import numpy as np
 import pandas as pd
 ROOT=Path(__file__).resolve().parents[1]
-DATA=ROOT/'data/revision_20261104'
+LEGACY=ROOT/'data/revision_20261104'
+SNAPSHOT=ROOT/'data/revision_20261109_tnorm15'
+DATA=SNAPSHOT/'offline'
 METRICS=['acc','host_reject','frr','host_pore']
-report={'revision_date':'2026-11-04','aggregation':'Equal-weight means and sample SD (ddof=1), n=3'}
+report={'revision_date':'2026-11-09','pore_time_normalization_constant_s':15.0,'aggregation':'Equal-weight means and sample SD (ddof=1), n=3'}
 def read(n):
-    d=pd.read_csv(DATA/(n+'.csv'))
+    source=LEGACY if n in ['fig2a_p05_summary','timing_raw','tableS1_counts','figS3_composition'] else DATA
+    d=pd.read_csv(source/(n+'.csv'))
     return d[d.rule.isin(['beta1','native'])] if n=='table1_units' else d
 def check_stats(units,summary,keys,metrics):
     summary=summary.set_index(keys);checked=0
@@ -25,9 +29,14 @@ for u,s,k,m in [('table1_units','table1_new',['family','method','window'],METRIC
     checks+=check_stats(read(u),read(s),k,m)
 checks+=check_stats(read('table3_fixed_ext_units'),read('table3_fixed_ext_summary'),['family','method'],METRICS)
 report['mean_sd_metric_groups_verified']=checks
-for name,meta in json.loads((DATA/'provenance.json').read_text()).items():
-    assert hashlib.sha256((DATA/name).read_bytes()).hexdigest()==meta['sha256'],name
+for name,meta in json.loads((LEGACY/'provenance.json').read_text()).items():
+    assert hashlib.sha256((LEGACY/name).read_bytes()).hexdigest()==meta['sha256'],name
+new_provenance=json.loads((SNAPSHOT/'provenance.json').read_text())
+assert new_provenance['host_reference_s']==15.0
+for name,meta in new_provenance['files'].items():
+    assert hashlib.sha256((SNAPSHOT/name).read_bytes()).hexdigest()==meta['sha256'],name
 report['source_snapshot_hashes_verified']=True
+report['new_frozen_input_files_verified']=len(new_provenance['files'])
 # The beta=1 results must equal the main policy in each of the 12 units.
 main_units=read('table1_units');main_units=main_units[main_units.method=='poreloom'].copy()
 main_units['unit']=main_units.dataset+'/r'+main_units.rep.astype(str)
@@ -40,8 +49,8 @@ for r in beta.itertuples(index=False):
     q=main_units[(main_units.family==r.family)&(main_units.unit==r.unit)];assert len(q)==1
     np.testing.assert_allclose(q[METRICS].to_numpy()[0],[getattr(r,m) for m in METRICS],atol=1e-12,rtol=0)
 report['beta1_units_equal_main']=len(beta)
-# Recompute all closed-loop results from the 3 seed rows, including enrichment.
-a=json.loads((DATA/'icarust_aggregate.json').read_text())
+# Recompute historical comparators from seed rows. New PoreLoom runs are unavailable.
+a=json.loads((LEGACY/'icarust_aggregate.json').read_text())
 for key,summary in a['table'].items():
     fraction,strategy=key.split('/');q=[r for r in a['rows'] if r['permille']==int(fraction) and r['strategy']==strategy]
     assert len(q)==3
@@ -52,12 +61,20 @@ for key,summary in a['table'].items():
         assert np.isclose(expected,r['acc'])
     for m in ['enrichment','acc','host_eject','target_eject','host_pore']:
         vals=[r[m] for r in q];np.testing.assert_allclose([np.mean(vals),np.std(vals,ddof=1)],summary[m],atol=1e-12)
-report['closed_loop_seed_rows_verified']=len(a['rows'])
-active_rows=[r for r in a['rows'] if r['strategy']!='PoreLoom']
-assert len(active_rows)==72
-report['closed_loop_active_seed_rows']=len(active_rows)
+report['historical_closed_loop_seed_rows_verified']=len(a['rows'])
+active_rows=[r for r in a['rows'] if not r['strategy'].startswith('PoreLoom')]
+assert len(active_rows)==63
+report['current_closed_loop_baseline_seed_rows']=len(active_rows)
 # Match current table values against the revision document's companion numeric record.
 numbers=json.loads((DATA/'paper_numbers.json').read_text())
+report['closed_loop']={
+    'poreloom_source':'data/revision_20261109_tnorm15/offline/paper_numbers.json',
+    'poreloom_precision':'Supplied rounded mean and SD only',
+    'new_poreloom_raw_runs_verified':False,
+    'limitation':'The delivery omits icarust/aggregate.json, check.json and raw runs; current PoreLoom closed-loop cells can only be checked against the rounded summary export.',
+    'baseline_and_nonselective_values_unchanged':True,
+    'poreloom_latency_p50_summary_s':numbers['closed_loop_latency_p50'],
+}
 def pm(line):return re.findall(r'([0-9]+\.[0-9]+)\s*(?:\$)?\\pm(?:\$)?\s*([0-9]+\.[0-9]+)',line)
 def expected_pm(vals):return [tuple(v.split(' ± ')) for v in vals]
 def table_lines(name,needle=None):
@@ -110,12 +127,15 @@ for family,line in zip(stopping_families,forced_rows):
         expected.append((f'{timing.at_budget_mean*100:.2f}',f'{timing.at_budget_sd*100:.2f}'))
     assert pm(line)==expected,(family,line,expected)
 report['forced_decision_table']={'number':'S2','rows_verified':len(forced_rows),'cells_verified':len(forced_rows)*len(stopping_methods),'denominator':'All test reads'}
-# Check the paired host-time direction and the all-read budget fractions used in Section 3.3.
-paired=stopping[stopping.method=='facp'].merge(stopping[stopping.method.isin(['d0.01','d0.05'])],on=['family','dataset','rep'],suffixes=('_facp','_threshold'),validate='one_to_many')
-assert len(paired)==24
-assert (paired.host_pore_threshold>paired.host_pore_facp).all()
+# Verify paired threshold-minus-FACP differences and the 15-second cost scale.
+paired=stopping[stopping.method=='facp'].merge(stopping[stopping.method!='facp'],on=['family','dataset','rep'],suffixes=('_facp','_threshold'),validate='one_to_many')
+paired['method']=paired.method_threshold
+for metric in METRICS+['J']:
+    paired[metric]=paired[metric+'_threshold']-paired[metric+'_facp']
+report['paired_threshold_metric_groups_verified']=check_stats(paired,read('table3_fixed_ext_paired'),['family','method'],METRICS+['J'])
+np.testing.assert_allclose(stopping.J,stopping.host_pore/15.0+stopping.frr,atol=1e-12,rtol=0)
 np.testing.assert_allclose(decisions[['early_mean','at_budget_mean','no_decision_mean']].sum(axis=1),1,atol=1e-12,rtol=0)
-report['table3']['longer_host_time_paired_units_per_new_threshold']=12
+report['table3']['longer_host_time_paired_units_by_threshold']={method:int((q.host_pore>0).sum()) for method,q in paired.groupby('method')}
 # Fixed-probability prefix data are available only at the supplied 0.01 percentage-point precision.
 prefix=read('fig2a_p05_summary')
 assert len(prefix)==128 and prefix.groupby('family').size().eq(32).all()
@@ -132,6 +152,17 @@ for r in read('figS3_composition').itertuples(index=False):
     if r.partition in ['train','dev_a (new)','test']:
         assert f'{r.pct:.2f}'==numbers['figS_composition'][r.fold][r.partition][int(r.group[-1])-1]
 
+# Verify the shared accuracy-tolerance interval from all fitted beta policies.
+beta_summary=read('figS_beta_summary')
+peak=beta_summary.groupby('family').acc_mean.max()
+beta_summary['gap_pp']=100*(beta_summary.family.map(peak)-beta_summary.acc_mean)
+passing=beta_summary.groupby('beta').gap_pp.max()
+passing=passing[passing<=1]
+lo,hi=float(passing.index.min()),float(passing.index.max())
+np.testing.assert_allclose([lo,hi],[.475468,1.50356])
+report['effective_normalization_interval_s']=[15*lo,15*hi]
+report['beta_normalization_equivalence']='Action-cost ordering with fixed predictions only; refitting at a new normalization is not guaranteed equivalent.'
+
 # Tables and figure numbering are locked to the current manuscript snapshot.
 manifest=json.loads((ROOT/'provenance/publication_manifest.json').read_text())
 expected_tables={
@@ -145,6 +176,7 @@ expected_figures={
     'Figure 1':'fig01_overview', 'Figure 2':'fig02_overall', 'Figure 3':'fig05_budget',
     'Figure S1':'figS_encoding', 'Figure S2':'fig03_encoder_cache',
     'Figure S3':'figS_taxon_holdouts', 'Figure S4':'figS_beta',
+    'Figure S5':'figS_example_reads',
 }
 assert len(manifest['tables'])==len(expected_tables)
 assert {r['label']:r['file'] for r in manifest['tables']}=={
@@ -156,8 +188,19 @@ for record in manifest['tables']:
 assert len(manifest['figures'])==len(expected_figures)
 assert {r['label']:r['file'] for r in manifest['figures']}=={
     label:'figures/'+name+'.pdf' for label,name in expected_figures.items()}
-# PDF metadata can change on redraw. Presence and readable formats are checked
-# here; the plotting code separately verifies numerical summaries and layout.
+# PDF metadata may change; compare decoded pixels against the manuscript references.
+render_comparison=[]
+for record in manifest['figures']:
+    with fitz.open(ROOT/record['file']) as document:
+        assert len(document)==1,record['file']
+        pix=document[0].get_pixmap(dpi=manifest['figure_comparison']['dpi'],alpha=False)
+        digest=hashlib.sha256(pix.samples).hexdigest()
+        assert [pix.width,pix.height]==record['source_render_size'],record['file']
+        assert digest==record['source_render_sha256'],('Figure differs from current manuscript',record['file'],digest)
+    render_comparison.append({'label':record['label'],'file':record['file'],'identical_render_to_manuscript':True,'render_sha256':digest})
+(ROOT/'provenance/figure_render_comparison.json').write_text(json.dumps(render_comparison,indent=2)+'\n')
+report['figure_renders_equal_current_manuscript']=len(render_comparison)
+assert (ROOT/'figures/fig01_overview.png').read_bytes()==(ROOT.parent/'docs/poreloom_overview.png').read_bytes()
 for record in manifest['figures']:
     for suffix in ['.pdf','.png','.svg']:
         path=(ROOT/record['file']).with_suffix(suffix)
@@ -188,7 +231,7 @@ for family,count in [('Simulated',10000),('R9',10000),('R10 mixed',10000),('R10 
     assert counts.loc[counts.family==family,'dev_a'].eq(count).all(), family
 assert len(counts[counts.family=='R9'].drop_duplicates(['dataset','train','dev_a','test']))==1
 report['tables']={'main':3,'supplementary':7,'match_manuscript_hashes':len(manifest['tables'])}
-report['figures']={'main':3,'supplementary':4,'formats':['pdf','png','svg']}
+report['figures']={'main':3,'supplementary':5,'formats':['pdf','png','svg']}
 report['numeric_macros_verified']=len(macros)
 report['partition_rows_in_table']=10
 report['sample_sd_ddof']=1
