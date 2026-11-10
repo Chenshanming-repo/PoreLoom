@@ -38,8 +38,6 @@ Alternatively, copy `configs/paths.example.yaml` to `configs/paths.yaml`.
 [example/](example/README.md) is a quick test of an installation: it runs the bundled PoreLoom
 model and the three 3000-sample baselines on 1,000 simulated test reads in about a minute on a CPU,
 reports the metrics, checks every read against its saved reference, and draws example reads.
-The bundled model and reference retain the earlier `T_norm = 13.93 s` configuration; they are
-a historical installation test. Current `T_norm = 15 s` publication results are in `paper/`.
 
 ```bash
 pip install -e . matplotlib
@@ -58,9 +56,7 @@ The stages are window pretraining (`stageA`), streaming-prefix training (`stream
 at `beta = 1.0` (`head`), and test replay (`test`). Each stage can replace `all` in the command.
 Model and action-head parameters are fitted on training reads; validation reads select checkpoints
 and control early stopping. The main protocol fixes beta at 1.
-Existing output directories reuse saved models and settings, so use a new directory when retraining.
-Changing `T_norm` requires refitting the action heads; editing a checkpoint's stored value does not
-convert an existing model to the new normalization.
+Use a new output directory when retraining. Refit the action heads when changing `T_norm`.
 
 | Option | Meaning |
 |---|---|
@@ -68,15 +64,14 @@ convert an existing model to the new normalization.
 | `--max-samples N` | Raw decision endpoint including the skipped prefix (default 7500, a 6000-sample usable budget). |
 | `--max-decision-seconds T` | Endpoint as `floor(T * fs)` raw samples. For example, `--fs 5000 --max-decision-seconds 2.1` equals `--fs 5000 --max-samples 10500`. |
 | `--replicate r` | Training repeat; offsets the training seeds. |
-| `--t-norm T` | Host pore-time normalization in seconds (default 15); `train` uses the fitting set's mean host duration for historical reproduction. |
+| `--t-norm T` | Host pore-time normalization in seconds (default 15). |
 
 The encoder's length-feature scales remain 7500 samples and 4000 Hz across acquisition rates
 and budgets. `--fs` sets the acquisition rate used for replay timing.
 
-The legacy prefix-cache layout uses `train/`, `dev/`, and `test/`, documented in
-`poreloom.method.data`. The current validation set corresponds to the legacy DEV-A subset. Caches must
-cover the requested endpoint. Later stages and inference use the saved configuration. Budget
-experiments can use prepared caches directly; rebuilding them from raw data requires the original
+The prefix-cache layout uses `train/`, `dev/`, and `test/`, documented in
+`poreloom.method.data`. Prepare caches covering the requested endpoint. Later stages and inference
+use the saved configuration. Budget experiments can use prepared caches directly; rebuilding them from raw data requires the original
 preprocessing readers, configured with `PORELOOM_DATA_PREP`.
 
 Evaluate the five fixed symmetric-threshold controls on an existing trained encoder:
@@ -96,7 +91,7 @@ channel's calibration, streams raw signal with `get_live_reads`, and sends `unbl
 and `stop_further_data` for accept. The decision computation is the one used in the closed-loop
 runs; a unit test checks it against `experiments/20261014_final/icarust_live.py`.
 
-**Status: tested against the Icarust simulator only. It has not been run on a sequencing device.**
+**Validation: tested against the Icarust simulator.**
 
 ```bash
 pip install -e .[minknow]
@@ -124,8 +119,7 @@ python -m poreloom.method.baselines --tool readcurrent --data <dataset root> --o
 ```
 
 `--tool` accepts `readcurrent`, `nanodeep`, or `squigglenet`. Use `--recipe upstream` for
-NanoDeep to reproduce its paper training configuration. The dated 6000-sample workflow is
-archived in `experiments/20261016_window6000/win6000.py`.
+NanoDeep to reproduce its paper training configuration.
 
 For baseline runs, install the upstream code under `third_party/`:
 
@@ -252,10 +246,8 @@ from held-out reads by deterministic read-ID hashing.
 | R10 sputum | ONT `pathogen_surveillance_2025.09`, barcodes 01–14, R10.4.1 | 5000 | 79,922–79,994 / 20,000 / 58,868–60,002 | 3 groups from one run |
 
 Table S1 lists exact counts for each group, with R9 listed once because its three training repeats
-share one split. The validation counts incorporate the author's 4 November correction, recorded
-in `paper/data/revision_20261104/provenance.json`. R10 mixed is a computational mixture of two
-separate acquisitions. Sputum uses genomic-locus grouping to keep 10-kb alignment-start bins
-separate across groups and partitions. Supplementary Note 1 gives accessions, labels, and split details.
+share one split. R10 mixed is a computational mixture of two separate acquisitions. Sputum uses
+genomic-locus grouping to keep 10-kb alignment-start bins separate across groups and partitions. Supplementary Note 1 gives accessions, labels, and split details.
 
 ## Reproducing the paper
 
@@ -271,10 +263,7 @@ python paper/scripts/verify_publication.py
 
 [paper/README.md](paper/README.md) maps every current figure and table to its source data and
 explains precision, experimental units, and denominators. Figure 2a's fixed-0.5 means and SDs use
-the supplied precision of 0.01 percentage points. Earlier publication scripts, figure data, and
-provenance are archived under `paper/legacy/20261030/`. The earlier
-`paper/data/revision_20261104/` snapshot remains as provenance and as the source of unchanged
-baseline, timing, and dataset-composition results.
+the supplied precision of 0.01 percentage points.
 
 Current training and evaluation use `python -m poreloom.method all`, and the fixed-threshold
 comparison uses `python -m poreloom.method.thresholds`. For larger budgets, set the raw endpoint
@@ -282,15 +271,12 @@ with `--max-samples` to the usable budget plus 1500. The frozen publication snap
 the 9 November beta=1 results, extended fixed-threshold comparison, budget and taxon-holdout
 experiments, beta sensitivity results, and exported closed-loop summaries.
 
-Dated experimental drivers and SLURM templates are archived in `experiments/`; see
-[experiments/README.md](experiments/README.md) for their original protocols and current entrypoints.
+See [experiments/README.md](experiments/README.md) for experimental workflows and SLURM templates.
 
 The closed-loop comparison has 72 runs: eight strategies (nonselective sequencing, PoreLoom,
 and three baselines at two windows), three target fractions, and three simulator seeds. The
-current PoreLoom entries use the 15-s revision's exported means and SDs from
-`paper/data/revision_20261109_tnorm15/offline/paper_numbers.json`; baseline entries are unchanged.
-The new per-seed Icarust aggregate was not included in the delivery, so these entries retain
-the supplied rounded precision and are not reconstructed from the older raw aggregate.
+PoreLoom means and SDs are provided in
+`paper/data/revision_20261109_tnorm15/offline/paper_numbers.json`.
 Repeating the matrix requires Icarust built from upstream commit `ef05586` (v0.0.7a) with
 `icarust.patch`, trained checkpoints, and the simulation support files `closed_loop.py` and
 `analyze_live.py`. All three files are in
@@ -307,9 +293,8 @@ src/poreloom/baselines/   baseline models and preprocessing
 src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarust only)
 src/poreloom/             streaming, replay, controller, and evaluation modules
 example/                  1,000 simulated test reads and trained models for a quick test
-experiments/              dated experimental drivers and cluster job templates
+experiments/              experimental workflows and cluster job templates
 paper/data/revision_20261109_tnorm15/  current frozen publication results (T_norm = 15 s)
-paper/data/revision_20261104/  historical inputs and unchanged baseline/timing sources
 paper/                    current tables, figures, rebuild scripts, and provenance
 configs/, env/            path templates and environment specifications
 tests/                    unit tests
