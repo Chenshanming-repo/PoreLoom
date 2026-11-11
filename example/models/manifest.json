@@ -3,8 +3,8 @@
     "nanodeep/best.pt": "cc989002b9de7e84f47f95a855cb94d93addf89161a67063685d8971a9e9a1ca",
     "nanodeep/selection.json": "817d999965fcd5c1a0ae120847501e5a9d774ec86db5fef9ac4deecdb890f6c5",
     "poreloom/encoder.pt": "0926db71854cd94830fd66a9df9ec838d48facbef4fe99b91a685399dfd41183",
-    "poreloom/head.pt": "174a232c67c40863b42747107e7ed34966cbd89c43424843b9c6122a675df164",
-    "poreloom/selection.json": "58c56e59874393f1c3fe1f76c993eb641e32083b22fafd9cbd68abdc45e479ce",
+    "poreloom/head.pt": "74c2fda27dcedc9fd46062b49fa6062a32348c958d6c9089c58f760db0d4813e",
+    "poreloom/selection.json": "28a4734892c3c8fd29bace3e6f8ba0baf454dea3d926f8dc04ee25f7664c8c88",
     "readcurrent/best.pt": "2e52946d91c56b2b7ede34002554a2a9c3f74eb56eaadc791ef95f8f942ddac2",
     "readcurrent/selection.json": "e20027e55d194ddc70b847c94490cbbd4be316e4cc4c889e99d35bb8f4d3497d",
     "squigglenet/best.pt": "d148f923da4723f3f97e6328032f50e7fd7a5e20d6a8aad269f06c405540c109",
@@ -12,7 +12,7 @@
   },
   "paper_sha256": {
     "poreloom/encoder.pt": "03a9b529f063f4d02a80798dc762bf0bdfd709f31346251a3ed965f9c61ffb27",
-    "poreloom/head.pt": "f0a503281e0c966ac3fc8f5ec4053c610e286dd0770c52ddeaf07abb4ad035cf",
+    "poreloom/head.pt": "c5b0026f392c4e20ced66386360e414d67b348e11214acb8e1051de681333baf",
     "readcurrent/best.pt": "05bfe0f866f7a41bdbabca90c2e866ddb4ba9700e87fe47c50d92f963afce523",
     "nanodeep/best.pt": "cc989002b9de7e84f47f95a855cb94d93addf89161a67063685d8971a9e9a1ca",
     "squigglenet/best.pt": "79ef3f661712ae05aa30af423d82058f4f06036e2406aa6b82ab92856c49053f"
@@ -20,9 +20,9 @@
   "note": "checkpoints are the paper's files with init_checkpoint shortened to its run-relative path; in poreloom/head.pt and poreloom/selection.json the key host_reference is renamed t_norm; every tensor is unchanged",
   "poreloom": {
     "encoder": "runs/main/sim_g1/poreloom_r0/stream/best.pt",
-    "head": "ftref_20261106/runs/main/sim_g1/r0/poreloom/head/controllers.pt",
+    "head": "ftref_20261109_tnorm15/runs/main/sim_g1/r0/poreloom/head/controllers.pt",
     "beta": 1.0,
-    "t_norm": 13.93,
+    "t_norm": 15.0,
     "service_seconds": 0.0158467092551291
   },
   "baselines": {

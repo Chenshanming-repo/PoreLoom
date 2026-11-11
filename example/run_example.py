@@ -3,10 +3,10 @@
 
     python example/run_example.py [--device cpu] [--out example/output]
 
-The example tests the installation using the historical T_norm = 13.93 s bundled models and saved references.
-It replays a small simulated test subset (an observation every 0.4 s, 0.1 s ejection), checks every read's
-outcome against that reference, and writes metrics.json, per_read.csv, example_reads.png and README.md to --out.
-The action-head checkpoints for the current T_norm = 15 s publication results are not bundled.
+The example is a test of the installation: it runs the paper's trained models (PoreLoom with its T_norm = 15 s
+action head) on a small subset of the paper's simulated test set with the paper's offline protocol (an observation
+every 0.4 s, 0.1 s ejection), checks every read's outcome against the paper's, and writes metrics.json,
+per_read.csv, example_reads.png and README.md to --out.
 Baseline architectures come from their upstream repositories; missing files are downloaded into third_party/ at
 the commits used in the paper and checked by sha256.
 """
@@ -229,11 +229,10 @@ def write_readme(path, results, paper, matches, picks, seconds, device):
     lines = [
         '# Example: PoreLoom and baselines on 1,000 simulated reads',
         '',
-        'This example tests an installation using the bundled PoreLoom model and three baselines on a small',
-        'subset of the simulated test set. It retains the earlier `T_norm = 13.93 s` checkpoint and saved',
-        'reference outcomes. The action-head checkpoints for the current `T_norm = 15 s` publication',
-        'results are not bundled with this example.',
-        'The results below come from the command in [Running the example](#running-the-example).',
+        'This example is for testing. It runs the paper\'s trained PoreLoom model (action head fitted with',
+        '`T_norm = 15 s`, beta = 1) and three baselines on a small subset of the simulated test set and reports the',
+        'metrics used in the paper, so an installation can be checked in about a minute. The results below come',
+        'from the command in [Running the example](#running-the-example).',
         '',
         '## Results',
         '',
@@ -252,7 +251,8 @@ def write_readme(path, results, paper, matches, picks, seconds, device):
                      f'{percent(r["target_reject"])} | {r["host_pore_seconds"]:.3f} s |')
     lines += [
         '',
-        f'The same bundled models on all {paper["reads"]:,} test reads of simulated group 1 in the historical reference:',
+        f'The same models on all {paper["reads"]:,} test reads of simulated group 1 in the paper (Table 1 averages',
+        'this group with two others):',
         '',
         '| Method | Accuracy | Hosts rejected | Targets rejected | Pore time per host read |',
         '|---|---|---|---|---|',
@@ -264,7 +264,7 @@ def write_readme(path, results, paper, matches, picks, seconds, device):
     same = ', '.join(f'{NAMES[m]} {matches[m]:,}/{n:,}' for m in METHODS)
     lines += [
         '',
-        f'Per-read outcomes identical to the saved historical reference: {same}.',
+        f'Per-read outcomes identical to the paper\'s: {same}.',
         '',
         '## Example reads',
         '',
@@ -296,7 +296,7 @@ def write_readme(path, results, paper, matches, picks, seconds, device):
         f'| `data/test/` | {n:,} reads in the prefix-cache layout of `poreloom.method.data`: int16 ADC of the first 9000 samples, calibration, class, and each read\'s replay phase in the paper (`phase`) |',
         '| `models/poreloom/` | streaming encoder (`encoder.pt`) and FACP head (`head.pt`, beta = 1) |',
         '| `models/readcurrent/`, `models/nanodeep/`, `models/squigglenet/` | 3000-sample baselines (`best.pt`) and their selection files with the service time used in replay |',
-        '| `reference/` | historical per-read outcomes for these reads and metrics on all group-1 test reads |',
+        '| `reference/` | the paper\'s per-read outcomes for these reads and its metrics on all group-1 test reads |',
         '| `run_example.py` | the script that produced this page |',
         '',
         'The simulated reads were generated with Squigulator (`dna-r10-min`, 4 kHz) from GRCh38.p14 (host) and eight',

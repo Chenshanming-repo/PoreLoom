@@ -5,9 +5,9 @@
   "metrics": {
     "poreloom": {
       "acc": 0.962,
-      "host_reject": 0.984,
-      "target_reject": 0.06,
-      "host_pore_seconds": 1.4969387581132985
+      "host_reject": 0.982,
+      "target_reject": 0.058,
+      "host_pore_seconds": 1.5230194211387993
     },
     "readcurrent": {
       "acc": 0.865,
