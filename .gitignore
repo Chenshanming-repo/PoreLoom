@@ -92,3 +92,6 @@ docs/**/*.pdf
 /third_party/NanoDeep/
 /third_party/SquiggleNet/
 /third_party/ReadCurrent/
+
+# Local experiment scripts and records
+/experiments/

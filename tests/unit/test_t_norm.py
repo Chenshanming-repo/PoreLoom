@@ -124,6 +124,8 @@ def test_archived_drivers_keep_the_per_dataset_t_norm(path):
     """Dated October drivers document the DEV-B protocol; their train_heads calls must not inherit the fixed T_norm."""
     import re
     from pathlib import Path
-    src = (Path(__file__).resolve().parents[2]/path).read_text()
+    source = Path(__file__).resolve().parents[2]/path
+    if not source.exists(): pytest.skip('experiments/ is not part of this checkout')
+    src = source.read_text()
     calls = re.findall(r'H\.train_heads\((.*?)\)\n', src, flags=re.S)
     assert calls and all('t_norm=None' in c for c in calls)
