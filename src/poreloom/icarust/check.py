@@ -1,10 +1,11 @@
 """Live strategies against their offline definitions, before any closed-loop run.
 
 A random sample of test reads of the dataset the models were trained on is fed to each live strategy as growing
-0.4-s chunks with the offline per-read phases (seed 20261012, drawn over the whole test set). The live command
-(reject, accept or none) is compared with the command of the offline replay of the same reads and phases with zero
-service time (PoreLoom: poreloom.method.head; baselines: native scores and the native 0.5 decision), for every read
-where the offline replay issues one.
+0.4-s chunks with the offline per-read phases (seed 20261012, drawn over the whole test set). As in a live run, each
+read's ADC is first mapped with its own calibration to the strategy's ADC grid (the client does the same with the
+simulator's calibration). The live command (reject, accept or none) is compared with the command of the offline
+replay of the same reads and phases with zero service time (PoreLoom: poreloom.method.head; baselines: native scores
+and the native 0.5 decision), for every read where the offline replay issues one.
 """
 from pathlib import Path
 
@@ -43,13 +44,21 @@ def offline_native(name, path, data, phase, fs, device):
                                        raw_end=CONTRACTS[tool]['raw_end'], phase=phase)
 
 
-def live_commands(policy, data, phase, fs):
+def model_grid(adc, calibration, model):
+    """One read's int16 ADC on the strategy's ADC grid (calibration: offset, range, digitisation)."""
+    from .client import adc_map
+    gain, shift = adc_map(dict(offset=calibration[0], range=calibration[1], digitisation=calibration[2]), model)
+    return np.rint(np.asarray(adc, np.float64)*gain + shift).astype(np.int16)
+
+
+def live_commands(policy, data, phase, fs, model_calibration):
     """Commands of a live strategy on every read of `data`, one read and one decision at a time."""
     from ..chunk_replay import arrivals
     m = arrivals(phase*INTERVAL*fs, INTERVAL*fs, BUFFER)
     raw = np.asarray(data.raw_length)
+    cal = np.asarray(data.calibration, np.float64)
     states = [dict(channel=i, read_id=str(data.read_id[i]), read_number=1, received=0, k=0, h=None,
-                   buf=np.asarray(data.adc[i]).astype(np.int16).copy()) for i in range(len(raw))]
+                   buf=model_grid(data.adc[i], cal[i], model_calibration)) for i in range(len(raw))]
     got = np.full(len(raw), None, object)
     for j in range(m.shape[1]):
         for i, s in enumerate(states):
@@ -81,7 +90,7 @@ def check(models, data_root, strategies, device, n=3000, fs=4000., workdir='.', 
         else:
             off = offline_native(name, models[name], data, phase, fs, device)
         policy = build(name, models[name], device, MODEL_CALIBRATION, workdir)
-        got = live_commands(policy, data, phase, fs)
+        got = live_commands(policy, data, phase, fs, MODEL_CALIBRATION)
         want = np.where(off['command'], np.where(off['command_reject'], 'reject', 'accept'), None)
         compared = [(g, w) for g, w in zip(got, want) if w is not None]
         agree = sum(g == w for g, w in compared)
