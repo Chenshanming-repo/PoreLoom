@@ -6,7 +6,7 @@
 The example tests the installation using the historical T_norm = 13.93 s bundled models and saved references.
 It replays a small simulated test subset (an observation every 0.4 s, 0.1 s ejection), checks every read's
 outcome against that reference, and writes metrics.json, per_read.csv, example_reads.png and README.md to --out.
-Current T_norm = 15 s publication results are in paper/; their new action-head checkpoints are not bundled.
+The action-head checkpoints for the current T_norm = 15 s publication results are not bundled.
 Baseline architectures come from their upstream repositories; missing files are downloaded into third_party/ at
 the commits used in the paper and checked by sha256.
 """
@@ -231,8 +231,8 @@ def write_readme(path, results, paper, matches, picks, seconds, device):
         '',
         'This example tests an installation using the bundled PoreLoom model and three baselines on a small',
         'subset of the simulated test set. It retains the earlier `T_norm = 13.93 s` checkpoint and saved',
-        'reference outcomes. Current `T_norm = 15 s` publication results are in `paper/`; the new',
-        'action-head checkpoints were not supplied with those results.',
+        'reference outcomes. The action-head checkpoints for the current `T_norm = 15 s` publication',
+        'results are not bundled with this example.',
         'The results below come from the command in [Running the example](#running-the-example).',
         '',
         '## Results',

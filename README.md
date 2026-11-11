@@ -89,7 +89,7 @@ for the denominator used in Table S2. Every threshold is fixed before evaluation
 read-until API (`minknow_api`). It finds the position through the manager service, reads each
 channel's calibration, streams raw signal with `get_live_reads`, and sends `unblock` for reject
 and `stop_further_data` for accept. The decision computation is the one used in the closed-loop
-runs; a unit test checks it against `experiments/20261014_final/icarust_live.py`.
+runs.
 
 **Validation: tested against the Icarust simulator.**
 
@@ -105,9 +105,7 @@ Set `MINKNOW_TRUSTED_CA` to MinKNOW's `conf/rpc-certs/ca.crt` if the certificate
 automatically, and pass `--token` when MinKNOW requires a developer API token. The device sample
 rate must equal the bundle's `fs` (checked at start). `LOGS` receives `manifest.json`,
 `decisions.jsonl`, `acks.jsonl`, and `reads.jsonl`. See `python -m poreloom.minknow --help` for
-channel ranges, unblock duration, and read-classification filters, and
-[experiments/20261104_minknow_icarust/](experiments/20261104_minknow_icarust/README.md) for the
-Icarust smoke test.
+channel ranges, unblock duration, and read-classification filters.
 
 ## Baselines
 
@@ -249,41 +247,11 @@ Table S1 lists exact counts for each group, with R9 listed once because its thre
 share one split. R10 mixed is a computational mixture of two separate acquisitions. Sputum uses
 genomic-locus grouping to keep 10-kb alignment-start bins separate across groups and partitions. Supplementary Note 1 gives accessions, labels, and split details.
 
-## Reproducing the paper
-
-The current publication inputs are frozen in `paper/data/revision_20261109_tnorm15/`.
-They use the fixed `T_norm = 15 s` reference. Rebuild the current main and supplementary
-tables and figures directly from these saved results:
-
-```bash
-python -m pip install -r paper/requirements.txt
-python paper/scripts/build_revision.py
-python paper/scripts/verify_publication.py
-```
-
-[paper/README.md](paper/README.md) maps every current figure and table to its source data and
-explains precision, experimental units, and denominators. Figure 2a's fixed-0.5 means and SDs use
-the supplied precision of 0.01 percentage points.
+## Training and evaluation
 
 Current training and evaluation use `python -m poreloom.method all`, and the fixed-threshold
 comparison uses `python -m poreloom.method.thresholds`. For larger budgets, set the raw endpoint
-with `--max-samples` to the usable budget plus 1500. The frozen publication snapshot contains
-the 9 November beta=1 results, extended fixed-threshold comparison, budget and taxon-holdout
-experiments, beta sensitivity results, and exported closed-loop summaries.
-
-See [experiments/README.md](experiments/README.md) for experimental workflows and SLURM templates.
-
-The closed-loop comparison has 72 runs: eight strategies (nonselective sequencing, PoreLoom,
-and three baselines at two windows), three target fractions, and three simulator seeds. The
-PoreLoom means and SDs are provided in
-`paper/data/revision_20261109_tnorm15/offline/paper_numbers.json`.
-Repeating the matrix requires Icarust built from upstream commit `ef05586` (v0.0.7a) with
-`icarust.patch`, trained checkpoints, and the simulation support files `closed_loop.py` and
-`analyze_live.py`. All three files are in
-[experiments/20261011_simloop/](experiments/20261011_simloop/README.md) (the default
-`PORELOOM_SIMLOOP`), whose README gives the build steps; configure model paths and compute settings. Raw signals, preprocessing
-readers, read-ID split membership, checkpoints, and the HPC rerun environment provide the inputs
-needed to repeat the experiments.
+with `--max-samples` to the usable budget plus 1500.
 
 ## Repository layout
 
@@ -293,9 +261,6 @@ src/poreloom/baselines/   baseline models and preprocessing
 src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarust only)
 src/poreloom/             streaming, replay, controller, and evaluation modules
 example/                  1,000 simulated test reads and trained models for a quick test
-experiments/              experimental workflows and cluster job templates
-paper/data/revision_20261109_tnorm15/  current frozen publication results (T_norm = 15 s)
-paper/                    current tables, figures, rebuild scripts, and provenance
 configs/, env/            path templates and environment specifications
 tests/                    unit tests
 ```

@@ -1,4 +1,0 @@
-reads 30000 same command 0.9951 same command and time 0.9123
-panel a: host rejected at 0.54 s candidates 50 unchanged under fixed T_ref 50
-panel b: target retained at 1.05 s candidates 284 unchanged under fixed T_ref 276
-panel c: host rejected at 0.58 s candidates 83 unchanged under fixed T_ref 83

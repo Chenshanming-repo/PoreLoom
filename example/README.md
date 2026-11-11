@@ -2,8 +2,8 @@
 
 This example tests an installation using the bundled PoreLoom model and three baselines on a small
 subset of the simulated test set. It retains the earlier `T_norm = 13.93 s` checkpoint and saved
-reference outcomes. Current `T_norm = 15 s` publication results are in
-[`paper/`](../paper/README.md); the new action-head checkpoints were not supplied with those results.
+reference outcomes. The action-head checkpoints for the current `T_norm = 15 s` publication
+results are not bundled with this example.
 The results below come from the command in [Running the example](#running-the-example).
 
 ## Results

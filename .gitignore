@@ -66,11 +66,7 @@ htmlcov/
 *.jsonl.gz
 
 # ===== 论文 / 图表产物 =====
-# paper/results/ stores an externally supplied archive; paper/review/ stores local checks
-/paper/results/
-/paper/review/*
-!/paper/review/.gitkeep
-/paper/output/
+/paper/
 docs/**/*.pdf
 
 # ===== 放行：测试小样本与示例配置 =====
