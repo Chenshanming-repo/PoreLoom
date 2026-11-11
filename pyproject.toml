@@ -19,9 +19,13 @@ dependencies = [
 raw = ["pyslow5"]
 dev = ["pytest"]
 minknow = ["minknow_api"]
+icarust = ["minknow_api"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"poreloom.icarust" = ["reference_blocks.json", "icarust.patch"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

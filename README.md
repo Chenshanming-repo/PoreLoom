@@ -21,7 +21,7 @@ action. The final head excludes Continue.
 ```bash
 conda env create -f env/poreloom.yml      # Python 3.9, PyTorch 1.12.1
 conda activate poreloom
-pip install -e .                        # add [raw] for pyslow5, [dev] for pytest, [minknow] for minknow_api
+pip install -e .                        # add [raw] for pyslow5, [dev] for pytest, [minknow] or [icarust] for minknow_api
 ```
 
 Raw BLOW5 preparation uses a separate environment (`env/raw-requirements.txt`, Python 3.10,
@@ -88,8 +88,8 @@ for the denominator used in Table S2. Every threshold is fixed before evaluation
 `src/poreloom/minknow/` connects a trained bundle to one MinKNOW sequencing position through the
 read-until API (`minknow_api`). It finds the position through the manager service, reads each
 channel's calibration, streams raw signal with `get_live_reads`, and sends `unblock` for reject
-and `stop_further_data` for accept. The decision computation is the one used in the closed-loop
-runs.
+and `stop_further_data` for accept. Its PoreLoom policy is the one that drives the Icarust
+closed-loop runs ([below](#closed-loop-simulation-with-icarust)).
 
 **Validation: tested against the Icarust simulator.**
 
@@ -129,6 +129,117 @@ For baseline runs, install the upstream code under `third_party/`:
 
 The PoreLoom backbone in `src/poreloom/method/backbone.py` retains the ReadCurrent architecture
 and MIT notice within this repository.
+
+## Closed-loop simulation with Icarust
+
+`src/poreloom/icarust/` runs the closed-loop comparison (Table 2, Table S5) against
+[Icarust](https://github.com/LooseLab/Icarust), which simulates an R10.4.1 flow cell (4 kHz,
+400 bases/s, 512 channels) from reference sequences and serves the MinKNOW read-until API. Each
+strategy reads every channel through `get_live_reads` and sends `unblock` (0.1 s) for reject and
+`stop_further_data` for accept. Metrics come from the simulator's own record of each read (sample,
+length, end reason), not from the client. Requirements: Linux, a CUDA GPU, `pip install -e .[icarust]`,
+and Rust with `protoc`, HDF5 and OpenSSL to build Icarust.
+
+**1. Build the simulator** in a directory outside the repository (`$ICARUST` below). The patch adds
+seeded read generation, the per-read audit log, and bounded output buffering to Icarust v0.0.7a;
+its header lists every change.
+
+```bash
+git clone https://github.com/LooseLab/Icarust $ICARUST/src_tree
+cd $ICARUST/src_tree
+git checkout ef055864183ca2f149b748d29c34fe4ec1e74cac
+git apply /path/to/PoreLoom/src/poreloom/icarust/icarust.patch
+cargo build --release --locked --target-dir ../target
+cd -
+python -m poreloom.icarust setup --icarust $ICARUST     # tls/: localhost certificate (10 years); vbz/: HDF5 plugin
+```
+
+**2. Reference sequences.** Icarust samples host reads from 200 human and target reads from 13
+bacterial 100-kb blocks, all from the test-only part of the simulated data's genomes. Download the
+genomes and cut the blocks; the command checks that `host.fa` and `target.fa` are identical to the
+files of the paper runs.
+
+```bash
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.fna.gz
+for a in AL009126.3 U00096.3 AE016830.1 AP008937.1 AL591824.1 AE004091.2 CP000255.1 AE006468.2; do
+    wget -O $a.fa https://www.ebi.ac.uk/ena/browser/api/fasta/$a
+done
+python -m poreloom.icarust references --out $ICARUST/references \
+    --fasta GCF_000001405.40_GRCh38.p14_genomic.fna.gz AL009126.3.fa U00096.3.fa AE016830.1.fa \
+            AP008937.1.fa AL591824.1.fa AE004091.2.fa CP000255.1.fa AE006468.2.fa
+```
+
+**3. Models.** A JSON file maps strategy names to trained models; relative paths are read from the
+file's directory:
+
+```json
+{
+  "PoreLoom": "runs/sim_g1/poreloom/poreloom_sh_cp.pt",
+  "readcurrent": "runs/sim_g1/readcurrent",
+  "nanodeep": "runs/sim_g1/nanodeep",
+  "squigglenet": "runs/sim_g1/squigglenet"
+}
+```
+
+`PoreLoom` takes the bundle written by `python -m poreloom.method` (or its run directory). The
+baselines take run directories of `python -m poreloom.method.baselines` (or a `best.pt`), need the
+upstream code under `third_party/` (see [Baselines](#baselines)), and decide once from a
+3000-sample window at the native probability threshold of 0.5. `readcurrent_w6000`,
+`nanodeep_w6000` and `squigglenet_w6000` classify samples 1500–7500 instead and need models trained
+on that window; `python -m poreloom.method.baselines` trains the 3000-sample windows. Icarust
+produces R10.4.1 signal at 4 kHz, so use models trained on the simulated data (group 1 in the
+paper). `example/models/` contains such models (PoreLoom and the 3000-sample baselines; see
+[example/README.md](example/README.md)) and can be used directly, e.g.
+`{"PoreLoom": "example/models/poreloom", "nanodeep": "example/models/nanodeep"}`.
+
+**4. Check the live strategies** before running the simulator:
+
+```bash
+python -m poreloom.icarust check --models models.json --data <simulated group 1 root> --device cuda:0 --out check.json
+```
+
+This feeds 3,000 test reads to each live strategy as 0.4-s chunks and compares its accept and reject
+commands with the offline replay of the same reads.
+
+**5. One run:**
+
+```bash
+python -m poreloom.icarust run --strategy PoreLoom --models models.json --icarust $ICARUST \
+    --out icarust_runs/1pct_20331101_PoreLoom --seed 20331101 --target-permille 10 \
+    --port 25100 --device cuda:0
+```
+
+`--strategy` is `No-AS` (nonselective: accept every read), `PoreLoom`, `readcurrent`, `nanodeep`,
+`squigglenet`, or one of the `_w6000` baselines. `--target-permille` is the target molecule weight
+out of 1000 (10, 100 and 300 give 1%, 10% and 30%), and `--seed` fixes the simulated reads. Icarust
+uses ports `--port` and `--port + 1` and converts the references to signal at start-up (under a
+minute); the client then streams for `--duration` (1200 s) plus `--follow` (20 s) for decisions
+still in flight, so a run takes about 21 minutes. Pass `--ld-library-path` when Icarust's HDF5 and
+OpenSSL libraries are not on the default path. The simulator writes to `/dev/shm/poreloom_icarust`
+(`--tmp`) and only its audit log is kept. The run directory receives `manifest.json`, the client logs
+(`decisions.jsonl`, `acks.jsonl`, `client_reads.jsonl`), the audit log under `sim/`, and
+`summary.json` and `read_outcomes.jsonl` for reads starting within the first `--duration` seconds.
+
+**6. The full comparison** runs No-AS and every strategy in `models.json` at 1%, 10% and 30% targets
+with simulator seeds 20331101–20331103, one run at a time per lane (`DEVICE:PORT`), retrying failed
+runs; repeating the command resumes it and reruns only runs without an accepted result:
+
+```bash
+python -m poreloom.icarust matrix --models models.json --icarust $ICARUST --out icarust_matrix \
+    --lanes cuda:0:25100 cuda:1:25200 cuda:2:25300 --max-latency-p50 0.16
+python -m poreloom.icarust aggregate icarust_matrix      # also run at the end of matrix
+```
+
+With all eight strategies this is 72 runs (about 8.5 hours on three lanes, about 0.7 GB kept per
+run). Decisions are latency sensitive, so give each lane a GPU that no other job is using;
+`--max-latency-p50` reruns any run whose median command latency (from the arrival of the samples a
+decision needs to the command being sent) exceeds the limit, which was 0.16 s for the paper's
+PoreLoom runs. `aggregate` writes
+`aggregate.json` and `aggregate.md`: target-base enrichment (bases of target reads that were not
+ejected, sequenced within the window, divided by the same count for No-AS with the same seed and
+target fraction), accuracy and ejection rates from effective ejections, host pore time, and command
+latency, as means ± SD over seeds.
+`python -m poreloom.icarust analyze RUN` recomputes one run's summary.
 
 ## Method
 
@@ -259,6 +370,7 @@ with `--max-samples` to the usable budget plus 1500.
 src/poreloom/method/      data, backbone, FACP, pipeline, and main-comparison baselines
 src/poreloom/baselines/   baseline models and preprocessing
 src/poreloom/minknow/     MinKNOW read-until adapter (template; tested on Icarust only)
+src/poreloom/icarust/     Icarust closed-loop simulation: simulator patch, references, live runs, metrics
 src/poreloom/             streaming, replay, controller, and evaluation modules
 example/                  1,000 simulated test reads and trained models for a quick test
 configs/, env/            path templates and environment specifications
